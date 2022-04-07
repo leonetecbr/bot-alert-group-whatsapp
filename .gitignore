@@ -1,0 +1,9 @@
+*.sqlite
+node_modules
+package-lock.json
+*.data.json
+*.node-persist
+*_IGNORE_*
+.idea
+**.node-persist**
+/logs

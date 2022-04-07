@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@open-wa/wa-automate": "^4.33.4",
+    "axios": "^0.26.0",
+    "sequelize": "^6.16.0",
+    "sqlite3": "^5.0.2"
+  }
+}
