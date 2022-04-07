@@ -1,6 +1,5 @@
 *.sqlite
 node_modules
-package-lock.json
 *.data.json
 *.node-persist
 *_IGNORE_*
