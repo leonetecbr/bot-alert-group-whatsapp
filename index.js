@@ -18,7 +18,6 @@ wa.create({
 
 function start(client) {
   client.onMessage(async message => {
-    console.log(message)
 
     if (message.chat.isGroup){
       if (await findAlert(message, client)){
