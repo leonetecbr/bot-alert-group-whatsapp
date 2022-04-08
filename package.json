@@ -1,8 +1,30 @@
 {
+  "name": "bot-alert-group-whatsapp",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "email": "falecom@leone.tec.br",
+    "name": "Leone Oliveira",
+    "url": "https://leone.tec.br"
+  },
   "dependencies": {
     "@open-wa/wa-automate": "^4.33.4",
     "axios": "^0.26.0",
     "sequelize": "^6.16.0",
     "sqlite3": "^5.0.2"
-  }
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leonetecbr/bot-alert-group-whatsapp"
+  },
+  "keywords": [
+    "whatsapp",
+    "grupo",
+    "alerta",
+    "chatbot"
+  ],
+  "bugs": "https://github.com/leonetecbr/bot-alert-group-whatsapp/issues"
 }

@@ -1,8 +1,10 @@
 const database = require('../databases/db')
-const ALERTS = require('../alerts.json')
+const ALERTS = require('../resources/alerts.json')
 const Users = require('../models/User')
 
 async function ChatBot(message){
+
+    message.text = message.text.toLowerCase()
     if (message.text === 'meus alertas'){
         await database.sync()
 
@@ -16,7 +18,7 @@ async function ChatBot(message){
         }
 
         let text = 'Os alertas disponíveis são:\n'
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
             text += '\n ```'+ALERTS[i]+'```: '
             text += (user['a'+i])?'*Ativado* ✅':'*Desativado* ❌'
         }
@@ -24,7 +26,7 @@ async function ChatBot(message){
     }
 
     let action = true
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
         if(message.text.search(ALERTS[i]) !== -1){
             await database.sync()
 

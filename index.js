@@ -1,7 +1,6 @@
 const wa = require('@open-wa/wa-automate')
 const findAlert = require('./components/FindAlert')
 const chatBot = require('./components/ChatBot')
-const {cli} = require("@open-wa/wa-automate/dist/cli/setup");
 
 wa.create({
   sessionId: 'BOT_ALERT',
@@ -20,7 +19,6 @@ wa.create({
 function start(client) {
   client.onMessage(async message => {
     console.log(message)
-    message.text = message.text.toLowerCase()
 
     if (message.chat.isGroup){
       if (await findAlert(message, client)){
