@@ -6,3 +6,4 @@ node_modules
 .idea
 **.node-persist**
 /logs
+package-lock.json
