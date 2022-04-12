@@ -51,9 +51,9 @@ async function ChatBot(message){
         }
     }
 
-    return 'Oi, aqui você pode gerenciar seus alertas, para vê quais alertas estão ativados ou desativados e para ' +
+    return 'Oi, aqui você pode gerenciar seus alertas, para ver quais alertas estão ativados ou desativados e para ' +
         'consultar a lista de alertas disponíveis me mande ```Meus Alertas```, para ativar me mande o nome do alerta' +
-        ', por exemplo, ```#bug```, para desativar mande o nome do alerta seguido de ```off```, por exemplo, ```#bug off```'
+        ', por exemplo, ```#bug```, para desativar mande o nome do alerta seguido de "off", por exemplo, ```#bug off```'
 }
 
 module.exports = ChatBot
