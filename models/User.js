@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const database = require('../databases/db')
 
-const User = database.define('users', {
+let table = {
   id: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -31,7 +31,7 @@ const User = database.define('users', {
     type: Sequelize.BOOLEAN,
     default: false
   },
-  a7:{
+  a7: {
     type: Sequelize.BOOLEAN,
     default: false
   },
@@ -47,7 +47,8 @@ const User = database.define('users', {
     type: Sequelize.BOOLEAN,
     default: false
   }
+}
 
-})
+const User = database.define('users', table)
 
 module.exports = User

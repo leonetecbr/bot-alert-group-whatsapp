@@ -20,9 +20,7 @@ function start(client) {
   client.onMessage(async message => {
 
     if (message.chat.isGroup){
-      if (await findAlert(message, client)){
-        await client.reply(message.chat.id, '*Alerta enviado!*', message.id, true)
-      }
+      if (await findAlert(message, client)) await client.reply(message.chat.id, '*Alerta enviado!*', message.id, true)
     } else{
       await client.reply(message.from, await chatBot(message), message.id, true)
     }

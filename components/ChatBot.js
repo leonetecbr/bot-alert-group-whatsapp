@@ -32,9 +32,7 @@ async function ChatBot(message){
 
             let user = await Users.findByPk(message.from)
 
-            if (message.text.replace(ALERTS[i]+' ', '') === 'off'){
-                action = false
-            }
+            if (message.text.replace(ALERTS[i]+' ', '') === 'off') action = false
             if (user === null){
                 let data = {
                     id: message.from
