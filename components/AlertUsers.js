@@ -18,9 +18,8 @@ async function AlertUsers(message, alertId, client){
         for (let i = 0; typeof users[i] !== "undefined"; i++){
             if (users[i].id !== message.author){
                 let sended = await client.sendText(users[i].id, text)
-                if (!sended.startsWith('true')){
-                    notSend.push(users[i].id)
-                }
+                if (typeof sended !== 'string') notSend.push(users[i].id)
+                else if (!sended.startsWith('true')) notSend.push(users[i].id)
             }
         }
 
