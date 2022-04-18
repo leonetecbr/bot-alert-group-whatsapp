@@ -14,7 +14,6 @@ async function ChatBot(message){
             user = await Users.create({
                 id: message.from
             })
-            await user.save()
         }
 
         let text = 'Os alertas disponíveis são:\n'
@@ -39,7 +38,6 @@ async function ChatBot(message){
                 }
                 data['a'+i] = action
                 user = await Users.create(data)
-                await user.save()
             } else{
                 user['a'+i] = action
                 await user.save()

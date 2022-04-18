@@ -7,7 +7,7 @@ async function AlertUsers(message, alertId, client){
     let where = {}
     where['a'+alertId] = true
 
-    let users = await User.findAll(where)
+    let users = await User.findAll({where: where})
 
     if (users !== null){
         let text = 'Oi, você tem um novo alerta para *' + ALERTS[alertId] + '*\n\n*' + message.sender.pushname + '* mandou a ' +
