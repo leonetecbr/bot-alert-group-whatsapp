@@ -17,7 +17,6 @@ async function AlertUsers(message, alertId, client){
             if (users[i].id !== message.author){
                 let sended = await client.sendText(users[i].id, text)
                 if (typeof sended !== 'string') console.log(users[i])
-                else if (!sended.startsWith('true')) console.log(users[i])
             }
         }
     }
