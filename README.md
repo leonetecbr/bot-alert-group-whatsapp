@@ -12,7 +12,8 @@ QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) 
 do privado do bot. Os alertas podem ser alterados no arquivo 
 [alerts.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/alerts.json). Para 
 definir o número do administrador use o arquivo 
-[admin.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/resources/admin.json), faça como no exemplo abaixo: 
+[admin.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/resources/admin.json), faça como no exemplo 
+abaixo: 
 ```
 [
     "5599999999999@c.us"
