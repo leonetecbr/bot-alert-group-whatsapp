@@ -19,3 +19,6 @@ abaixo:
     "5599999999999@c.us"
 ]
 ```
+
+**Observação**: Após criação do banco de dados se faz necessário ajustar o banco de dados caso a quantidade de alertas 
+aumente!
