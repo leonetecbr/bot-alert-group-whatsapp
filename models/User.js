@@ -10,6 +10,7 @@ let table = {
   }
 }
 
+// Cria os campos na tabela conforme a quantidade de alertas definidos
 for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
   table['a'+i] = {
     type: Sequelize.BOOLEAN,
@@ -17,6 +18,7 @@ for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
   }
 }
 
+// Cria tabela se não existir
 const User = database.define('users', table)
 
 module.exports = User

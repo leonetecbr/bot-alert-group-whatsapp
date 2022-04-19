@@ -22,3 +22,32 @@ abaixo:
 
 **Observação**: Após criação do banco de dados se faz necessário ajustar o banco de dados caso a quantidade de alertas 
 aumente!
+
+## Usando
+
+### Ativando alertas
+
+Primeiramente os usuários que desejarem serem alertados devem entrar em contato com o bot pelo privado, lá poderão 
+ativar e desativar os alertas que desejam. Para consultar a lista de alertas disponíveis pode se usar o comando 
+`Meus Alertas`. Exemplo:
+
+<p align="center">
+   <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Conversando%20com%20o%20bot.jpg" alt="Conversando com o bot"/>
+</p>
+
+### Disparando alertas
+
+Para disparar o alerta é bem simples, basta usar o alerta em uma mensagem no grupo, recomendamos que o alerta inicie com
+ uma hash (#), para evitar o disparo acidental, (pode se incluir vários alertas em uma mesma mensagem). Exemplo:
+
+<p align="center">
+   <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Lan%C3%A7ando%20alerta%20no%20grupo.jpg" alt="Disparando os alertas"/>
+</p>
+
+### Recebendo alertas
+
+Quando o alerta for disparado, todos que ativaram o alerta receberam a mensagem correspondente no privado. Exemplo:
+
+<p align="center">
+   <img src="https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/result/Alerta%20sendo%20recebido%20no%20privado.jpg" alt="Recebendo os alertas"/>
+</p>
