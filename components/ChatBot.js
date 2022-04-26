@@ -27,33 +27,36 @@ async function ChatBot(message){
         return text
     }
 
-    let action = true
-    for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
-        // Se existir o alerta na mensagem
-        if(message.text.search(ALERTS[i]) !== -1){
-            await database.sync()
+    // Se tiver sintaxe de alerta
+    if (message.text.startsWith('#') && message.length > 1) {
+        let action = true
+        for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
+            // Se existir o alerta na mensagem
+            if (message.text.search(ALERTS[i]) !== -1) {
+                await database.sync()
 
-            // Busca pelo usuário no banco de dados
-            let user = await Users.findByPk(message.from)
+                // Busca pelo usuário no banco de dados
+                let user = await Users.findByPk(message.from)
 
-            // Se o comando for para desativar o alerta
-            if (message.text.replace(ALERTS[i]+' ', '').search('off') !== -1) action = false
-            // Se o usuário não existir no banco de dados
-            if (user === null){
-                let data = {
-                    id: message.from
+                // Se o comando for para desativar o alerta
+                if (message.text.replace(ALERTS[i] + ' ', '').search('off') !== -1) action = false
+                // Se o usuário não existir no banco de dados
+                if (user === null) {
+                    let data = {
+                        id: message.from
+                    }
+                    data['a' + i] = action
+                    // Registra o usuário no banco
+                    user = await Users.create(data)
+                } else {
+                    user['a' + i] = action
+                    // Altera o registro do usuário
+                    await user.save()
                 }
-                data['a'+i] = action
-                // Registra o usuário no banco
-                user = await Users.create(data)
-            } else{
-                user['a'+i] = action
-                // Altera o registro do usuário
-                await user.save()
-            }
 
-            // Confirma a ativação ou desativação do alerta
-            return (action)?'*Alerta para '+ALERTS[i]+' ativado!* ✅':'*Alerta para '+ALERTS[i]+' desativado!* ❌'
+                // Confirma a ativação ou desativação do alerta
+                return (action) ? '*Alerta para ' + ALERTS[i] + ' ativado!* ✅' : '*Alerta para ' + ALERTS[i] + ' desativado!* ❌'
+            }
         }
     }
 
