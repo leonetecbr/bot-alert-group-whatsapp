@@ -23,8 +23,8 @@ function start(client) {
     if (message.chat.isGroup){
       // Se encontrar um alerta em uma mensagem
       if (await findAlert(message, client)) await client.reply(message.chat.id, '*Alerta enviado!*', message.id, true)
-      // Evita que o bot responda empresas que eventualmente enviei uma mensagem privada para o número
-    } else if (message.sender.verifiedLevel !== 2){
+      // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
+    } else if (!message.sender.isEnterprise){
       // Envia o banco de dados para o administrador
       if (admin.includes(message.from) && message.text === '/admin') await client.sendFile(message.from, './db.sqlite', 'db.sqlite', 'Banco de dados')
       // Interage com os usuários comuns
