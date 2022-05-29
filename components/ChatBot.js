@@ -28,7 +28,7 @@ async function ChatBot(message){
     }
 
     // Se tiver sintaxe de alerta
-    if (message.text.startsWith('#') && message.length > 1) {
+    if (message.text.startsWith('#') && message.text.length > 1) {
         let action = true
         for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
             // Se existir o alerta na mensagem
