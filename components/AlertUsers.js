@@ -19,9 +19,7 @@ async function AlertUsers(message, alertId, client){
             // Se não for o usuário que lançou o alerta
             if (users[i].id !== message.author){
                 // Envie o alerta
-                let sended = await client.sendText(users[i].id, text)
-                // Registra no console
-                console.log(sended)
+                await client.sendText(users[i].id, text)
             }
         }
     }
