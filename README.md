@@ -1,4 +1,11 @@
-# Bot de alerta para grupos do Whatsapp
+<div align="center">
+    <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/resources/logo.png" alt="Bot de alerta para grupos do Whatsapp">
+    <h1>Bot de alerta para grupos do Whatsapp</h1>
+    <img src="https://img.shields.io/npm/v/@open-wa/wa-automate.svg?color=green" alt="Versão mínima do NPM"/>&nbsp;&nbsp;
+    <img src="https://img.shields.io/github/license/leonetecbr/leone-promos.svg" alt="Licença"/>&nbsp;&nbsp;
+    <img src="https://img.shields.io/github/issues/leonetecbr/leone-promos.svg" alt="Problemas"/>&nbsp;&nbsp;
+    <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"/>&nbsp;&nbsp;
+</div>
 
 ## Introdução
 
