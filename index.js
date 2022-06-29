@@ -21,8 +21,9 @@ function start(client) {
   client.onMessage(async message => {
 
     if (message.chat.isGroup){
+      let result = await findAlert(message, client)
       // Se encontrar um alerta em uma mensagem
-      if (await findAlert(message, client)) await client.reply(message.chat.id, '*Alerta enviado!*', message.id, true)
+      if (result.alerted) await client.reply(message.chat.id, '*Alerta enviado!*', result.messageId, true)
       // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
     } else if (!message.sender.isEnterprise){
       // Envia o banco de dados para o administrador

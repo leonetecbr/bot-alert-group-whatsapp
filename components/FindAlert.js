@@ -2,7 +2,7 @@ const ALERTS = require('../resources/alerts.json')
 const alertUsers = require('./AlertUsers')
 
 async function FindAlert(message, client) {
-    let alerted = false
+    let result = {alerted: false, messageId: message.id}
     // Enquanto existirem alertas a serem verificados
     for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
         // Se existir o alerta na mensagem
@@ -11,12 +11,13 @@ async function FindAlert(message, client) {
             if (message.text.length === ALERTS[i].length && message.quotedMsgObj !== null && message.quotedMsgObj.text !== ''){
                 // Envia um alerta para a mensagem respondida
                 await alertUsers(message.quotedMsgObj, i, client)
+                result.messageId = message.quotedMsgObj.id
             } else await alertUsers(message, i, client)
             // Envia um alerta para a mensagem
-            alerted = true
+            result.alerted = true
         }
     }
-    return alerted
+    return result
 }
 
 module.exports = FindAlert
