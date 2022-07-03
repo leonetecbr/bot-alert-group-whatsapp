@@ -6,7 +6,6 @@ node_modules
 .idea
 **.node-persist**
 /logs
-package-lock.json
 resources/admin.json
 **.data.json
 **_IGNORE_**
