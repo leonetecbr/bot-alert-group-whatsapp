@@ -11,7 +11,7 @@ async function ChatBot(message){
         // Busca pelo usuário no banco de dados
         let user = await Users.findByPk(message.from)
 
-        // Se o usuário não existir no banco de dados
+        // Se o usuário não existir no banco de dados, cria
         if (user === null){
             user = await Users.create({
                 id: message.from
@@ -25,10 +25,15 @@ async function ChatBot(message){
             text += (user['a'+i])?'*Ativado* ✅':'*Desativado* ❌'
         }
         return text
+    } else if (message.text === 'ajuda'){
+        // Envia texto de ajuda
+        return  'Para ver quais alertas estão ativados ou desativados e para consultar a lista de alertas ' +
+            'disponíveis me mande ```Meus Alertas```, para ativar me mande o nome do alerta, por exemplo,' +
+            ' ```'+ALERTS[1]+'```, para desativar mande o nome do alerta seguido de "off", por exemplo, ' +
+            '```'+ALERTS[1]+' off```'
     }
-
-    // Se tiver sintaxe de alerta
-    if (message.text.startsWith('#') && message.text.length > 1) {
+    else if (message.text.startsWith('#') && message.text.length > 1) {
+        // Se tiver sintaxe de alerta
         let action = true
         for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
             // Se existir o alerta na mensagem
@@ -61,9 +66,7 @@ async function ChatBot(message){
     }
 
     // Se não for nenhum alerta ou algum comando
-    return 'Oi, aqui você pode gerenciar seus alertas, para ver quais alertas estão ativados ou desativados e para ' +
-        'consultar a lista de alertas disponíveis me mande ```Meus Alertas```, para ativar me mande o nome do alerta' +
-        ', por exemplo, ```'+ALERTS[1]+'```, para desativar mande o nome do alerta seguido de "off", por exemplo, ```'+ALERTS[1]+' off```'
+    return 'Oi, aqui você pode gerenciar seus alertas, para saber como me envie ```Ajuda```'
 }
 
 module.exports = ChatBot

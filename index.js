@@ -19,15 +19,18 @@ wa.create({
 
 function start(client) {
   client.onMessage(async message => {
-
+    // Em grupos
     if (message.chat.isGroup){
+      // Busca por alertas
       let result = await findAlert(message, client)
       // Se encontrar um alerta em uma mensagem
-      if (result.alerted) await client.reply(message.chat.id, '*Alerta enviado!*', result.messageId, true)
+      if (result.alerted)
+        await client.reply(message.chat.id, '*Alerta enviado!*', result.messageId, true)
       // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
     } else if (!message.sender.isEnterprise){
       // Envia o banco de dados para o administrador
-      if (admin.includes(message.from) && message.text === '/admin') await client.sendFile(message.from, './db.sqlite', 'db.sqlite', 'Banco de dados')
+      if (admin.includes(message.from) && message.text === '/admin')
+        await client.sendFile(message.from, './db.sqlite', 'db.sqlite', 'Banco de dados', message.id)
       // Interage com os usuários comuns
       else await client.reply(message.from, await chatBot(message), message.id, true)
     }

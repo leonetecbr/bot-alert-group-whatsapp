@@ -9,8 +9,10 @@
 
 ## Introdução
 
-Esse bot surgiu da necessidade de marcar várias pessoas sempre que uma promoção grande acontecia, como não há a opção de
-marcar todos no WhatsApp ou função similar, eu criei esse bot para nos ajudar.
+Esse bot surgiu da necessidade de avisar vários membros de um grande de grupo de WhatsApp sempre que era encontrada uma 
+promoção incrível.
+
+**Testado e aprovado em um grupo de compradores compulsivos. ✅**
 
 ## Instalação
 
@@ -32,14 +34,22 @@ aumente!
 
 ## Usando
 
-### Ativando alertas
+### Conversando com o bot
 
-Primeiramente os usuários que desejarem serem alertados devem entrar em contato com o bot pelo privado, lá poderão 
-ativar e desativar os alertas que desejam. Para consultar a lista de alertas disponíveis pode se usar o comando 
-`Meus Alertas`. Exemplo:
+Primeiramente os usuários que desejarem serem alertados devem entrar em contato com o bot pelo privado, lá poderão
+ativar e desativar os alertas que desejam. Exemplo:
 
 <p align="center">
    <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Conversando%20com%20o%20bot.jpg" alt="Conversando com o bot"/>
+</p>
+
+### Ativando e desativando alertas
+
+Para ativar um alerta basta mandá-lo para o bot no privado, para desativar é só mandá-lo seguido de `off`, caso deseje 
+consultar a lista de alertas disponíveis pode se usar o comando `Meus Alertas`. Exemplo:
+
+<p align="center">
+   <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Gerenciando%20os%20alertas.jpg" alt="Gerenciando os alertas"/>
 </p>
 
 ### Disparando alertas
