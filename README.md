@@ -16,13 +16,14 @@ promoção incrível.
 
 ## Instalação
 
-Para utilizá-lo basta clonar esse repositório, rodar o comando ```yarn run start``` ou ```npm run start```, escanear o 
-QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e configurar os alertas através 
-do privado do bot. Os alertas podem ser alterados no arquivo 
-[alerts.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/alerts.json). Para 
-definir o número do administrador use o arquivo 
-[admin.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/resources/admin.json), faça como no exemplo 
-abaixo: 
+Para utilizá-lo basta clonar esse repositório, rodar o comando ```yarn run start``` ou ```npm run start```, escanear o
+QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e configurar os alertas através
+do privado do bot. Os alertas podem ser alterados no arquivo
+[alerts.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/alerts.json). Para
+definir o(s) número(s) do(s) administrador(es) use o arquivo
+[admin.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/resources/admin.json), faça como no exemplo
+abaixo:
+
 ```
 [
     "5599999999999@c.us"
@@ -34,9 +35,18 @@ aumente!
 
 ## Usando
 
+### Adicionando ao(s) seu(s) grupo(s)
+
+Primeiramente o bot deve ser adicionado em pelo menos um grupo, defina todos os alertas corretamente, porque eles 
+estarão na mensagem de boas-vindas que o bot enviará após ser adicionado no grupo. Exemplo da mensagem de boas-vindas: 
+
+<p align="center">
+   <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Adicionando%20ao%20grupo.jpg" alt="Adicionando o bot ao grupo"/>
+</p>
+
 ### Conversando com o bot
 
-Primeiramente os usuários que desejarem serem alertados devem entrar em contato com o bot pelo privado, lá poderão
+Os usuários que desejarem serem alertados devem entrar em contato com o bot pelo privado, lá poderão
 ativar e desativar os alertas que desejam. Exemplo:
 
 <p align="center">

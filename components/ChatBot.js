@@ -21,7 +21,7 @@ async function ChatBot(message){
         // Lista os alertas disponíveis
         let text = 'Os alertas disponíveis são:\n'
         for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
-            text += '\n ```'+ALERTS[i]+'```: '
+            text += '\n```'+ALERTS[i]+'```: '
             text += (user['a'+i])?'*Ativado* ✅':'*Desativado* ❌'
         }
         return text
