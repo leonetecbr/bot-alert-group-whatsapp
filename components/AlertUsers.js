@@ -1,40 +1,79 @@
 const ALERTS = require('../resources/alerts.json')
 const database = require('../databases/db')
 const User = require('../models/User')
+const {Op} = require('sequelize')
 
-async function AlertUsers(message, alertId, client){
+async function AlertUsers(found, client) {
     await database.sync()
-    let where = {}
-    where['a'+alertId] = true
 
-    let users = await User.findAll({where: where, raw: true})
+    let where = {}, users, alertsText = '', attributes = ['id']
+    let message = found.message, alertsId
 
-    // Se existirem usuários com o alerta ativado
-    if (users.length !== 0){
-        let url
-        let text = 'Oi, você tem um novo alerta para *' + ALERTS[alertId] + '*\n\n*' + message.sender.pushname + '* mandou a ' +
-            'seguinte mensagem no grupo *' + message.chat.name + '*: \n\n'
-        text += message.text
+    if (found.alerts.length === 1) {
+        alertsId = found.alerts[0]
+        alertsText = ALERTS[alertsId]
+        where['a' + alertsId] = true
+        attributes.push('a' + alertsId)
+        users = await User.findAll({
+            attributes: attributes,
+            where: where,
+            raw: true
+        })
+    } else {
+        alertsId = found.alerts
 
-        if (message.text.indexOf('https://') !== -1) {
-            // Se tiver um link na mensagem busca ele
-            let re = /https:\/\/[\w-./:=&"'?%+@#$!()]+/
-            let matches = message.text.match(re)
-            url = matches[0]
+        for (let i = 0; typeof alertsId[i] !== 'undefined'; i++) {
+            where['a' + alertsId[i]] = true
+            attributes.push('a' + alertsId[i])
         }
 
-        for (let i = 0; i < users.length; i++){
-            // Se não for o usuário que lançou o alerta
-            if (users[i].id !== message.author){
-                // Envie o alerta
-                if (message.text.indexOf('https://') !== -1) {
-                    // Se tiver um link no texto envia a mensagem com um preview
-                    await client.sendLinkWithAutoPreview(users[i].id, url, text)
-                } else {
-                    await client.sendText(users[i].id, text)
+        users = await User.findAll({
+            attributes: attributes,
+            where: {
+                [Op.or]: where
+            },
+            raw: true
+        })
+    }
+
+    // Se existirem usuários com o(a) alerta(s) ativado(s)
+    if (users.length === 0) return false
+    let start, end
+
+    start = 'Oi, você tem um novo alerta para *'
+    end = '*\n\n*' + message.sender.pushname + '* mandou a seguinte mensagem no grupo *' + message.chat.name +
+        '*:'
+
+    for (let i = 0; i < users.length; i++) {
+        // Se for o usuário que lançou o alerta, vai para o próximo o usuário
+        if (users[i].id === message.author) continue
+
+        // Se foram vários alertas lançados, busca quais esse usuário ativou
+        if (typeof alertsId === 'object') {
+            let alertId = alertsId.filter((value) => {
+                return (users[i]['a' + value] === 1)
+            })
+
+            // Se o usuário ativou apenas um alerta
+            if (alertId.length === 1) alertsText = ALERTS[alertId[0]]
+            else {
+                alertsText = ''
+                // Forma a string com a lista de alertas
+                for (let i = 0; typeof alertId[i] !== 'undefined'; i++) {
+                    if (i !== 0 && i + 1 === alertId.length) alertsText += '* e *'
+
+                    alertsText += ALERTS[alertId[i]]
+
+                    if (i + 3 <= alertId.length) alertsText += '*, *'
                 }
             }
         }
+
+        // Cria o texto da mensagem
+        let text = start + alertsText + end
+
+        await client.sendText(users[i].id, text)
+        await client.ghostForward(users[i].id, message.id)
     }
 }
 

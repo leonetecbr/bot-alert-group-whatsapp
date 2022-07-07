@@ -2,8 +2,8 @@ const wa = require('@open-wa/wa-automate')
 const findAlert = require('./components/FindAlert')
 const chatBot = require('./components/ChatBot')
 const admin = require('./resources/admin.json')
-const ALERTS = require("./resources/alerts.json");
-const {cli} = require("@open-wa/wa-automate/dist/cli/setup");
+const ALERTS = require('./resources/alerts.json')
+const {cli} = require('@open-wa/wa-automate/dist/cli/setup')
 let client
 
 wa.create({

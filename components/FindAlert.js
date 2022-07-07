@@ -3,20 +3,35 @@ const alertUsers = require('./AlertUsers')
 
 async function FindAlert(message, client) {
     let result = {alerted: false, messageId: message.id}
+    let found = {
+        message: message,
+        alerts: []
+    }
+
     // Enquanto existirem alertas a serem verificados
     for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
         // Se existir o alerta na mensagem
         if (message.text.toLowerCase().search(ALERTS[i]) !== -1) {
-            // Se o alerta for resposta a outra mensagem
-            if (message.text.length === ALERTS[i].length && message.quotedMsgObj !== null && message.quotedMsgObj.text !== ''){
-                // Envia um alerta para a mensagem respondida
-                await alertUsers(message.quotedMsgObj, i, client)
-                result.messageId = message.quotedMsgObj.id
-            } else await alertUsers(message, i, client)
-            // Envia um alerta para a mensagem
-            result.alerted = true
+            // Se for a primeira checagem
+            if (i === 1) {
+                // Se o alerta for resposta a outra mensagem, envia um alerta para a mensagem respondida
+                if (message.text.length === ALERTS[i].length && message.quotedMsgObj !== null) {
+                    found.message = message.quotedMsgObj
+                    result.messageId = message.quotedMsgObj.id
+                }
+            }
+            // Adiciona o alerta a lista de alertas encontrados
+            found.alerts.push(i)
         }
     }
+
+    if (found.alerts.length !== 0) {
+        // Envia uma mensagem para o usuário informando dos alertas encontrados
+        await alertUsers(found, client)
+        // Envia uma resposta para a mensagem alertada
+        result.alerted = true
+    }
+
     return result
 }
 
