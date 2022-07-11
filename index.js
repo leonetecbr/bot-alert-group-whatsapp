@@ -31,7 +31,7 @@ async function processMessage(message){
     // Em grupos
     if (message.chat.isGroup){
         // Busca por alertas
-        let result = await findAlert(message, client)
+        const result = await findAlert(message, client)
         // Se encontrar um alerta em uma mensagem
         if (result.alerted)
             await client.reply(message.chat.id, '*Alerta enviado!*', result.messageId, true)

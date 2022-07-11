@@ -14,11 +14,40 @@ async function FindAlert(message, client) {
         if (message.text.toLowerCase().search(ALERTS[i]) !== -1) {
             // Se ainda não tiver encontrado nenhum alerta
             if (result.messageId === null) {
+                // Define se o alerta deve ser enviado da mensagem que lançou o alerta ou da mensagem respondida
+                let reply = false
+
+                // Se existir uma mensagem respondida
+                if (message.quotedMsgObj !== null) {
+                    // Se o tamanho da mensagem for exatamente o tamanho do alerta lançado, ela é uma resposta
+                    if (message.text.length === ALERTS[i].length) reply = true
+                    else {
+                        // Separa cada palavra da mensagem em um array
+                        const content = message.text.split(' ');
+                        reply = true
+
+                        // Verifica se todas as palavras da mensagem são alertas, se for ela é uma resposta
+                        for (let i = 0; typeof content[i] !== 'undefined'; i++) {
+                            let equal = false
+
+                            for (let a = 1; typeof ALERTS[a] !== 'undefined'; a++) {
+                                if (content[i] === ALERTS[a]) {
+                                    equal = true
+                                    break
+                                }
+                            }
+
+                            if (!equal) {
+                                reply = false
+                                break
+                            }
+                        }
+                    }
+                }
+
                 // Se o alerta for resposta a outra mensagem, envia um alerta para a mensagem respondida
-                if (message.text.length === ALERTS[i].length && message.quotedMsgObj !== null) {
-                    found.message = message.quotedMsgObj
-                    result.messageId = message.quotedMsgObj.id
-                } else result.messageId = message.id
+                if (reply) found.message = message.quotedMsgObj
+                result.messageId = found.message.id
             }
             // Adiciona o alerta a lista de alertas encontrados
             found.alerts.push(i)

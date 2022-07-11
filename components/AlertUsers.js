@@ -6,8 +6,8 @@ const {Op} = require('sequelize')
 async function AlertUsers(found, client) {
     await database.sync()
 
-    let where = {}, users, alertsText = '', attributes = ['id']
-    let message = found.message, alertsId
+    let where = {}, users, alertsText = '', attributes = ['id'], alertsId
+    const message = found.message
 
     if (found.alerts.length === 1) {
         alertsId = found.alerts[0]
@@ -50,7 +50,7 @@ async function AlertUsers(found, client) {
 
         // Se foram vários alertas lançados, busca quais esse usuário ativou
         if (typeof alertsId === 'object') {
-            let alertId = alertsId.filter((value) => {
+            const alertId = alertsId.filter((value) => {
                 return (users[i]['a' + value] === 1)
             })
 

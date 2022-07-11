@@ -13,7 +13,8 @@
     "sqlite3": "latest"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
