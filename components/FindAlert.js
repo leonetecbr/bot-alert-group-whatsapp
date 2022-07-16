@@ -7,11 +7,12 @@ async function FindAlert(message, client) {
         message: message,
         alerts: []
     }
+    message.words = message.text.split(' ')
 
     // Enquanto existirem alertas a serem verificados
     for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
-        // Se existir o alerta na mensagem
-        if (message.text.toLowerCase().search(ALERTS[i]) !== -1) {
+        // Se existir o alerta nas palavras da mensagem
+        if (message.words.includes(ALERTS[i])) {
             // Se ainda não tiver encontrado nenhum alerta
             if (result.messageId === null) {
                 // Define se o alerta deve ser enviado da mensagem que lançou o alerta ou da mensagem respondida
@@ -22,16 +23,14 @@ async function FindAlert(message, client) {
                     // Se o tamanho da mensagem for exatamente o tamanho do alerta lançado, ela é uma resposta
                     if (message.text.length === ALERTS[i].length) reply = true
                     else {
-                        // Separa cada palavra da mensagem em um array
-                        const content = message.text.split(' ');
                         reply = true
 
                         // Verifica se todas as palavras da mensagem são alertas, se for ela é uma resposta
-                        for (let i = 0; typeof content[i] !== 'undefined'; i++) {
+                        for (let i = 0; typeof message.words[i] !== 'undefined'; i++) {
                             let equal = false
 
                             for (let a = 1; typeof ALERTS[a] !== 'undefined'; a++) {
-                                if (content[i] === ALERTS[a]) {
+                                if (message.words[i] === ALERTS[a]) {
                                     equal = true
                                     break
                                 }
