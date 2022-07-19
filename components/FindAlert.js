@@ -7,7 +7,10 @@ async function FindAlert(message, client) {
         message: message,
         alerts: []
     }
-    message.words = message.text.split(' ')
+
+    // Separa cada palavra em um elemento do array
+    if (message.text !== null) message.words = message.text.replace(/\n/g, ' ').split(' ')
+    else message.words = []
 
     // Enquanto existirem alertas a serem verificados
     for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
