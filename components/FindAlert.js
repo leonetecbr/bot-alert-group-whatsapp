@@ -9,7 +9,7 @@ async function FindAlert(message, client) {
     }
 
     // Separa cada palavra em um elemento do array
-    if (message.text !== null) message.words = message.text.replace(/\n/g, ' ').split(' ')
+    if (message.text !== null) message.words = message.text.replace(/\n/g, ' ').toLowerCase().split(' ')
     else message.words = []
 
     // Enquanto existirem alertas a serem verificados
