@@ -8,9 +8,9 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
-    "@open-wa/wa-automate": "latest",
-    "sequelize": "latest",
-    "sqlite3": "latest"
+    "@open-wa/wa-automate": "^4.47.0",
+    "sequelize": "^6.23.2",
+    "sqlite3": "^5.1.1"
   },
   "scripts": {
     "start": "node index.js",
