@@ -1,4 +1,4 @@
-const ALERTS = require('../resources/alerts.json');
+const ALERTS = require('../resources/alerts.json')
 
 // Ações a ser realizadas após o bot ser adicionado em um grupo
 async function processAddGroup(client, chat){

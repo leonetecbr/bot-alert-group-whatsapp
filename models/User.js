@@ -1,10 +1,12 @@
-const Sequelize = require('sequelize')
-const database = require('../databases/db')
+const { DataTypes, Model } = require('sequelize')
+const sequelize = require('../databases/db')
 const ALERTS = require('../resources/alerts.json')
+
+class User extends Model {}
 
 let table = {
     id: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true
     }
@@ -13,12 +15,15 @@ let table = {
 // Cria os campos na tabela conforme a quantidade de alertas definidos
 for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
     table['a'+i] = {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         default: false
     }
 }
 
-// Cria tabela se não existir
-const User = database.define('users', table)
+User.init(table, {
+    sequelize,
+    modelName: 'User',
+    tableName: 'users',
+})
 
 module.exports = User

@@ -1,4 +1,3 @@
-const database = require('../databases/db')
 const ALERTS = require('../resources/alerts.json')
 const Users = require('../models/User')
 
@@ -6,7 +5,7 @@ async function ChatBot(message){
 
     message.text = message.text.toLowerCase()
     if (message.text === 'meus alertas'){
-        await database.sync()
+        await Users.sync()
 
         // Busca pelo usuário no banco de dados
         let user = await Users.findByPk(message.from)
@@ -38,7 +37,7 @@ async function ChatBot(message){
         for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
             // Se existir o alerta na mensagem
             if (message.text.search(ALERTS[i]) !== -1) {
-                await database.sync()
+                await Users.sync()
 
                 // Busca pelo usuário no banco de dados
                 let user = await Users.findByPk(message.from)

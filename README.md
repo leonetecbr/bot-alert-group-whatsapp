@@ -30,9 +30,6 @@ abaixo:
 ]
 ```
 
-**Observação**: Após criação do banco de dados se faz necessário ajustar o banco de dados caso a quantidade de alertas 
-aumente!
-
 ## Usando
 
 ### Adicionando ao(s) seu(s) grupo(s)

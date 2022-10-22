@@ -1,10 +1,9 @@
 const ALERTS = require('../resources/alerts.json')
-const database = require('../databases/db')
 const User = require('../models/User')
 const {Op} = require('sequelize')
 
 async function AlertUsers(found, client) {
-    await database.sync()
+    await User.sync()
 
     let where = {}, users, alertsText = '', attributes = ['id'], alertsId
     const message = found.message
