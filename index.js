@@ -2,11 +2,27 @@ const {create} = require('@open-wa/wa-automate')
 const processMessage = require('./components/ProcessMessage')
 const processAddGroup = require('./components/ProcessAddGroup')
 const sequelize = require('./databases/db')
+const Alert = require('./models/Alert')
+const ALERTS = require('./resources/alerts.json')
 
-create().then(start)
+create({
+    useChrome: true,
+    cacheEnabled: true,
+    disableSpins: true,
+}).then(start)
 
 async function start(client) {
-    await sequelize.sync({alter: true})
+    await sequelize.sync()
+
+    const alerts = await Alert.findAll()
+    if (alerts.length === 0) {
+        ALERTS.map(async alert => {
+            await Alert.create({
+                name: alert
+            })
+        })
+    }
+
     await client.onMessage(message => processMessage(client, message))
     await client.onAddedToGroup(chat => processAddGroup(client, chat))
 

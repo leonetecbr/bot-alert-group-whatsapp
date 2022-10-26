@@ -1,4 +1,4 @@
-const ALERTS = require('../resources/alerts.json')
+const Alert = require('../models/Alert')
 const alertUsers = require('./AlertUsers')
 
 async function FindAlert(message, client) {
@@ -12,28 +12,37 @@ async function FindAlert(message, client) {
     if (message.text !== null) message.words = message.text.replace(/\n/g, ' ').toLowerCase().split(' ')
     else message.words = []
 
-    // Enquanto existirem alertas a serem verificados
-    for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
+    // Verifica se a mensagem tem palavras
+    if (message.words.length === 0) return result
+
+    await Alert.sync()
+    const alerts = await Alert.findAll({raw: true, attributes: ['id', 'name']})
+
+    alerts.map(alert => {
+        const name = '#' + alert.name
+
         // Se existir o alerta nas palavras da mensagem
-        if (message.words.includes(ALERTS[i])) {
+        if (message.words.includes(name)) {
             // Se ainda não tiver encontrado nenhum alerta
             if (result.messageId === null) {
                 // Define se o alerta deve ser enviado da mensagem que lançou o alerta ou da mensagem respondida
                 let reply = false
-
                 // Se existir uma mensagem respondida
                 if (message.quotedMsgObj !== null) {
                     // Se o tamanho da mensagem for exatamente o tamanho do alerta lançado, ela é uma resposta
-                    if (message.text.length === ALERTS[i].length) reply = true
-                    else {
+                    if (message.text.length === name.length) reply = true
+                    else if (message.words.length > 1) {
                         reply = true
 
                         // Verifica se todas as palavras da mensagem são alertas, se for ela é uma resposta
                         for (let i = 0; typeof message.words[i] !== 'undefined'; i++) {
                             let equal = false
 
-                            for (let a = 1; typeof ALERTS[a] !== 'undefined'; a++) {
-                                if (message.words[i] === ALERTS[a]) {
+                            // Verifica se a palavra é um alerta
+                            for (let j = 0; typeof alerts[j] !== 'undefined'; j++) {
+                                const name = '#' + alerts[j].name
+
+                                if (message.words[i] === name) {
                                     equal = true
                                     break
                                 }
@@ -52,9 +61,9 @@ async function FindAlert(message, client) {
                 result.messageId = found.message.id
             }
             // Adiciona o alerta a lista de alertas encontrados
-            found.alerts.push(i)
+            found.alerts.push(alert.id)
         }
-    }
+    })
 
     if (found.alerts.length !== 0) {
         // Envia uma mensagem para o usuário informando dos alertas encontrados

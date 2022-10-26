@@ -1,65 +1,86 @@
-const ALERTS = require('../resources/alerts.json')
 const Users = require('../models/User')
+const Alert = require('../models/Alert')
+const AlertUser = require('../models/AlertUser')
 
-async function ChatBot(message){
+async function ChatBot(message) {
 
     message.text = message.text.toLowerCase()
-    if (message.text === 'meus alertas'){
+    if (message.text === 'meus alertas') {
         await Users.sync()
 
         // Busca pelo usuário no banco de dados
-        let user = await Users.findByPk(message.from)
+        let user = await Users.findByPk(message.from, {
+            include: {
+                model: AlertUser,
+                attributes: ['AlertId'],
+            }
+        })
 
-        // Se o usuário não existir no banco de dados, cria
-        if (user === null){
-            user = await Users.create({
-                id: message.from
-            })
-        }
+        await Alert.sync()
 
         // Lista os alertas disponíveis
         let text = 'Os alertas disponíveis são:\n'
-        for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
-            text += '\n```'+ALERTS[i]+'```: '
-            text += (user['a'+i])?'*Ativado* ✅':'*Desativado* ❌'
-        }
+        const alerts = await Alert.findAll({raw: true, attributes: ['name', 'id']})
+        let activeAlerts = []
+
+        if (user !== null) user.AlertUsers.map(alert => activeAlerts.push(alert.AlertId))
+
+        alerts.map(alert => {
+            const name = '#' + alert.name
+
+            text += '\n```' + name + '```: ' + ((activeAlerts.includes(alert.id)) ? '*Ativado* ✅' : '*Desativado* ❌')
+        })
+
         return text
-    } else if (message.text === 'ajuda'){
+    } else if (message.text === 'ajuda') {
+        await Alert.sync()
+
+        const alerts = await Alert.findAll({raw: true, attributes: ['name'], limit: 1})
+        const name = '#' + alerts[0].name
+
         // Envia texto de ajuda
-        return  'Para ver quais alertas estão ativados ou desativados e para consultar a lista de alertas ' +
+        return 'Para ver quais alertas estão ativados ou desativados e para consultar a lista de alertas ' +
             'disponíveis me mande ```Meus Alertas```, para ativar me mande o nome do alerta, por exemplo,' +
-            ' ```'+ALERTS[1]+'```, para desativar mande o nome do alerta seguido de "off", por exemplo, ' +
-            '```'+ALERTS[1]+' off```'
+            ' ```' + name + '```, para desativar mande o nome do alerta seguido de "off", por exemplo, ' +
+            '```' + name + ' off```'
     }
+    // Se tiver sintaxe de alerta
     else if (message.text.startsWith('#') && message.text.length > 1) {
-        // Se tiver sintaxe de alerta
+        await Alert.sync()
+
         let action = true
-        for (let i = 1; typeof ALERTS[i] !== 'undefined'; i++) {
-            // Se existir o alerta na mensagem
-            if (message.text.search(ALERTS[i]) !== -1) {
+        const alerts = await Alert.findAll({raw: true, attributes: ['name', 'id']})
+
+        for (let i = 0; i < alerts.length; i++) {
+            const name = '#' + alerts[i].name
+
+            if (message.text.startsWith(name)) {
                 await Users.sync()
 
                 // Busca pelo usuário no banco de dados
-                let user = await Users.findByPk(message.from)
-
-                // Se o comando for para desativar o alerta
-                if (message.text.replace(ALERTS[i] + ' ', '').search('off') !== -1) action = false
-                // Se o usuário não existir no banco de dados
-                if (user === null) {
-                    let data = {
-                        id: message.from
+                let user = await Users.findByPk(message.from, {
+                    include: {
+                        model: AlertUser,
+                        attributes: ['AlertId'],
                     }
-                    data['a' + i] = action
-                    // Registra o usuário no banco
-                    user = await Users.create(data)
-                } else {
-                    user['a' + i] = action
-                    // Altera o registro do usuário
-                    await user.save()
+                })
+
+                // Se o usuário não existir, cria
+                if (user === null) {
+                    user = await Users.create({id: message.from})
                 }
 
+                // Se o comando for para desativar o alerta
+                if (message.text.endsWith('off')) action = false
+
+                await AlertUser.sync()
+
+                // Ativa ou desativa o alerta
+                if (action) await AlertUser.create({UserId: message.from, AlertId: alerts[i].id})
+                else await AlertUser.destroy({where: {UserId: message.from, AlertId: alerts[i].id}})
+
                 // Confirma a ativação ou desativação do alerta
-                return (action) ? '*Alerta para ' + ALERTS[i] + ' ativado!* ✅' : '*Alerta para ' + ALERTS[i] + ' desativado!* ❌'
+                return '*Alerta para ' + name + ' ' + ((action) ? 'ativado!* ✅' : 'desativado!* ❌')
             }
         }
     }

@@ -16,7 +16,14 @@ promoção incrível.
 
 ## Instalação
 
-Para utilizá-lo basta clonar esse repositório, rodar o comando ```yarn run start``` ou ```npm run start```, escanear o
+Para utilizá-lo basta clonar esse repositório e instalar o Chrome no seu servidor com os seguintes comandos:
+
+```bash
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install ./google-chrome-stable_current_amd64.deb
+```
+
+Logo após basta rodar o comando ```yarn run start``` ou ```npm run start```, escanear o
 QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e configurar os alertas através
 do privado do bot. Os alertas podem ser alterados no arquivo
 [alerts.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/alerts.json). Para
