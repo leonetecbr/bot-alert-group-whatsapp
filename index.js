@@ -9,6 +9,9 @@ create({
     useChrome: true,
     cacheEnabled: true,
     disableSpins: true,
+    logging: [{
+        type: 'file',
+    }]
 }).then(start)
 
 async function start(client) {

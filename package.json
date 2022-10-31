@@ -8,8 +8,7 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
-    "@open-wa/wa-automate": "^4.47.6",
-    "@wppconnect-team/wppconnect": "^1.18.1",
+    "@open-wa/wa-automate": "^4.48.0",
     "sequelize": "^6.25.3",
     "sqlite3": "^5.1.2"
   },

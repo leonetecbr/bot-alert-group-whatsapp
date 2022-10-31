@@ -1,7 +1,7 @@
 const fs = require('fs')
 const findAlert = require('./FindAlert')
 const chatBot = require('./ChatBot')
-const adminFile = 'resources/admin.json'
+const adminFile = '../resources/admin.json'
 const admin = fs.existsSync(adminFile) ? require(adminFile) : []
 
 // Processa mensagens recebidas em grupos e chats privados
