@@ -54,7 +54,7 @@ async function AlertUsers(found, client) {
         ' seguinte mensagem no grupo *' + message.chat.name + '*:'
 
     activeUsers.map(async id => {
-        //TODO if (id === message.author) return false
+        if (id === message.author) return false
 
         await client.sendText(id, text)
         await client.ghostForward(id, message.id)
