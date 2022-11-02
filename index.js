@@ -25,6 +25,7 @@ async function start(client) {
 
     await client.onMessage(message => processMessage(client, message))
     await client.onAddedToGroup(chat => processAddGroup(client, chat))
+    await client.onMessageDeleted(message => console.log(message))// TODO: Deletar a mensagem que marca os usuários
 
     client.onStateChanged(state => {
         console.log('Mudou de estado:', state)

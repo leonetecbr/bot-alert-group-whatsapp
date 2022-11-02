@@ -2,7 +2,6 @@ const Alert = require('../models/Alert')
 const alertUsers = require('./AlertUsers')
 
 async function FindAlert(message, client) {
-    let result = {alerted: false, messageId: null}
     let found = {
         message: message,
         alerts: []
@@ -13,18 +12,18 @@ async function FindAlert(message, client) {
     else message.words = []
 
     // Verifica se a mensagem tem palavras
-    if (message.words.length === 0) return result
+    if (message.words.length === 0) return false
 
     await Alert.sync()
     const alerts = await Alert.findAll({raw: true, attributes: ['id', 'name']})
 
-    alerts.map(alert => {
+    alerts.map((alert, index) => {
         const name = '#' + alert.name
 
         // Se existir o alerta nas palavras da mensagem
         if (message.words.includes(name)) {
             // Se ainda não tiver encontrado nenhum alerta
-            if (result.messageId === null) {
+            if (index === 0) {
                 // Define se o alerta deve ser enviado da mensagem que lançou o alerta ou da mensagem respondida
                 let reply = false
                 // Se existir uma mensagem respondida
@@ -58,21 +57,16 @@ async function FindAlert(message, client) {
 
                 // Se o alerta for resposta a outra mensagem, envia um alerta para a mensagem respondida
                 if (reply) found.message = message.quotedMsgObj
-                result.messageId = found.message.id
             }
             // Adiciona o alerta a lista de alertas encontrados
             found.alerts.push(alert.id)
         }
     })
 
-    if (found.alerts.length !== 0) {
-        // Envia uma mensagem para o usuário informando dos alertas encontrados
-        await alertUsers(found, client)
-        // Envia uma resposta para a mensagem alertada
-        result.alerted = true
-    }
+    // Envia uma mensagem de resposta marcando os usuários que tem os alertas ativados
+    if (found.alerts.length !== 0) await alertUsers(found, client)
 
-    return result
+    return true
 }
 
 module.exports = FindAlert

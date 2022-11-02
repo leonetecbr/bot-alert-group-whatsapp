@@ -8,7 +8,7 @@ async function processAddGroup(client, chat){
         'desejar ser alertado pode entrar em contato comigo e ativar os alertas que mais te interessa!\n'
     text += '\nOs alertas disponíveis são:\n'
 
-    alerts.map(async alert => text += '\n```#' + alert.name + '```')
+    alerts.map(alert => text += '\n```#' + alert.name + '```')
 
     await client.sendText(chat.id, text)
 }
