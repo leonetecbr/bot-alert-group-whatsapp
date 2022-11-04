@@ -3,15 +3,12 @@ const sequelize = require('../databases/db')
 
 class User extends Model {}
 
-let table = {
+User.init({
     id: {
         type: DataTypes.STRING,
-        allowNull: false,
-        primaryKey: true
-    }
-}
-
-User.init(table, {
+        primaryKey: true,
+    },
+}, {
     sequelize,
     updatedAt: false,
 })

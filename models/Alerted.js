@@ -1,21 +1,20 @@
 const { DataTypes, Model } = require('sequelize')
 const sequelize = require('../databases/db')
 
-class Alert extends Model {}
+class Alerted extends Model {}
 
-Alert.init({
-    id: {
-        type: DataTypes.INTEGER,
+Alerted.init({
+    messageId: {
+        type: DataTypes.STRING,
         primaryKey: true,
-        autoIncrement: true,
     },
-    name: {
+    alertedMessageId: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
+    }
 }, {
     sequelize,
-    createdAt: false,
+    updatedAt: false
 })
 
-module.exports = Alert
+module.exports = Alerted

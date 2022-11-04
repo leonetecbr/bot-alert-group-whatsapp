@@ -10,8 +10,10 @@ async function processMessage(client, message){
     if (message.chat.isGroup) await findAlert(message, client)
     // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
     else if (!message.sender.isEnterprise){
-        // Envia o banco de dados para o administrador
-        if (admin.includes(message.from) && message.text === '/admin') await client.sendFile(message.from, './db.sqlite', 'db.sqlite', 'Banco de dados', message.id)
+        // Interage com o administrador quando ele envia um comando
+        if (admin.includes(message.from) && message.text.startsWith('/')) {
+            // TODO Comandos de administrador
+        }
         // Interage com os usuários comuns
         else await client.reply(message.from, await chatBot(message), message.id, true)
     }

@@ -1,6 +1,7 @@
 const {create} = require('@open-wa/wa-automate')
 const processMessage = require('./components/ProcessMessage')
 const processAddGroup = require('./components/ProcessAddGroup')
+const processDeletion = require('./components/ProcessDeletion')
 const sequelize = require('./databases/db')
 const Alert = require('./models/Alert')
 const ALERTS = require('./resources/alerts.json')
@@ -25,7 +26,7 @@ async function start(client) {
 
     await client.onMessage(message => processMessage(client, message))
     await client.onAddedToGroup(chat => processAddGroup(client, chat))
-    await client.onMessageDeleted(message => console.log(message))// TODO: Deletar a mensagem que marca os usuários
+    await client.onMessageDeleted(message => processDeletion(client, message))
 
     client.onStateChanged(state => {
         console.log('Mudou de estado:', state)
