@@ -57,13 +57,15 @@ async function AlertUsers(found, client) {
     // Envia a resposta para o grupo com as menções
     const messageId = await client.sendReplyWithMentions(message.chatId, text, message.id, false, activeUsers)
 
-    console.log('Chat ID: ', message.chatId)
     console.log('Texto enviado: ', text)
     console.log('Id da mensagem: ', messageId)
     console.log('Id da mensagem respondida: ', message.id)
 
     // Se tiver sido enviada com sucesso
     if (messageId && messageId.startsWith('true_')) {
+        // Envia uma reação para a mensagem original
+        await client.react(message.id, '✅')
+
         // Salva o ‘id’ da mensagem no banco de dados
         await Alerted.create({
             messageId,

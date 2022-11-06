@@ -7,10 +7,6 @@ async function FindAlert(message, client) {
         alerts: []
     }
 
-    // Separa cada palavra em um elemento do array
-    if (message.text !== null) message.words = message.text.replace(/\n/g, ' ').toLowerCase().split(' ')
-    else message.words = []
-
     // Verifica se a mensagem tem palavras
     if (message.words.length === 0) return false
 

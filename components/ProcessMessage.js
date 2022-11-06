@@ -1,18 +1,64 @@
 const fs = require('fs')
 const findAlert = require('./FindAlert')
 const chatBot = require('./ChatBot')
+const User = require('../models/User')
+const Alert = require('../models/Alert')
 const adminFile = 'resources/admin.json'
 const admin = fs.existsSync(adminFile) ? require('../' + adminFile) : []
 
 // Processa mensagens recebidas em grupos e chats privados
-async function processMessage(client, message){
-    // Em grupos, busca por alertas nas mensagens recebidas
+async function processMessage(client, message) {
+    // Separa cada palavra em um elemento do array
+    message.words = (message.text !== null) ? message.text.replace(/\n/g, ' ').toLowerCase().split(' ') : []
+
+    // Em grupos, busca por alertas nas mensagens recebidas,
     if (message.chat.isGroup) await findAlert(message, client)
     // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
-    else if (!message.sender.isEnterprise){
+    else if (!message.sender.isEnterprise) {
         // Interage com o administrador quando ele envia um comando
-        if (admin.includes(message.from) && message.text.startsWith('/')) {
-            // TODO Comandos de administrador
+        if (admin.includes(message.from) && message.text.startsWith('/') && message.words.length === 2) {
+            const param = message.words[1]
+            const command = message.words[0].replace('/', '')
+
+            // Deletar usuário ou alerta
+            if (command === 'del') {
+                // Deletar o usuário
+                if (param.endsWith('@c.us')) {
+                    await User.sync()
+
+                    const user = await User.findByPk(param)
+
+                    if (user) {
+                        await user.destroy()
+                        await client.react(message.id, '✅')
+                    } else await client.react(message.id, '❌')
+                }
+                // Deletar alerta
+                else {
+                    await Alert.sync()
+
+                    const alert = await Alert.findOne({
+                        where: {
+                            name: param
+                        }
+                    })
+
+                    if (alert) {
+                        await alert.destroy()
+                        await client.react(message.id, '✅')
+                    } else await client.react(message.id, '❌')
+                }
+            }
+            // Criar alerta
+            else if (command === 'add') {
+                await Alert.create({
+                    name: param,
+                })
+
+                await client.react(message.id, '✅')
+            }
+            // Comando inválido
+            else await client.sendText(message.from, 'Comando inválido')
         }
         // Interage com os usuários comuns
         else await client.reply(message.from, await chatBot(message), message.id, true)
