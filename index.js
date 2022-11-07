@@ -10,6 +10,11 @@ create({
     useChrome: true,
     cacheEnabled: true,
     disableSpins: true,
+    killProcessOnBrowserClose: true,
+    killClientOnLogout: true,
+    killProcessOnTimeout: true,
+    logConsoleErrors: true,
+    restartOnCrash: start,
 }).then(start)
 
 async function start(client) {
