@@ -15,6 +15,11 @@ create({
     killProcessOnTimeout: true,
     logConsoleErrors: true,
     restartOnCrash: start,
+    logging: [
+        {
+            type: "file"
+        },
+    ],
 }).then(start)
 
 async function start(client) {

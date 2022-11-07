@@ -1,6 +1,6 @@
 {
   "name": "bot-alert-group-whatsapp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "author": {
     "email": "falecom@leone.tec.br",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@open-wa/wa-automate": "^4.49.1",
-    "sequelize": "^6.25.3",
+    "sequelize": "^6.25.4",
     "sqlite3": "^5.1.2"
   },
   "scripts": {
