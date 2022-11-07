@@ -1,7 +1,7 @@
-const { DataTypes, Model } = require('sequelize')
-const sequelize = require('../databases/db')
+import {DataTypes, Model} from 'sequelize'
+import sequelize from '../databases/db.js'
 
-class Alerted extends Model {}
+export class Alerted extends Model {}
 
 Alerted.init({
     messageId: {
@@ -17,4 +17,4 @@ Alerted.init({
     updatedAt: false
 })
 
-module.exports = Alerted
+export default Alerted

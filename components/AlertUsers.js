@@ -1,9 +1,9 @@
-const User = require('../models/User')
-const Alert = require('../models/Alert')
-const AlertUser = require('../models/AlertUser')
-const Alerted = require('../models/Alerted')
+import User from '../models/User.js'
+import Alert from '../models/Alert.js'
+import AlertUser from '../models/AlertUser.js'
+import Alerted from '../models/Alerted.js'
 
-async function AlertUsers(found, client) {
+export async function AlertUsers(found, client) {
     await User.sync()
 
     console.log('_____________________________________________________________________________________________________')
@@ -55,9 +55,13 @@ async function AlertUsers(found, client) {
     activeUsers.map(id => text += '@' + id.split('@')[0] + ' ')
 
     // Envia a resposta para o grupo com as menções
-    const messageId = await client.sendReplyWithMentions(message.chatId, text, message.id, false, activeUsers)
+    let messageId = await client.sendReplyWithMentions(message.chatId, text, message.id, false, activeUsers)
 
     console.log('Texto enviado: ', text)
+
+    // Se não tiver sido enviada com sucesso, tenta enviar novamente
+    if (!messageId || !messageId.startsWith('true_')) messageId = await client.sendTextWithMentions(message.chatId, text, false, activeUsers)
+
     console.log('Id da mensagem: ', messageId)
     console.log('Id da mensagem respondida: ', message.id)
 
@@ -74,4 +78,4 @@ async function AlertUsers(found, client) {
     }
 }
 
-module.exports = AlertUsers
+export default AlertUsers

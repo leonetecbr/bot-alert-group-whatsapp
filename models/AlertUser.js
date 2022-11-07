@@ -1,9 +1,9 @@
-const { DataTypes, Model } = require('sequelize')
-const sequelize = require('../databases/db')
-const User = require('./User')
-const Alert = require('./Alert')
+import {DataTypes, Model} from 'sequelize'
+import sequelize from '../databases/db.js'
+import User from './User.js'
+import Alert from './Alert.js'
 
-class AlertUser extends Model {}
+export class AlertUser extends Model {}
 
 AlertUser.init({
     id: {
@@ -37,4 +37,4 @@ AlertUser.init({
 User.hasMany(AlertUser, {onDelete: 'cascade'})
 Alert.hasMany(AlertUser, {onDelete: 'cascade'})
 
-module.exports = AlertUser
+export default AlertUser

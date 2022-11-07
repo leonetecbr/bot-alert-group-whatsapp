@@ -1,6 +1,6 @@
-const Alerted = require('../models/Alerted')
+import Alerted from '../models/Alerted.js'
 
-async function processDeletion(client, messageDeleted) {
+export async function processDeletion(client, messageDeleted) {
     if (messageDeleted.from === undefined) return false
 
     await Alerted.sync()
@@ -17,4 +17,4 @@ async function processDeletion(client, messageDeleted) {
     })
 }
 
-module.exports = processDeletion
+export default processDeletion

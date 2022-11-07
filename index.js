@@ -1,10 +1,11 @@
-const {create} = require('@open-wa/wa-automate')
-const processMessage = require('./components/ProcessMessage')
-const processAddGroup = require('./components/ProcessAddGroup')
-const processDeletion = require('./components/ProcessDeletion')
-const sequelize = require('./databases/db')
-const Alert = require('./models/Alert')
-const ALERTS = require('./resources/alerts.json')
+import fs from 'fs'
+import {create} from '@open-wa/wa-automate'
+import processMessage from './components/ProcessMessage.js'
+import processAddGroup from './components/ProcessAddGroup.js'
+import processDeletion from './components/ProcessDeletion.js'
+import sequelize from './databases/db.js'
+import Alert from './models/Alert.js'
+const ALERTS = JSON.parse(fs.readFileSync('resources/alerts.json', 'utf8'))
 
 create({
     useChrome: true,
@@ -15,11 +16,6 @@ create({
     killProcessOnTimeout: true,
     logConsoleErrors: true,
     restartOnCrash: start,
-    logging: [
-        {
-            type: "file"
-        },
-    ],
 }).then(start)
 
 async function start(client) {

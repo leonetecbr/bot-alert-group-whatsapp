@@ -1,7 +1,7 @@
-const Alert = require('../models/Alert')
+import Alert from '../models/Alert.js'
 
 // Ações a ser realizadas após o bot ser adicionado em um grupo
-async function processAddGroup(client, chat){
+export async function processAddGroup(client, chat){
     const alerts = await Alert.findAll()
     let text = 'Olá pessoal do grupo *'+chat.name+'*, vou ajudar vocês a avisarem os demais participantes quando algo relevante acontecer, ' +
         'para isso basta enviar um dos alertas abaixo em uma mensagem ou responder uma mensagem com o alerta, quem ' +
@@ -13,4 +13,4 @@ async function processAddGroup(client, chat){
     await client.sendText(chat.id, text)
 }
 
-module.exports = processAddGroup
+export default processAddGroup

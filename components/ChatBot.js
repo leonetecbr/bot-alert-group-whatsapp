@@ -1,15 +1,15 @@
-const Users = require('../models/User')
-const Alert = require('../models/Alert')
-const AlertUser = require('../models/AlertUser')
+import User from '../models/User.js'
+import Alert from '../models/Alert.js'
+import AlertUser from '../models/AlertUser.js'
 
-async function ChatBot(message) {
+export async function ChatBot(message) {
 
     message.text = message.text.toLowerCase()
     if (message.text === 'meus alertas') {
-        await Users.sync()
+        await User.sync()
 
         // Busca pelo usuário no banco de dados
-        let user = await Users.findByPk(message.from, {
+        let user = await User.findByPk(message.from, {
             include: {
                 model: AlertUser,
                 attributes: ['AlertId'],
@@ -55,10 +55,10 @@ async function ChatBot(message) {
             const name = '#' + alerts[i].name
 
             if (message.text.startsWith(name)) {
-                await Users.sync()
+                await User.sync()
 
                 // Busca pelo usuário no banco de dados
-                let user = await Users.findByPk(message.from, {
+                let user = await User.findByPk(message.from, {
                     include: {
                         model: AlertUser,
                         attributes: ['AlertId'],
@@ -67,7 +67,7 @@ async function ChatBot(message) {
 
                 // Se o usuário não existir, cria
                 if (user === null) {
-                    user = await Users.create({id: message.from})
+                    user = await User.create({id: message.from})
                 }
 
                 // Se o comando for para desativar o alerta
@@ -89,4 +89,4 @@ async function ChatBot(message) {
     return 'Oi, aqui você pode gerenciar seus alertas, para saber como me envie ```Ajuda```'
 }
 
-module.exports = ChatBot
+export default ChatBot

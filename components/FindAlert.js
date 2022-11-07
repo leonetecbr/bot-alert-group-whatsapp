@@ -1,7 +1,7 @@
-const Alert = require('../models/Alert')
-const alertUsers = require('./AlertUsers')
+import Alert from '../models/Alert.js'
+import alertUsers from './AlertUsers.js'
 
-async function FindAlert(message, client) {
+export async function FindAlert(message, client) {
     let found = {
         message: message,
         alerts: []
@@ -65,4 +65,4 @@ async function FindAlert(message, client) {
     return true
 }
 
-module.exports = FindAlert
+export default FindAlert

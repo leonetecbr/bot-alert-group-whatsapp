@@ -1,13 +1,13 @@
-const fs = require('fs')
-const findAlert = require('./FindAlert')
-const chatBot = require('./ChatBot')
-const User = require('../models/User')
-const Alert = require('../models/Alert')
+import fs from 'fs'
+import findAlert from './FindAlert.js'
+import chatBot from './ChatBot.js'
+import User from '../models/User.js'
+import Alert from '../models/Alert.js'
 const adminFile = 'resources/admin.json'
-const admin = fs.existsSync(adminFile) ? require('../' + adminFile) : []
+const admin = (fs.existsSync(adminFile)) ? JSON.parse(fs.readFileSync(adminFile, 'utf8')) : []
 
 // Processa mensagens recebidas em grupos e chats privados
-async function processMessage(client, message) {
+export async function processMessage(client, message) {
     // Separa cada palavra em um elemento do array
     message.words = (message.text !== null) ? message.text.replace(/\n/g, ' ').toLowerCase().split(' ') : []
 
@@ -65,4 +65,4 @@ async function processMessage(client, message) {
     }
 }
 
-module.exports = processMessage
+export default processMessage
