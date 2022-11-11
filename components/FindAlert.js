@@ -13,13 +13,13 @@ export async function FindAlert(message, client) {
     await Alert.sync()
     const alerts = await Alert.findAll({raw: true, attributes: ['id', 'name']})
 
-    alerts.map((alert, index) => {
+    alerts.map(alert => {
         const name = '#' + alert.name
 
         // Se existir o alerta nas palavras da mensagem
         if (message.words.includes(name)) {
             // Se ainda não tiver encontrado nenhum alerta
-            if (index === 0) {
+            if (found.alerts.length === 0) {
                 // Define se o alerta deve ser enviado da mensagem que lançou o alerta ou da mensagem respondida
                 let reply = false
                 // Se existir uma mensagem respondida
@@ -61,8 +61,6 @@ export async function FindAlert(message, client) {
 
     // Envia uma mensagem de resposta marcando os usuários que tem os alertas ativados
     if (found.alerts.length !== 0) await alertUsers(found, client)
-
-    return true
 }
 
 export default FindAlert
