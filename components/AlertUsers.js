@@ -14,6 +14,7 @@ export async function AlertUsers(found, client) {
     const message = found.message
     const members = await client.getGroupMembersId(message.chatId)
 
+    // Se tiver encontrado apenas um alerta
     if (found.alerts.length === 1) {
         alertsId = found.alerts[0]
         alerts = await Alert.findByPk(alertsId, {
@@ -24,7 +25,9 @@ export async function AlertUsers(found, client) {
         })
 
         alerts.AlertUsers.map(alert => activeUsers.push(alert.UserId))
-    } else {
+    }
+    // Se tiver encontrado mais de um alerta
+    else {
         alertsId = found.alerts
 
         alerts = await Alert.findAll({
@@ -43,8 +46,8 @@ export async function AlertUsers(found, client) {
     // Exclui os usuários repetidos
     activeUsers = [...new Set(activeUsers)]
 
-    // Exclui usuários que não estão no grupo
-    activeUsers = activeUsers.filter(user => members.includes(user))
+    // Exclui usuários que não estão no grupo e o autor da mensagem
+    activeUsers = activeUsers.filter(user => (members.includes(user) && user !== message.author))
 
     // Se não existirem usuários com o(s) alerta(s) ativado(s) interrompe a função
     if (activeUsers.length === 0) return false

@@ -9,8 +9,8 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
-    "@open-wa/wa-automate": "^4.49.1",
-    "sequelize": "^6.25.4",
+    "@open-wa/wa-automate": "^4.51.1",
+    "sequelize": "^6.25.8",
     "sqlite3": "^5.1.2"
   },
   "scripts": {
