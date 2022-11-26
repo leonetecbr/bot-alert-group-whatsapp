@@ -45,8 +45,6 @@ export async function FindAlert(message, client, alerts) {
                             }
                         }
                     }
-                } else{
-                    console.log(message)
                 }
 
                 // Se o alerta for resposta a outra mensagem, envia um alerta para a mensagem respondida

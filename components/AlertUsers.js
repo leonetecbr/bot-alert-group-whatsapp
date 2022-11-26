@@ -4,6 +4,8 @@ import AlertUser from '../models/AlertUser.js'
 import Alerted from '../models/Alerted.js'
 
 export async function AlertUsers(found, client) {
+    // Inicia o "digitando ..."
+    await client.simulateTyping(found.message.chatId, true)
     await User.sync()
 
     console.log('_____________________________________________________________________________________________________')
@@ -50,7 +52,11 @@ export async function AlertUsers(found, client) {
     activeUsers = activeUsers.filter(user => (members.includes(user) && user !== message.author))
 
     // Se não existirem usuários com o(s) alerta(s) ativado(s) interrompe a função
-    if (activeUsers.length === 0) return false
+    if (activeUsers.length === 0) {
+        // Para o "digitando ..."
+        await client.simulateTyping(found.message.chatId, false)
+        return false
+    }
 
     console.log('Membros com o(s) alerta(s) ativo(s): ', activeUsers)
 
@@ -67,6 +73,9 @@ export async function AlertUsers(found, client) {
 
     console.log('Id da mensagem: ', messageId)
     console.log('Id da mensagem respondida: ', message.id)
+
+    // Para o "digitando ..."
+    await client.simulateTyping(found.message.chatId, false)
 
     // Se tiver sido enviada com sucesso
     if (messageId && messageId.startsWith('true_')) {

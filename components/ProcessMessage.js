@@ -15,6 +15,8 @@ export async function processMessage(client, message, alerts) {
     if (message.chat.isGroup) await findAlert(message, client, alerts)
     // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
     else if (!message.sender.isEnterprise) {
+        // Inicia o "digitando ..."
+        await client.simulateTyping(message.chatId, true)
         // Interage com o administrador quando ele envia um comando
         if (admin.includes(message.from) && message.text.startsWith('/') && message.words.length === 2) {
             const param = message.words[1]
@@ -62,6 +64,8 @@ export async function processMessage(client, message, alerts) {
         }
         // Interage com os usuários comuns
         else await client.reply(message.from, await chatBot(message), message.id, true)
+        // Para o "digitando ..."
+        await client.simulateTyping(message.chatId, false)
     }
 }
 
