@@ -7,12 +7,12 @@ const adminFile = 'resources/admin.json'
 const admin = (fs.existsSync(adminFile)) ? JSON.parse(fs.readFileSync(adminFile, 'utf8')) : []
 
 // Processa mensagens recebidas em grupos e chats privados
-export async function processMessage(client, message) {
+export async function processMessage(client, message, alerts) {
     // Separa cada palavra em um elemento do array
     message.words = (message.text !== null) ? message.text.replace(/\n/g, ' ').toLowerCase().split(' ') : []
 
     // Em grupos, busca por alertas nas mensagens recebidas,
-    if (message.chat.isGroup) await findAlert(message, client)
+    if (message.chat.isGroup) await findAlert(message, client, alerts)
     // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
     else if (!message.sender.isEnterprise) {
         // Interage com o administrador quando ele envia um comando

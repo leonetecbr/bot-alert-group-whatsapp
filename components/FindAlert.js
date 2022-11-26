@@ -1,7 +1,6 @@
-import Alert from '../models/Alert.js'
 import alertUsers from './AlertUsers.js'
 
-export async function FindAlert(message, client) {
+export async function FindAlert(message, client, alerts) {
     let found = {
         message: message,
         alerts: []
@@ -9,9 +8,6 @@ export async function FindAlert(message, client) {
 
     // Verifica se a mensagem tem palavras
     if (message.words.length === 0) return false
-
-    await Alert.sync()
-    const alerts = await Alert.findAll({raw: true, attributes: ['id', 'name']})
 
     alerts.map(alert => {
         const name = '#' + alert.name
@@ -49,6 +45,8 @@ export async function FindAlert(message, client) {
                             }
                         }
                     }
+                } else{
+                    console.log(message)
                 }
 
                 // Se o alerta for resposta a outra mensagem, envia um alerta para a mensagem respondida

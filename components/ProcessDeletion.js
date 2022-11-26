@@ -13,6 +13,7 @@ export async function processDeletion(client, messageDeleted) {
 
     messages.map(async message => {
         await client.deleteMessage(messageDeleted.from, message.messageId)
+        console.log('|***** Mensagem deletada:  ', message.messageId, '*****|')
         await message.destroy()
     })
 }
