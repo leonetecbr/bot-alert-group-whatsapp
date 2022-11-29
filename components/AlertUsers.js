@@ -48,8 +48,8 @@ export async function AlertUsers(found, client) {
     // Exclui os usuários repetidos
     activeUsers = [...new Set(activeUsers)]
 
-    // Exclui usuários que não estão no grupo e o autor da mensagem
-    activeUsers = activeUsers.filter(user => (members.includes(user) && user !== message.author))
+    // Exclui usuários que não estão no grupo e o autor da(s) mensagem(ns)
+    activeUsers = activeUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
 
     // Se não existirem usuários com o(s) alerta(s) ativado(s) interrompe a função
     if (activeUsers.length === 0) {

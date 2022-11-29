@@ -3,7 +3,8 @@ import alertUsers from './AlertUsers.js'
 export async function FindAlert(message, client, alerts) {
     let found = {
         message: message,
-        alerts: []
+        alerts: [],
+        ignore: [message.author,],
     }
 
     // Verifica se a mensagem tem palavras
@@ -48,7 +49,10 @@ export async function FindAlert(message, client, alerts) {
                 }
 
                 // Se o alerta for resposta a outra mensagem, envia um alerta para a mensagem respondida
-                if (reply) found.message = message.quotedMsgObj
+                if (reply) {
+                    found.message = message.quotedMsgObj
+                    found.ignore.push(message.quotedMsgObj.author)
+                }
             }
             // Adiciona o alerta a lista de alertas encontrados
             found.alerts.push(alert.id)
