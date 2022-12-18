@@ -1,8 +1,8 @@
 import fs from 'fs'
 import findAlert from './FindAlert.js'
 import chatBot from './ChatBot.js'
-import User from '../models/User.js'
-import Alert from '../models/Alert.js'
+import commandsAdmin from './CommandsAdmin.js'
+
 const adminFile = 'resources/admin.json'
 const admin = (fs.existsSync(adminFile)) ? JSON.parse(fs.readFileSync(adminFile, 'utf8')) : []
 
@@ -18,52 +18,10 @@ export async function processMessage(client, message, alerts) {
         // Inicia o "digitando ..."
         await client.simulateTyping(message.chatId, true)
         // Interage com o administrador quando ele envia um comando
-        if (admin.includes(message.from) && message.text.startsWith('/') && message.words.length === 2) {
-            const param = message.words[1]
-            const command = message.words[0].replace('/', '')
-
-            // Deletar usuário ou alerta
-            if (command === 'del') {
-                // Deletar o usuário
-                if (param.endsWith('@c.us')) {
-                    await User.sync()
-
-                    const user = await User.findByPk(param)
-
-                    if (user) {
-                        await user.destroy()
-                        await client.react(message.id, '✅')
-                    } else await client.react(message.id, '❌')
-                }
-                // Deletar alerta
-                else {
-                    await Alert.sync()
-
-                    const alert = await Alert.findOne({
-                        where: {
-                            name: param
-                        }
-                    })
-
-                    if (alert) {
-                        await alert.destroy()
-                        await client.react(message.id, '✅')
-                    } else await client.react(message.id, '❌')
-                }
-            }
-            // Criar alerta
-            else if (command === 'add') {
-                await Alert.create({
-                    name: param,
-                })
-
-                await client.react(message.id, '✅')
-            }
-            // Comando inválido
-            else await client.sendText(message.from, 'Comando inválido')
-        }
-        // Interage com os usuários comuns
+        if (admin.includes(message.from) && message.text.startsWith('/') && message.words.length === 2) await commandsAdmin()        // Interage com os usuários comuns
         else await client.reply(message.from, await chatBot(message), message.id, true)
+        // Marca a mensagem como lida (reply não está funcionando)
+        await client.sendSeen(message.chatId)
         // Para o "digitando ..."
         await client.simulateTyping(message.chatId, false)
     }

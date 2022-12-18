@@ -23,7 +23,8 @@ export async function AlertUsers(found, client) {
             include: {
                 model: AlertUser,
                 attributes: ['UserId']
-            }
+            },
+            attributes: [],
         })
 
         alerts.AlertUsers.map(alert => activeUsers.push(alert.UserId))
@@ -39,14 +40,15 @@ export async function AlertUsers(found, client) {
             include: {
                 model: AlertUser,
                 attributes: ['UserId']
-            }
+            },
+            attributes: [],
         })
 
-        alerts.map(alert => alert.AlertUsers.map(alert => activeUsers.push(alert.UserId)))
+        alerts.map(alert => alert.AlertUsers.map(alert => {
+            // Evita que usuários sejam inseridos no array mais de uma vez
+            if (!activeUsers.includes(alert.UserId)) activeUsers.push(alert.UserId)
+        }))
     }
-
-    // Exclui os usuários repetidos
-    activeUsers = [...new Set(activeUsers)]
 
     // Exclui usuários que não estão no grupo e o autor da(s) mensagem(ns)
     activeUsers = activeUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
@@ -55,6 +57,8 @@ export async function AlertUsers(found, client) {
     if (activeUsers.length === 0) {
         // Para o "digitando ..."
         await client.simulateTyping(found.message.chatId, false)
+        // Marca a mensagem como lida
+        await client.sendSeen(found.message.chatId)
         return false
     }
 

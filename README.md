@@ -8,7 +8,7 @@
 
 ## Introdução
 
-Esse bot surgiu da necessidade de avisar vários membros de um grande de grupo de WhatsApp sempre que era encontrada uma 
+Esse bot surgiu da necessidade de avisar vários membros de um grande de grupo de WhatsApp sempre que era encontrada uma
 promoção incrível.
 
 **Testado e aprovado em um grupo de compradores compulsivos. ✅**
@@ -23,21 +23,21 @@ sudo apt install ./google-chrome-stable_current_amd64.deb
 ```
 
 Logo após basta rodar o comando ```yarn start``` ou ```npm start```, escanear o QR Code para fazer login com o WhatsApp.
-Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas através do privado do bot. Os alertas devem ser 
-definidos no arquivo 
-[alerts.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/alerts.json), eles serão 
-inseridos no banco de dados na primeira ativação do bot. Para definir o(s) número(s) do(s) administrador(es) do bot use 
-o arquivo [admin.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/resources/admin.json), faça como no 
+Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas através do privado do bot. Os alertas devem ser
+definidos no arquivo
+[alerts.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/alerts.json), eles serão
+inseridos no banco de dados na primeira ativação do bot. Para definir o(s) número(s) do(s) administrador(es) do bot use
+o arquivo [admin.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/resources/admin.json), faça como no
 exemplo arquivo de exemplo
-[admin.json.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/admin.json.example), 
+[admin.json.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/admin.json.example),
 administradores podem acessar o banco de dados com os números e alertas de cada usuário através do comando `/admin`.
 
 ## Usando
 
 ### Adicionando ao(s) seu(s) grupo(s)
 
-Primeiramente o bot deve ser adicionado em pelo menos um grupo, defina todos os alertas corretamente, porque eles 
-estarão na mensagem de boas-vindas que o bot enviará após ser adicionado no grupo. Exemplo da mensagem de boas-vindas: 
+Primeiramente o bot deve ser adicionado em pelo menos um grupo, defina todos os alertas corretamente, porque eles
+estarão na mensagem de boas-vindas que o bot enviará após ser adicionado no grupo. Exemplo da mensagem de boas-vindas:
 
 <p align="center">
    <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Adicionando%20ao%20grupo.jpg" alt="Adicionando o bot ao grupo"/>
@@ -54,7 +54,7 @@ ativar e desativar os alertas que desejam. Exemplo:
 
 ### Ativando e desativando alertas
 
-Para ativar um alerta basta mandá-lo para o bot no privado, para desativar é só mandá-lo seguido de `off`, caso deseje 
+Para ativar um alerta basta mandá-lo para o bot no privado, para desativar é só mandá-lo seguido de `off`, caso deseje
 consultar a lista de alertas disponíveis pode se usar o comando `Meus Alertas`. Exemplo:
 
 <p align="center">
@@ -64,7 +64,7 @@ consultar a lista de alertas disponíveis pode se usar o comando `Meus Alertas`.
 ### Disparando alertas
 
 Para disparar o alerta é bem simples, basta usar o alerta em uma mensagem no grupo, recomendamos que o alerta inicie com
- uma hash (#), para evitar o disparo acidental, (pode se incluir vários alertas em uma mesma mensagem). Exemplo:
+uma hash (#), para evitar o disparo acidental, (pode se incluir vários alertas em uma mesma mensagem). Exemplo:
 
 <p align="center">
    <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Lan%C3%A7ando%20alerta%20no%20grupo.jpg" alt="Disparando os alertas"/>

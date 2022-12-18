@@ -3,7 +3,8 @@ import sequelize from '../databases/db.js'
 import User from './User.js'
 import Alert from './Alert.js'
 
-export class AlertUser extends Model {}
+export class AlertUser extends Model {
+}
 
 AlertUser.init({
     id: {
@@ -11,7 +12,7 @@ AlertUser.init({
         primaryKey: true,
         autoIncrement: true,
     },
-    UserId:{
+    UserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -20,7 +21,7 @@ AlertUser.init({
             onDelete: 'CASCADE',
         },
     },
-    AlertId:{
+    AlertId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

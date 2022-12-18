@@ -1,7 +1,8 @@
 import {DataTypes, Model} from 'sequelize'
 import sequelize from '../databases/db.js'
 
-export class Alerted extends Model {}
+export class Alerted extends Model {
+}
 
 Alerted.init({
     messageId: {
