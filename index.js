@@ -32,8 +32,8 @@ async function start(client) {
         attributes: ['id', 'name'],
         raw: true,
     })
-    const unreadMessages = await client.getAllUnreadMessages()
 
+    // Verifica se os alertas estão no banco de dados
     if (alerts.length === 0) {
         ALERTS.map(async alert => {
             await Alert.create({
@@ -42,12 +42,18 @@ async function start(client) {
         })
     }
 
-    unreadMessages.forEach(message => queue.add(() => processMessage(client, message, alerts)))
+    // Mensagem recebida
     await client.onMessage(message => queue.add(() => processMessage(client, message, alerts)))
+    // Foi adicionado em um grupo
     await client.onAddedToGroup(chat => processAddGroup(client, chat))
+    // Mensagem deletada
     await client.onMessageDeleted(message => queue.add(() => processDeletion(client, message)))
+    // Chamada recebida
     await client.onIncomingCall(call => processCall(client, call))
+    // Processa as mensagens não lidas
+    await client.emitUnreadMessages()
 
+    // Estado mudou, tenta reconectar
     client.onStateChanged(state => {
         console.log('Mudou de estado:', state)
 
@@ -55,5 +61,9 @@ async function start(client) {
         if (state === 'UNPAIRED') console.log('Desconectado do Whatsapp!!!')
     })
 
+    // Inicia o fila de execução
     queue.start()
+
+    // Atualiza a página para evitar que o navegador fique travado
+    setInterval(() => client.refresh(), 1000 * 60 * 60 * 3)
 }
