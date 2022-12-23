@@ -2,6 +2,10 @@ import User from '../models/User.js'
 import Alert from '../models/Alert.js'
 import AlertUser from '../models/AlertUser.js'
 
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 export async function ChatBot(message) {
 
     message.text = message.text.toLowerCase()
@@ -13,14 +17,18 @@ export async function ChatBot(message) {
             include: {
                 model: AlertUser,
                 attributes: ['AlertId'],
-            }
+            },
+            attributes: [],
         })
 
         await Alert.sync()
 
         // Lista os alertas disponíveis
         let text = 'Os alertas disponíveis são:\n'
-        const alerts = await Alert.findAll({raw: true, attributes: ['name', 'id']})
+        const alerts = await Alert.findAll({
+            raw: true,
+            attributes: ['name', 'id'],
+        })
         let activeAlerts = []
 
         if (user !== null) user.AlertUsers.map(alert => activeAlerts.push(alert.AlertId))
@@ -35,7 +43,11 @@ export async function ChatBot(message) {
     } else if (message.text === 'ajuda') {
         await Alert.sync()
 
-        const alerts = await Alert.findAll({raw: true, attributes: ['name'], limit: 1})
+        const alerts = await Alert.findAll({
+            raw: true,
+            attributes: ['name'],
+            limit: 1,
+        })
         const name = '#' + alerts[0].name
 
         // Envia texto de ajuda
@@ -62,13 +74,12 @@ export async function ChatBot(message) {
                     include: {
                         model: AlertUser,
                         attributes: ['AlertId'],
-                    }
+                    },
+                    attributes: [],
                 })
 
                 // Se o usuário não existir, cria
-                if (user === null) {
-                    user = await User.create({id: message.from})
-                }
+                if (user === null) user = await User.create({id: message.from})
 
                 // Se o comando for para desativar o alerta
                 if (message.text.endsWith('off')) action = false
@@ -85,8 +96,14 @@ export async function ChatBot(message) {
         }
     }
 
+    const greetings = ['olá', 'oii', 'oe', 'oie', 'bom dia', 'boa tarde', 'boa noite', 'eai', 'eae']
+    let start = 'Oi' + ' ' + message.sender.pushname
+
+    // Personaliza a saudação
+    if (greetings.includes(message.text)) start = capitalize(message.text) + ' ' + message.sender.pushname
+
     // Se não for nenhum alerta ou algum comando
-    return 'Oi, aqui você pode gerenciar seus alertas, para saber como me envie ```Ajuda```'
+    return start + ', aqui você pode gerenciar seus alertas, para saber como me envie ```Ajuda```'
 }
 
 export default ChatBot

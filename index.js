@@ -64,6 +64,6 @@ async function start(client) {
     // Inicia o fila de execução
     queue.start()
 
-    // Atualiza a página para evitar que o navegador fique travado
-    setInterval(() => client.refresh(), 1000 * 60 * 60 * 3)
+    // Atualiza a página para evitar que o navegador não fique travado
+    setInterval(() => client.refresh(), 24 * 60 * 60 * 1000)
 }

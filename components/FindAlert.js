@@ -59,10 +59,14 @@ export async function FindAlert(message, client, alerts) {
         }
     })
 
-    // Envia uma mensagem de resposta marcando os usuários que tem os alertas ativados
-    if (found.alerts.length !== 0) await alertUsers(found, client)
+    // Envia uma mensagem de resposta marcando os usuários com os alertas ativados
+    if (found.alerts.length !== 0) {
+        await alertUsers(found, client)
+        return true
+    }
     // Marca a mensagem como lida
     else await client.sendSeen(message.from)
+    return false
 }
 
 export default FindAlert

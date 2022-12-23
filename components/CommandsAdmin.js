@@ -1,5 +1,6 @@
 import User from '../models/User.js'
 import Alert from '../models/Alert.js'
+
 export async function commandsAdmin(client, message) {
     const param = message.words[1]
     const command = message.words[0].replace('/', '')

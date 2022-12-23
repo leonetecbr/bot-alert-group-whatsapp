@@ -8,7 +8,9 @@ export async function processDeletion(client, messageDeleted) {
     const messages = await Alerted.findAll({
         where: {
             alertedMessageId: messageDeleted.id
-        }
+        },
+        attributes: ['messageId'],
+        raw: true,
     })
 
     messages.map(async message => {

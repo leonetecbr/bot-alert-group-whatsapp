@@ -2,6 +2,7 @@ import fs from 'fs'
 import findAlert from './FindAlert.js'
 import chatBot from './ChatBot.js'
 import commandsAdmin from './CommandsAdmin.js'
+import {cli} from "@open-wa/wa-automate/dist/cli/setup.js";
 
 const adminFile = 'resources/admin.json'
 const admin = (fs.existsSync(adminFile)) ? JSON.parse(fs.readFileSync(adminFile, 'utf8')) : []
@@ -12,7 +13,14 @@ export async function processMessage(client, message, alerts) {
     message.words = (message.text !== null) ? message.text.replace(/\n/g, ' ').toLowerCase().split(' ') : []
 
     // Em grupos, busca por alertas nas mensagens recebidas,
-    if (message.chat.isGroup) await findAlert(message, client, alerts)
+    if (message.chat.isGroup) {
+        // Se não encontrar alerta, procura por easter eggs
+        if (!await findAlert(message, client, alerts)){
+            const me = (await client.getMe())['status']
+            // Reage a mensagens que o mencionam
+            if (message.mentionedJidList.includes(me)) await client.react(message.id, '👀')
+        }
+    }
     // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
     else if (!message.sender.isEnterprise) {
         // Inicia o "digitando ..."
