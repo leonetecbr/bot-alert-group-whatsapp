@@ -13,17 +13,20 @@ const queue = new PQueue({
     autoStart: false,
 })
 const ALERTS = JSON.parse(fs.readFileSync('resources/alerts.json', 'utf8'))
+let interval = null
 
-create({
-    useChrome: true,
-    cacheEnabled: true,
-    cachedPatch: true,
-    disableSpins: true,
-    killClientOnLogout: true,
-    killProcessOnTimeout: true,
-    logConsoleErrors: true,
-    restartOnCrash: start,
-}).then(start)
+function inicialize(){
+    create({
+        useChrome: true,
+        cacheEnabled: true,
+        cachedPatch: true,
+        disableSpins: true,
+        killClientOnLogout: true,
+        killProcessOnTimeout: true,
+        logConsoleErrors: true,
+        restartOnCrash: start,
+    }).then(start)
+}
 
 async function start(client) {
     await sequelize.sync()
@@ -65,5 +68,12 @@ async function start(client) {
     queue.start()
 
     // Atualiza a página para evitar que o navegador não fique travado
-    setInterval(() => client.refresh(), 24 * 60 * 60 * 1000)
+    if (interval === null) {
+        interval = setInterval(() => {
+            client.kill()
+            inicialize()
+        }, 24 * 60 * 60 * 1000)
+    }
 }
+
+inicialize()
