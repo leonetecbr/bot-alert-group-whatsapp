@@ -1,14 +1,11 @@
-import fs from 'fs'
 import findAlert from './FindAlert.js'
 import chatBot from './ChatBot.js'
 import commandsAdmin from './CommandsAdmin.js'
-import {cli} from "@open-wa/wa-automate/dist/cli/setup.js";
-
-const adminFile = 'resources/admin.json'
-const admin = (fs.existsSync(adminFile)) ? JSON.parse(fs.readFileSync(adminFile, 'utf8')) : []
 
 // Processa mensagens recebidas em grupos e chats privados
 export async function processMessage(client, message, alerts) {
+    const admin = process.env.ADMINS.split(',')
+
     // Separa cada palavra em um elemento do array
     message.words = (message.text !== null) ? message.text.replace(/\n/g, ' ').toLowerCase().split(' ') : []
 

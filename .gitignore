@@ -1,4 +1,5 @@
 *.sqlite
+.env
 node_modules
 *.data.json
 *.node-persist

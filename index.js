@@ -1,6 +1,6 @@
-import fs from 'fs'
-import {create} from '@open-wa/wa-automate'
+import dotenv from 'dotenv'
 import PQueue from 'p-queue'
+import {create} from '@open-wa/wa-automate'
 import processMessage from './components/ProcessMessage.js'
 import processAddGroup from './components/ProcessAddGroup.js'
 import processDeletion from './components/ProcessDeletion.js'
@@ -8,11 +8,13 @@ import processCall from './components/ProcessCall.js'
 import sequelize from './databases/db.js'
 import Alert from './models/Alert.js'
 
+dotenv.config()
+
 const queue = new PQueue({
     concurrency: 4,
     autoStart: false,
 })
-const ALERTS = JSON.parse(fs.readFileSync('resources/alerts.json', 'utf8'))
+const ALERTS = process.env.ALERTS.split(',')
 let interval = null
 
 function inicialize(){
@@ -72,7 +74,7 @@ async function start(client) {
         interval = setInterval(() => {
             client.kill()
             inicialize()
-        }, 24 * 60 * 60 * 1000)
+        }, 4 * 60 * 60 * 1000)
     }
 }
 

@@ -15,22 +15,17 @@ promoção incrível.
 
 ## Instalação
 
-Para utilizá-lo basta clonar esse repositório e instalar o Chrome no seu servidor com os seguintes comandos:
+Para utilizá-lo clone esse repositório e instalar o Chrome no seu servidor com os seguintes comandos:
 
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt install ./google-chrome-stable_current_amd64.deb
 ```
 
-Logo após basta rodar o comando ```yarn start``` ou ```npm start```, escanear o QR Code para fazer login com o WhatsApp.
-Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas através do privado do bot. Os alertas devem ser
-definidos no arquivo
-[alerts.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/alerts.json), eles serão
-inseridos no banco de dados na primeira ativação do bot. Para definir o(s) número(s) do(s) administrador(es) do bot use
-o arquivo [admin.json](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/resources/admin.json), faça como no
-exemplo arquivo de exemplo
-[admin.json.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/resources/admin.json.example),
-administradores podem acessar o banco de dados com os números e alertas de cada usuário através do comando `/admin`.
+Logo após copie o aquivo [.env.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/.env.example), 
+renomei-o para ```.env``` e prencha conforme seu ambiente, rode o comando ```npm install ; npm start``` e por fim 
+escanei o QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas 
+através do privado do bot.
 
 ## Usando
 
