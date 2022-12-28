@@ -12,7 +12,7 @@ export async function processMessage(client, message, alerts) {
     // Em grupos, busca por alertas nas mensagens recebidas,
     if (message.chat.isGroup) {
         // Se não encontrar alerta, procura por easter eggs
-        if (!await findAlert(message, client, alerts)){
+        if (!await findAlert(message, client, alerts) && message.mentionedJidList) {
             const me = (await client.getMe())['status']
             // Reage a mensagens que o mencionam
             if (message.mentionedJidList.includes(me)) await client.react(message.id, '👀')

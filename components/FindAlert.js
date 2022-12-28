@@ -7,55 +7,30 @@ export async function FindAlert(message, client, alerts) {
         ignore: [message.author,],
     }
 
-    // Verifica se a mensagem tem palavras
-    if (message.words.length === 0) return false
+    const matches = message.text.match(/#\w+/g)
 
-    alerts.map(alert => {
-        const name = '#' + alert.name
+    // Verifica se tem possíveis alertas na mensagem
+    if (matches === null) {
+        await client.sendSeen(message.from)
+        return false
+    }
 
-        // Se existir o alerta nas palavras da mensagem
-        if (message.words.includes(name)) {
-            // Se ainda não tiver encontrado nenhum alerta
-            if (found.alerts.length === 0) {
-                // Define se o alerta deve ser enviado da mensagem que lançou o alerta ou da mensagem respondida
-                let reply = false
-                // Se existir uma mensagem respondida
-                if (message.quotedMsgObj !== null) {
-                    // Se o tamanho da mensagem for exatamente o tamanho do alerta lançado, ela é uma resposta
-                    if (message.text.length === name.length) reply = true
-                    else if (message.words.length > 1) {
-                        reply = true
+    matches.map((match, i, macthes) => {
+        // Retira a # do inicio do alerta
+        match = match.substring(1)
 
-                        // Verifica se todas as palavras da mensagem são alertas, se for ela é uma resposta
-                        for (let i = 0; typeof message.words[i] !== 'undefined'; i++) {
-                            let equal = false
+        // Verifica se o alerta existe
+        const alert = alerts.filter(alert => alert.name === match)
 
-                            // Verifica se a palavra é um alerta
-                            for (let j = 0; typeof alerts[j] !== 'undefined'; j++) {
-                                const name = '#' + alerts[j].name
-
-                                if (message.words[i] === name) {
-                                    equal = true
-                                    break
-                                }
-                            }
-
-                            if (!equal) {
-                                reply = false
-                                break
-                            }
-                        }
-                    }
-                }
-
-                // Se o alerta for resposta a outra mensagem, envia um alerta para a mensagem respondida
-                if (reply) {
-                    found.message = message.quotedMsgObj
-                    found.ignore.push(message.quotedMsgObj.author)
-                }
-            }
+        if (alert.length > 0) {
             // Adiciona o alerta a lista de alertas encontrados
-            found.alerts.push(alert.id)
+            found.alerts.push(alert[0].id)
+            // Se for o último item, existir uma mensagem respondida e a quantidade palavras e alertas forem iguais, ela é uma resposta
+            if (i + 1 === macthes.length && message.quotedMsgObj !== null && message.words.length === found.alerts.length) {
+                // O alerta é uma resposta a outra mensagem, sendo assim envia um alerta para a mensagem respondida
+                found.message = message.quotedMsgObj
+                found.ignore.push(message.quotedMsgObj.author)
+            }
         }
     })
 
@@ -65,7 +40,7 @@ export async function FindAlert(message, client, alerts) {
         return true
     }
     // Marca a mensagem como lida
-    else await client.sendSeen(message.from)
+    await client.sendSeen(message.from)
     return false
 }
 

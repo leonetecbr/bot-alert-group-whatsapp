@@ -15,20 +15,20 @@ const queue = new PQueue({
     autoStart: false,
 })
 const ALERTS = process.env.ALERTS.split(',')
-let interval = null
 
-function inicialize(){
-    create({
-        useChrome: true,
-        cacheEnabled: true,
-        cachedPatch: true,
-        disableSpins: true,
-        killClientOnLogout: true,
-        killProcessOnTimeout: true,
-        logConsoleErrors: true,
-        restartOnCrash: start,
-    }).then(start)
-}
+create({
+    useChrome: true,
+    cacheEnabled: true,
+    cachedPatch: true,
+    disableSpins: true,
+    killClientOnLogout: true,
+    killProcessOnTimeout: true,
+    logConsoleErrors: true,
+    hostNotificationLang: 'pt-br',
+    aggressiveGarbageCollection: true,
+    ensureHeadfulIntegrity: true,
+    restartOnCrash: start,
+}).then(start)
 
 async function start(client) {
     await sequelize.sync()
@@ -68,14 +68,4 @@ async function start(client) {
 
     // Inicia o fila de execução
     queue.start()
-
-    // Atualiza a página para evitar que o navegador não fique travado
-    if (interval === null) {
-        interval = setInterval(() => {
-            client.kill()
-            inicialize()
-        }, 4 * 60 * 60 * 1000)
-    }
 }
-
-inicialize()

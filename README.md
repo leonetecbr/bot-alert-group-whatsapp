@@ -22,9 +22,9 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt install ./google-chrome-stable_current_amd64.deb
 ```
 
-Logo após copie o aquivo [.env.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/.env.example), 
-renomei-o para ```.env``` e prencha conforme seu ambiente, rode o comando ```npm install ; npm start``` e por fim 
-escanei o QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas 
+Logo após copie o aquivo [.env.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/.env.example),
+renomei-o para ```.env``` e prencha conforme seu ambiente, rode o comando ```npm install ; npm start``` e por fim
+escanei o QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas
 através do privado do bot.
 
 ## Usando
