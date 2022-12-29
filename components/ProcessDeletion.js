@@ -10,7 +10,6 @@ export async function processDeletion(client, messageDeleted) {
             alertedMessageId: messageDeleted.id
         },
         attributes: ['messageId'],
-        raw: true,
     })
 
     messages.map(async message => {

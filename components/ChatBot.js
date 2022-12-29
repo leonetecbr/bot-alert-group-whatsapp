@@ -1,6 +1,7 @@
 import User from '../models/User.js'
 import Alert from '../models/Alert.js'
 import AlertUser from '../models/AlertUser.js'
+import processURL from './ProcessURL.js'
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
@@ -95,6 +96,10 @@ export async function ChatBot(message) {
             }
         }
     }
+
+    const url = processURL(message.text)
+
+    if (url) return url
 
     const greetings = ['olá', 'oii', 'oe', 'oie', 'bom dia', 'boa tarde', 'boa noite', 'eai', 'eae']
     let start = 'Oi' + ' ' + message.sender.pushname

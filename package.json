@@ -1,6 +1,6 @@
 {
   "name": "bot-alert-group-whatsapp",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "license": "MIT",
   "type": "module",
   "author": {
@@ -9,8 +9,9 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
-    "@open-wa/wa-automate": "^4.54",
+    "@open-wa/wa-automate": "^4.54.5",
     "dotenv": "^16.0.3",
+    "node-libcurl": "^3.0.0",
     "p-queue": "^7.3",
     "sequelize": "^6.28",
     "sqlite3": "^5.1.4"

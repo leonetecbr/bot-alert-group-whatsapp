@@ -23,7 +23,8 @@ export async function processMessage(client, message, alerts) {
         // Inicia o "digitando ..."
         await client.simulateTyping(message.chatId, true)
         // Interage com o administrador quando ele envia um comando
-        if (admin.includes(message.from) && message.text.startsWith('/') && message.words.length === 2) await commandsAdmin()        // Interage com os usuários comuns
+        if (admin.includes(message.from) && message.text.startsWith('/') && message.words.length === 2) await commandsAdmin()
+        // Interage com os usuários comuns
         else await client.reply(message.from, await chatBot(message), message.id, true)
         // Marca a mensagem como lida (reply não está funcionando)
         await client.sendSeen(message.chatId)
