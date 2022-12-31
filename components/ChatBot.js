@@ -24,8 +24,10 @@ export async function ChatBot(message) {
 
         await Alert.sync()
 
+        const alertMethod = (user === null || !user.privateAlerts) ? 'grupo' : 'privado'
+
         // Lista os alertas disponíveis
-        let text = 'Os alertas disponíveis são:\n'
+        let text = 'Seus alertas são enviados no *' + alertMethod + '*!\n\nOs alertas disponíveis são:\n'
         const alerts = await Alert.findAll({
             raw: true,
             attributes: ['name', 'id'],
