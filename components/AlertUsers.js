@@ -2,6 +2,7 @@ import User from '../models/User.js'
 import Alert from '../models/Alert.js'
 import AlertUser from '../models/AlertUser.js'
 import Alerted from '../models/Alerted.js'
+import generateShopee from './GenerateShopee.js'
 
 export async function AlertUsers(found, client) {
     // Inicia o "digitando ..."
@@ -12,7 +13,7 @@ export async function AlertUsers(found, client) {
     console.log('Texto da mensagem: ', found.message.text)
     console.log('Alertas encontrados: ', found.alerts)
 
-    let alertsId, alerts, activeUsers = [], text = ''
+    let alertsId, alerts, activeUsers = [], text = '', shopee = false
     const message = found.message
     const members = await client.getGroupMembersId(message.chatId)
 
@@ -24,10 +25,13 @@ export async function AlertUsers(found, client) {
                 model: AlertUser,
                 attributes: ['UserId']
             },
-            attributes: [],
+            attributes: ['name'],
         })
 
         alerts.AlertUsers.map(alert => activeUsers.push(alert.UserId))
+
+        // Se o alerta for do Shopee
+        if (alerts.name === 'shopee') shopee = true
     }
     // Se tiver encontrado mais de um alerta
     else {
@@ -41,13 +45,16 @@ export async function AlertUsers(found, client) {
                 model: AlertUser,
                 attributes: ['UserId']
             },
-            attributes: [],
+            attributes: ['name'],
         })
 
         alerts.map(alert => alert.AlertUsers.map(alert => {
             // Evita que usuários sejam inseridos no array mais de uma vez
             if (!activeUsers.includes(alert.UserId)) activeUsers.push(alert.UserId)
         }))
+
+        // Se algum dos alertas for do Shopee
+        if (alerts.some(alert => alert.name === 'shopee')) shopee = true
     }
 
     // Exclui usuários que não estão no grupo e o autor da(s) mensagem(ns)
@@ -63,6 +70,11 @@ export async function AlertUsers(found, client) {
     }
 
     console.log('Membros com o(s) alerta(s) ativo(s): ', activeUsers)
+
+    if (found.message.chatId !== process.env.GROUP_ID_IGNORE && shopee) {
+        const link = await generateShopee('https://shopee.com.br/cart')
+        text = '🛒 Link rápido pro carrinho: ' + link + '\n\n'
+    }
 
     // Monta o texto da mensagem
     activeUsers.map(id => text += '@' + id.split('@')[0] + ' ')

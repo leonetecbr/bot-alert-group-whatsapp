@@ -97,7 +97,7 @@ export async function ChatBot(message) {
         }
     }
 
-    const url = processURL(message.text)
+    const url = await processURL(message.text)
 
     if (url) return url
 
