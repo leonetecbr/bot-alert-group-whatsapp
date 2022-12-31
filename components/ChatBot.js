@@ -99,8 +99,12 @@ export async function ChatBot(message) {
         }
     }
 
-    const url = await processURL(message.text)
+    let url = message.text.match(/(https?:\/\/[-\w@:%.\\+~#?&/=]+)/g)
 
+    // Se a mensagem contiver um link ou mais, pega o primeiro link da mensagem e transforma em link de afiliados
+    if (url !== null) url = await processURL(url[0])
+
+    // Se o link de afiliados for gerado com sucesso, envia a mensagem
     if (url) return url
 
     const greetings = ['olá', 'oii', 'oe', 'oie', 'bom dia', 'boa tarde', 'boa noite', 'eai', 'eae']

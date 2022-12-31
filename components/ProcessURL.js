@@ -1,41 +1,38 @@
 import generateAwin from './GenerateAwin.js'
 import generateShopee from './GenerateShopee.js'
-import getLocation from "./GetLocation.js";
+import getLocation from './GetLocation.js'
+import processPelando from './ProcessPelando.js'
 
-export async function processURL(text) {
-    let link = text.match(/(https?:\/\/\S+)/g)
-
-    // Se a mensagem não for um link, retorna false
-    if (link === null) return false
-    // Pega o primeiro link da mensagem
-    link = link[0]
+export async function processURL(url) {
     // Remove parâmetros do link
-    link = link.split('?')[0]
+    url = url.split('?')[0]
 
-    link = link.replace('http://', 'https://')
+    url = url.replace('http://', 'https://')
 
     // Se for links mobile transforma em link padrão
-    if (link.startsWith('https://m.casasbahia.com.br') || link.startsWith('https://m.pontofrio.com.br') || link.startsWith('https://m.extra.com.br')) {
-        link = link.replace('//m.', '//www.')
-    }
+    if (url.startsWith('https://m.')) url = url.replace('//m.', '//www.')
 
-    if (link.startsWith('https://www.americanas.com.br')) return await generateAwin(link, 22193)
-    else if (link.startsWith('https://www.shoptime.com.br')) return await generateAwin(link, 22194)
-    else if (link.startsWith('https://www.submarino.com.br')) return await generateAwin(link, 22195)
-    else if (link.startsWith('https://www.casasbahia.com.br')) return await generateAwin(link, 17629)
-    else if (link.startsWith('https://www.pontofrio.com.br')) return await generateAwin(link, 17621)
-    else if (link.startsWith('https://www.extra.com.br')) return await generateAwin(link, 17874)
-    else if (link.startsWith('https://shopee.com.br')) return await generateShopee(link)
-    else if (link.startsWith('https://www.amazon.com.br/')) return link + '?tag=' + process.env.AMAZON_TAG
-    else if (link.startsWith('https://shope.ee/')) {
-        link = await getLocation(link)
+    // Se for um link do beta
+    if (url.startsWith('https://beta.')) url = url.replace('//beta.', '//www.')
 
-        if (!link) return false
+    if (url.startsWith('https://www.americanas.com.br')) return await generateAwin(url, 22193)
+    else if (url.startsWith('https://www.shoptime.com.br')) return await generateAwin(url, 22194)
+    else if (url.startsWith('https://www.submarino.com.br')) return await generateAwin(url, 22195)
+    else if (url.startsWith('https://www.casasbahia.com.br')) return await generateAwin(url, 17629)
+    else if (url.startsWith('https://www.pontofrio.com.br')) return await generateAwin(url, 17621)
+    else if (url.startsWith('https://www.extra.com.br')) return await generateAwin(url, 17874)
+    else if (url.startsWith('https://shopee.com.br')) return await generateShopee(url)
+    else if (url.startsWith('https://www.amazon.com.br')) return url + '?tag=' + process.env.AMAZON_TAG
+    else if (url.startsWith('https://www.pelando.com.br')) return processPelando(url)
+    else if (url.startsWith('https://shope.ee/')) {
+        url = await getLocation(url)
+
+        if (!url) return false
 
         // Remove parâmetros do link
-        link = link.split('?')[0]
+        url = url.split('?')[0]
 
-        return await generateShopee(link)
+        return await generateShopee(url)
     }
     return false
 }
