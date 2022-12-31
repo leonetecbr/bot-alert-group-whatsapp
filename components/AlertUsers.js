@@ -3,6 +3,7 @@ import Alert from '../models/Alert.js'
 import AlertUser from '../models/AlertUser.js'
 import Alerted from '../models/Alerted.js'
 import generateShopee from './GenerateShopee.js'
+import processURL from "./ProcessURL.js";
 
 export async function AlertUsers(found, client) {
     // Inicia o "digitando ..."
@@ -71,9 +72,20 @@ export async function AlertUsers(found, client) {
 
     console.log('Membros com o(s) alerta(s) ativo(s): ', activeUsers)
 
-    if (found.message.chatId !== process.env.GROUP_ID_IGNORE && shopee) {
-        const link = await generateShopee('https://shopee.com.br/cart')
-        text = '🛒 Link rápido pro carrinho: ' + link + '\n\n'
+    if (found.message.chatId !== process.env.GROUP_ID_IGNORE) {
+        const links = found.message.text.match(/(https?:\/\/[-\w@:%.\\+~#?&/=]+)/g)
+        if (links){
+            await Promise.all(
+                links.map(async link => {
+                    const url = await processURL(link)
+
+                    if (url) text += url + '\n\n'
+                })
+            )
+        } else if (shopee) {
+            const link = await generateShopee('https://shopee.com.br/cart')
+            text = '🛒 Link rápido pro carrinho: ' + link + '\n\n'
+        }
     }
 
     // Monta o texto da mensagem
