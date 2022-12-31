@@ -17,9 +17,9 @@ export async function ChatBot(message) {
         let user = await User.findByPk(message.from, {
             include: {
                 model: AlertUser,
-                attributes: ['AlertId'],
+                attributes: ['AlertId',],
             },
-            attributes: [],
+            attributes: ['privateAlerts',],
         })
 
         await Alert.sync()
@@ -30,7 +30,7 @@ export async function ChatBot(message) {
         let text = 'Seus alertas são enviados no *' + alertMethod + '*!\n\nOs alertas disponíveis são:\n'
         const alerts = await Alert.findAll({
             raw: true,
-            attributes: ['name', 'id'],
+            attributes: ['name', 'id',],
         })
         let activeAlerts = []
 
@@ -48,7 +48,7 @@ export async function ChatBot(message) {
 
         const alerts = await Alert.findAll({
             raw: true,
-            attributes: ['name'],
+            attributes: ['name',],
             limit: 1,
         })
         const name = '#' + alerts[0].name
@@ -90,8 +90,17 @@ export async function ChatBot(message) {
                 await AlertUser.sync()
 
                 // Ativa ou desativa o alerta
-                if (action) await AlertUser.create({UserId: message.from, AlertId: alerts[i].id})
-                else await AlertUser.destroy({where: {UserId: message.from, AlertId: alerts[i].id}})
+                if (action) {
+                    // Se o alerta já estiver ativado, não faz nada
+                    if (user.AlertUsers.some(alert => alert.AlertId === alerts[i].id)) return 'O alerta para ```' + name + '``` já está ativado!'
+                    // Se o alerta não estiver ativo, ativa
+                    await AlertUser.create({UserId: message.from, AlertId: alerts[i].id})
+                } else if (!action) {
+                    // Se o alerta já estiver desativado, não faz nada
+                    if (!user.AlertUsers.some(alert => alert.AlertId === alerts[i].id)) return 'O alerta para ```' + name + '``` já está desativado!'
+                    // Se o alerta estiver ativo, desativa
+                    await AlertUser.destroy({where: {UserId: message.from, AlertId: alerts[i].id}})
+                }
 
                 // Confirma a ativação ou desativação do alerta
                 return '*Alerta para ' + name + ' ' + ((action) ? 'ativado!* ✅' : 'desativado!* ❌')
