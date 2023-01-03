@@ -15,7 +15,7 @@ export async function AlertUsers(found, client) {
     console.log('Texto da mensagem: ', found.message.text)
     console.log('Alertas encontrados: ', found.alerts)
 
-    let alertsId, alerts, groupUsers = [], privateUsers = [], text = '', shopee = false
+    let alertsId, alerts, groupUsers = [], privateUsers = [], text = 'Você tem um novo alerta para *', shopee = false
     const message = found.message
     const members = await client.getGroupMembersId(message.chatId)
 
@@ -45,6 +45,9 @@ export async function AlertUsers(found, client) {
 
         // Se o alerta for do Shopee
         if (alerts.name === 'shopee') shopee = true
+
+        // Insere o nome do alerta no texto
+        text += '#' + alerts.name + '*\n\n'
     }
     // Se tiver encontrado mais de um alerta
     else {
@@ -64,7 +67,7 @@ export async function AlertUsers(found, client) {
                     attributes: ['privateAlerts',],
                 },
             },
-            attributes: ['name'],
+            attributes: ['id', 'name'],
         })
 
         alerts.map(alert => alert.users.map(user => {
@@ -79,6 +82,22 @@ export async function AlertUsers(found, client) {
 
         // Se algum dos alertas for do Shopee
         if (alerts.some(alert => alert.name === 'shopee')) shopee = true
+
+        // Insere o nome dos alertas no texto
+        const alertsName = {}
+
+        // Busca o nome dos alertas
+        await Promise.all(alerts.map(alert => alertsName[alert.id] = alert.name))
+
+        alertsId.map((id, i) => {
+            if (i !== 0 && i + 1 === alertsId.length) text += '* e *'
+
+            text += '#' + alertsName[id]
+
+            if (i + 3 <= alertsId.length) text += '*, *'
+        })
+
+        text += '*\n\n'
     }
 
     // Exclui usuários que não estão no grupo e o autor da(s) mensagem(ns)
@@ -106,7 +125,7 @@ export async function AlertUsers(found, client) {
             )
         } else if (shopee) {
             const link = await generateShopee('https://shopee.com.br/cart')
-            text = '🛒 Link rápido pro carrinho: ' + link + '\n\n'
+            text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
         }
     }
 
