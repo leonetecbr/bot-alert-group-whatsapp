@@ -1,9 +1,10 @@
 import User from '../models/User.js'
 import Alert from '../models/Alert.js'
 import AlertUser from '../models/AlertUser.js'
-import Alerted from '../models/Alerted.js'
 import generateShopee from './GenerateShopee.js'
-import processURL from "./ProcessURL.js";
+import processURL from './ProcessURL.js'
+import alertGroup from './AlertGroup.js'
+import alertPrivate from './AlertPrivate.js'
 
 export async function AlertUsers(found, client) {
     // Inicia o "digitando ..."
@@ -14,7 +15,7 @@ export async function AlertUsers(found, client) {
     console.log('Texto da mensagem: ', found.message.text)
     console.log('Alertas encontrados: ', found.alerts)
 
-    let alertsId, alerts, activeUsers = [], text = '', shopee = false
+    let alertsId, alerts, groupUsers = [], privateUsers = [], text = '', shopee = false
     const message = found.message
     const members = await client.getGroupMembersId(message.chatId)
 
@@ -24,12 +25,23 @@ export async function AlertUsers(found, client) {
         alerts = await Alert.findByPk(alertsId, {
             include: {
                 model: AlertUser,
-                attributes: ['UserId']
+                as: 'users',
+                attributes: ['UserId'],
+                include: {
+                    model: User,
+                    as: 'user',
+                    attributes: ['privateAlerts',],
+                },
             },
             attributes: ['name'],
         })
 
-        alerts.AlertUsers.map(alert => activeUsers.push(alert.UserId))
+        alerts.users.map(user => {
+            // Verifica se o usuário quer receber os alertas no privado
+            if (user.user.privateAlerts) privateUsers.push(user.UserId)
+            // Se não, envia para o grupo
+            else groupUsers.push(user.UserId)
+        })
 
         // Se o alerta for do Shopee
         if (alerts.name === 'shopee') shopee = true
@@ -44,14 +56,25 @@ export async function AlertUsers(found, client) {
             },
             include: {
                 model: AlertUser,
-                attributes: ['UserId']
+                as: 'users',
+                attributes: ['UserId'],
+                include: {
+                    model: User,
+                    as: 'user',
+                    attributes: ['privateAlerts',],
+                },
             },
             attributes: ['name'],
         })
 
-        alerts.map(alert => alert.AlertUsers.map(alert => {
-            // Evita que usuários sejam inseridos no array mais de uma vez
-            if (!activeUsers.includes(alert.UserId)) activeUsers.push(alert.UserId)
+        alerts.map(alert => alert.users.map(user => {
+            // Verifica se o usuário quer receber os alertas no privado
+            if (user.user.privateAlerts) {
+                // Evita que usuários sejam inseridos no array mais de uma vez
+                if (!privateUsers.includes(user.UserId)) privateUsers.push(user.UserId)
+            }
+            // Se não, envia para o grupo
+            else if (!groupUsers.includes(user.UserId)) groupUsers.push(user.UserId)
         }))
 
         // Se algum dos alertas for do Shopee
@@ -59,10 +82,11 @@ export async function AlertUsers(found, client) {
     }
 
     // Exclui usuários que não estão no grupo e o autor da(s) mensagem(ns)
-    activeUsers = activeUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
+    groupUsers = groupUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
+    privateUsers = privateUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
 
     // Se não existirem usuários com o(s) alerta(s) ativado(s) interrompe a função
-    if (activeUsers.length === 0) {
+    if (groupUsers.length === 0 && privateUsers.length === 0){
         // Para o "digitando ..."
         await client.simulateTyping(found.message.chatId, false)
         // Marca a mensagem como lida
@@ -70,11 +94,9 @@ export async function AlertUsers(found, client) {
         return false
     }
 
-    console.log('Membros com o(s) alerta(s) ativo(s): ', activeUsers)
-
     if (found.message.chatId !== process.env.GROUP_ID_IGNORE) {
         const links = found.message.text.match(/(https?:\/\/[-\w@:%.\\+~#?&/=]+)/g)
-        if (links){
+        if (links) {
             await Promise.all(
                 links.map(async link => {
                     const url = await processURL(link)
@@ -88,34 +110,11 @@ export async function AlertUsers(found, client) {
         }
     }
 
-    // Monta o texto da mensagem
-    activeUsers.map(id => text += '@' + id.split('@')[0] + ' ')
+    // Se tiver usuários que querem receber os alertas no grupo
+    if (groupUsers.length > 0) alertGroup(found, client, groupUsers, text).then(() => console.log('Enviado para o grupo!'))
 
-    // Envia a resposta para o grupo com as menções
-    let messageId = await client.sendReplyWithMentions(message.chatId, text, message.id, false, activeUsers)
-
-    console.log('Texto enviado: ', text)
-
-    // Se não tiver sido enviada com sucesso, tenta enviar novamente
-    if (!messageId || !messageId.startsWith('true_')) messageId = await client.sendTextWithMentions(message.chatId, text, false, activeUsers)
-
-    console.log('Id da mensagem: ', messageId)
-    console.log('Id da mensagem respondida: ', message.id)
-
-    // Para o "digitando ..."
-    await client.simulateTyping(found.message.chatId, false)
-
-    // Se tiver sido enviada com sucesso
-    if (messageId && messageId.startsWith('true_')) {
-        // Envia uma reação para a mensagem original
-        await client.react(message.id, '✅')
-
-        // Salva o ‘id’ da mensagem no banco de dados
-        await Alerted.create({
-            messageId,
-            alertedMessageId: message.id
-        })
-    }
+    // Se tiver usuários que querem receber os alertas no privado
+    if (privateUsers.length > 0) alertPrivate().then(() => console.log('Enviado para o privado!'))
 }
 
 export default AlertUsers

@@ -35,7 +35,9 @@ AlertUser.init({
     updatedAt: false,
 })
 
-User.hasMany(AlertUser, {onDelete: 'cascade'})
-Alert.hasMany(AlertUser, {onDelete: 'cascade'})
+User.hasMany(AlertUser, {as: 'alerts'})
+Alert.hasMany(AlertUser, {as: 'users'})
+AlertUser.belongsTo(User, {as: 'user'})
+AlertUser.belongsTo(Alert, {as: 'alert'})
 
 export default AlertUser
