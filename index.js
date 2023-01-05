@@ -50,7 +50,7 @@ async function start(client) {
     // Mensagem recebida
     await client.onMessage(message => queue.add(() => processMessage(client, message, alerts)))
     // Foi adicionado em um grupo
-    await client.onAddedToGroup(chat => processAddGroup(client, chat))
+    await client.onAddedToGroup(chat => processAddGroup(client, chat, alerts))
     // Mensagem deletada
     await client.onMessageDeleted(message => queue.add(() => processDeletion(client, message)))
     // Chamada recebida
