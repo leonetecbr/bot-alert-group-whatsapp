@@ -105,7 +105,7 @@ export async function AlertUsers(found, client) {
     privateUsers = privateUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
 
     // Se não existirem usuários com o(s) alerta(s) ativado(s) interrompe a função
-    if (groupUsers.length === 0 && privateUsers.length === 0){
+    if (groupUsers.length === 0 && privateUsers.length === 0) {
         // Para o "digitando ..."
         await client.simulateTyping(found.message.chatId, false)
         // Marca a mensagem como lida

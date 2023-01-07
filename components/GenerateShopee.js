@@ -4,7 +4,7 @@ import getLocation from './GetLocation.js'
 
 const sha256 = toSHA256 => crypto.createHash('sha256').update(toSHA256).digest('hex')
 
-export async function generateShopee(url){
+export async function generateShopee(url) {
     const timestamp = parseInt(String(Date.now() / 1000))
     const payload = '{"query":"mutation{    generateShortLink(input:{originUrl:\\"' + url + '\\",subIds:[]}){        shortLink    }}"}'
     const credential = String(process.env.APP_ID_SHOPEE)

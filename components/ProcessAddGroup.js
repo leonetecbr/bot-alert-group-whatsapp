@@ -1,5 +1,3 @@
-import Alert from '../models/Alert.js'
-
 // Ações a ser realizadas após o bot ser adicionado em um grupo
 export async function processAddGroup(client, chat, alerts) {
     const members = await client.getGroupMembersId(chat.id)

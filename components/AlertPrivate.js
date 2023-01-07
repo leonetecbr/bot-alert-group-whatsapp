@@ -1,4 +1,4 @@
-export async function alertPrivate(){
+export async function alertPrivate() {
     // TODO Enviar mensagem privada
 }
 

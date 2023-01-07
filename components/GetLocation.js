@@ -6,12 +6,10 @@ export async function getLocation(url) {
         SSL_VERIFYPEER: false,
     })
 
-    // Resposta da Awin
-    if (statusCode === 302) return headers[0].Location
-    // Resposta da Shopee
-    else if (statusCode === 301) return headers[0].location
-    // Algum erro aconteceu
-    else return false
+    if (statusCode !== 302 && statusCode !== 301) return false
+    // Retorna o link de destino
+    if (typeof headers[0].Location !== 'undefined') return headers[0].Location
+    return headers[0].location
 }
 
 export default getLocation

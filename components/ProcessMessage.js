@@ -15,7 +15,7 @@ export async function processMessage(client, message, alerts) {
         if (!await findAlert(message, client, alerts) && message.mentionedJidList) {
             const me = (await client.getMe())['status']
             // Responde a mensagens que o mencionam
-            if (message.mentionedJidList.includes(me)){
+            if (message.mentionedJidList.includes(me)) {
                 // Inicia o "digitando ..."
                 await client.simulateTyping(message.chatId, true)
 
