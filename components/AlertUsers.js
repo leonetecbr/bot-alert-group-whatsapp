@@ -12,7 +12,7 @@ export async function AlertUsers(found, client) {
     await User.sync()
 
     console.log('_____________________________________________________________________________________________________')
-    console.log('Texto da mensagem: ', found.message.text)
+    console.log('Texto da mensagem: ', found.message.textNormal)
     console.log('Alertas encontrados: ', found.alerts)
 
     let alertsId, alerts, groupUsers = [], privateUsers = [], text = 'Você tem um novo alerta para *', shopee = false
@@ -114,7 +114,7 @@ export async function AlertUsers(found, client) {
     }
 
     if (found.message.chatId !== process.env.GROUP_ID_IGNORE) {
-        const links = found.message.text.match(/(https?:\/\/[-\w@:%.\\+~#?&/=]+)/g)
+        const links = found.message.textNormal.match(/(https?:\/\/[-\w@:%.\\+~#?&/=]+)/g)
         if (links) {
             await Promise.all(
                 links.map(async link => {

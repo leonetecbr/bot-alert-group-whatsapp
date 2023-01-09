@@ -6,8 +6,14 @@ import commandsAdmin from './CommandsAdmin.js'
 export async function processMessage(client, message, alerts) {
     const admins = process.env.ADMINS.split(',')
 
+    // Armazena a mensagem original para ser usada na busca por links
+    message.textNormal = message.text
+
+    // Passa toda a mensagem para minúsculo
+    message.text = message.text.toLowerCase()
+
     // Separa cada palavra em um elemento do array
-    message.words = (message.text !== null) ? message.text.replace(/\n/g, ' ').toLowerCase().split(' ') : []
+    message.words = (message.text !== null) ? message.text.replace(/\n/g, ' ').split(' ') : []
 
     // Em grupos, busca por alertas nas mensagens recebidas,
     if (message.chat.isGroup) {

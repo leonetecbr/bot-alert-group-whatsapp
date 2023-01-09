@@ -110,7 +110,7 @@ export async function ChatBot(message) {
         }
     }
 
-    let url = message.text.match(/(https?:\/\/[-\w@:%.\\+~#?&/=]+)/g)
+    let url = message.textNormal.match(/(https?:\/\/[-\w@:%.\\+~#?&/=]+)/g)
 
     // Se a mensagem contiver um link ou mais, pega o primeiro link da mensagem e transforma em link de afiliados
     if (url !== null) url = await processURL(url[0])
