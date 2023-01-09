@@ -29,6 +29,7 @@ export async function FindAlert(message, client, alerts) {
             if (i + 1 === macthes.length && message.quotedMsgObj !== null && message.words.length === found.alerts.length) {
                 // O alerta é uma resposta a outra mensagem, sendo assim envia um alerta para a mensagem respondida
                 found.message = message.quotedMsgObj
+                found.message.textNormal = message.quotedMsgObj.text
                 found.ignore.push(message.quotedMsgObj.author)
             }
         }

@@ -29,7 +29,7 @@ export async function processURL(url) {
     if (url.startsWith('https://www.amazon.com.br')) return url + '?tag=' + process.env.AMAZON_TAG
     if (url.startsWith('https://www.pelando.com.br')) return processPelando(url)
     if (url.startsWith('https://shope.ee/') || url.startsWith('https://amzn.to/') || url.startsWith('https://cutt.ly/')
-        || url.startsWith('https://bit.ly/') || url.startsWith('https://tidd.ly/')){
+        || url.startsWith('https://bit.ly/') || url.startsWith('https://tidd.ly/') || url.startsWith('https://a.co/')){
         url = await getLocation(url)
 
         return (url) ? await processURL(url) : url
