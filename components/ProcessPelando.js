@@ -7,7 +7,7 @@ export async function processPelando(url) {
         SSL_VERIFYPEER: false,
     })
     // Pega a url original
-    const matches = [...data.matchAll(/"sourceUrl":"([-\w@:%.\\+~#?&/=]+)"/g)]
+    const matches = [...data.matchAll(/"sourceUrl":"([-\w@:%.\\+~#?&/=,]+)"/g)]
     // Busca por cupons
     const coupon = [...data.matchAll(/"couponCode":"(\w+)"/g)]
 
