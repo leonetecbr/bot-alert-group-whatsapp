@@ -15,7 +15,22 @@ promoção incrível.
 
 ## Instalação
 
-Para utilizá-lo clone esse repositório e instalar o Chrome no seu servidor com os seguintes comandos:
+### Deploy gratuito
+
+Usando a Digital Ocean para realizar seu deixar seu bot no ar, você ganhará U$ 200 em créditos em sua conta, clique no 
+botão abaixo para criar sua conta!
+
+<p align="center">
+    <a href="https://www.digitalocean.com/?refcode=73ea4bd8a1ba&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge">
+        <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/DigitalOcean.png" alt="DigitalOcean" />
+    </a>
+</p>
+
+Nossa recomensação mínima é o plano de $7/mês (Premium AMD/Intel, 1GB de RAM, 25GB de SSD, 1 CPU, 1TB de transferência).
+
+### Passo a passo
+
+Para utilizá-lo clone esse repositório e instalar o Chrome no seu servidor (caso use Linux como SO) com os seguintes comandos:
 
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
