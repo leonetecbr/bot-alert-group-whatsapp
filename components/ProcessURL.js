@@ -16,7 +16,8 @@ export async function processURL(url) {
     url = url.replace('http://', 'https://')
 
     // Se for links mobile transforma em link padrão
-    if (url.startsWith('https://m.')) url = url.replace('//m.', '//www.')
+    if (url.startsWith('https://m.pt.')) url = url.replace('//m.', '//')
+    else if (url.startsWith('https://m.')) url = url.replace('//m.', '//www.')
 
     // Se for um link do beta
     if (url.startsWith('https://beta.')) url = url.replace('//beta.', '//www.')
@@ -41,6 +42,10 @@ export async function processURL(url) {
         case 'www.extra.com.br':
             return await generateAwin(url, 17874)
 
+        case 'pt.aliexpress.com':
+        case 'www.aliexpress.com':
+            return await generateAwin(url, 18879)
+
         case 'shopee.com.br':
             return await generateShopee(url)
 
@@ -50,6 +55,7 @@ export async function processURL(url) {
         case 'www.pelando.com.br':
             return await processPelando(url)
 
+        // Links encurtados
         case 'shope.ee':
         case 'amzn.to':
         case 'cutt.ly':
@@ -57,6 +63,7 @@ export async function processURL(url) {
         case 'tidd.ly':
         case 'a.co':
         case 'tinyurl.com':
+        case 'a.aliexpress.com':
             url = await getLocation(url)
 
             return (url) ? await processURL(url) : url
