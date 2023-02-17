@@ -21,35 +21,64 @@ export async function processURL(url) {
     // Se for um link do beta
     if (url.startsWith('https://beta.')) url = url.replace('//beta.', '//www.')
 
-    if (url.startsWith('https://www.casasbahia.com.br')) return await generateAwin(url, 17629)
-    if (url.startsWith('https://www.pontofrio.com.br')) return await generateAwin(url, 17621)
-    if (url.startsWith('https://www.extra.com.br')) return await generateAwin(url, 17874)
-    if (url.startsWith('https://shopee.com.br')) return await generateShopee(url)
-    if (url.startsWith('https://www.amazon.com.br')) return url + '?tag=' + process.env.AMAZON_TAG
-    if (url.startsWith('https://www.pelando.com.br')) return processPelando(url)
-    if (url.startsWith('https://shope.ee/') || url.startsWith('https://amzn.to/') || url.startsWith('https://cutt.ly/')
-        || url.startsWith('https://bit.ly/') || url.startsWith('https://tidd.ly/') || url.startsWith('https://a.co/')
-        || url.startsWith('https://tinyurl.com/')){
-        url = await getLocation(url)
+    let domain = !url.endsWith('/') ? url + '/' : url
 
-        return (url) ? await processURL(url) : url
+    // Busca qual o domínio do link
+    domain = [...domain.matchAll(/https:\/\/([\w.\-]+)\//g)]
+
+    // Se não encontrar o domínio
+    if (domain.length === 0) return false
+
+    domain = domain[0][1]
+
+    switch (domain){
+        case 'www.casasbahia.com.br':
+            return await generateAwin(url, 17629)
+
+        case 'www.pontofrio.com.br':
+            return await generateAwin(url, 17621)
+
+        case 'www.extra.com.br':
+            return await generateAwin(url, 17874)
+
+        case 'shopee.com.br':
+            return await generateShopee(url)
+
+        case 'www.amazon.com.br':
+            return url + '?tag=' + process.env.AMAZON_TAG
+
+        case 'www.pelando.com.br':
+            return await processPelando(url)
+
+        case 'shope.ee':
+        case 'amzn.to':
+        case 'cutt.ly':
+        case 'bit.ly':
+        case 'tidd.ly':
+        case 'a.co':
+        case 'tinyurl.com':
+            url = await getLocation(url)
+
+            return (url) ? await processURL(url) : url
+
+        case 'www.awin1.com':
+        case 'redirect.viglink.com':
+            params = params.split('&')
+
+            let paramsObj = {}
+
+            params.map(param => {
+                let data = param.split('=')
+                paramsObj[data[0]] = data[1]
+            })
+
+            const link = (url.startsWith('https://www.awin1.com/cread.php')) ? paramsObj.ued : paramsObj.u
+
+            return await processURL(decodeURL(link))
+
+        default:
+            return false
     }
-    if (url.startsWith('https://www.awin1.com/cread.php') || url.startsWith('https://redirect.viglink.com')) {
-        params = params.split('&')
-
-        let paramsObj = {}
-
-        params.map(param => {
-            let data = param.split('=')
-            paramsObj[data[0]] = data[1]
-        })
-
-        const link = (url.startsWith('https://www.awin1.com/cread.php')) ? paramsObj.ued : paramsObj.u
-
-        return await processURL(decodeURL(link))
-    }
-
-    return false
 }
 
 export default processURL

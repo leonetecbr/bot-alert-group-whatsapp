@@ -114,7 +114,7 @@ export async function AlertUsers(found, client) {
     }
 
     if (found.message.chatId !== process.env.GROUP_ID_IGNORE) {
-        const links = found.message.textNormal.match(/(https?:\/\/[-\w@:%.\\+~#?&/=,]+)/g)
+        const links = found.message.textNormal.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
         if (links) {
             await Promise.all(
                 links.map(async link => {
