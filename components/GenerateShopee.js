@@ -6,7 +6,7 @@ const sha256 = toSHA256 => crypto.createHash('sha256').update(toSHA256).digest('
 
 export async function generateShopee(url) {
     const timestamp = parseInt(String(Date.now() / 1000))
-    const payload = '{"query":"mutation{    generateShortLink(input:{originUrl:\\"' + url + '\\",subIds:[]}){        shortLink    }}"}'
+    const payload = '{"query":"mutation{\\n    generateShortLink(input:{originUrl:\\"' + url + '\\"}){\\n        shortLink\\n    }\\n}"}'
     const credential = String(process.env.APP_ID_SHOPEE)
     const signature = sha256(credential + timestamp + payload + process.env.APP_SECRET_SHOPEE)
 
@@ -19,6 +19,8 @@ export async function generateShopee(url) {
         SSL_VERIFYHOST: false,
         SSL_VERIFYPEER: false,
     })
+
+    if (typeof data.data.generateShortLink === 'undefined') return false
 
     return (typeof data.errors === 'undefined') ? await getLocation(data.data.generateShortLink.shortLink) : false
 }

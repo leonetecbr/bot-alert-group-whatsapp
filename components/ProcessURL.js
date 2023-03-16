@@ -47,6 +47,7 @@ export async function processURL(url) {
             return await generateAwin(url, 18879)
 
         case 'shopee.com.br':
+        case 'live.shopee.com.br':
             return await generateShopee(url)
 
         case 'www.amazon.com.br':

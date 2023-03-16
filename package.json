@@ -9,12 +9,12 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
-    "@open-wa/wa-automate": "^4.57",
+    "@open-wa/wa-automate": "^4.58",
     "dotenv": "^16.0.3",
     "node-libcurl": "^3.0.0",
     "p-queue": "^7.3.4",
-    "sequelize": "^6.28",
-    "sqlite3": "^5.1.4"
+    "sequelize": "^6.29.3",
+    "sqlite3": "^5.1.6"
   },
   "scripts": {
     "start": "node index.js",
