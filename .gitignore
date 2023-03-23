@@ -10,4 +10,3 @@ node_modules
 resources/admin.json
 **.data.json
 **_IGNORE_**
-test.js

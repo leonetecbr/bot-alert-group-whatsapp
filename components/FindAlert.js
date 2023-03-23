@@ -1,6 +1,4 @@
-import alertUsers from './AlertUsers.js'
-
-export async function FindAlert(message, client, alerts) {
+export async function FindAlert(message, alerts) {
     let found = {
         message: message,
         alerts: [],
@@ -10,10 +8,7 @@ export async function FindAlert(message, client, alerts) {
     const matches = message.text.match(/#\w+/g)
 
     // Verifica se tem possíveis alertas na mensagem
-    if (matches === null) {
-        await client.sendSeen(message.from)
-        return false
-    }
+    if (matches === null) return found
 
     matches.map((match, i, macthes) => {
         // Retira a # do inicio do alerta
@@ -35,14 +30,7 @@ export async function FindAlert(message, client, alerts) {
         }
     })
 
-    // Envia uma mensagem de resposta marcando os usuários com os alertas ativados
-    if (found.alerts.length !== 0) {
-        await alertUsers(found, client)
-        return true
-    }
-    // Marca a mensagem como lida
-    await client.sendSeen(message.from)
-    return false
+    return found
 }
 
 export default FindAlert

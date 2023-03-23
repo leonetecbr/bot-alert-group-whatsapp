@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node test.js"
+    "test": "node --experimental-vm-modules --no-warnings=ExperimentalWarning node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
@@ -30,5 +30,9 @@
     "alerta",
     "chatbot"
   ],
-  "bugs": "https://github.com/leonetecbr/bot-alert-group-whatsapp/issues"
+  "bugs": "https://github.com/leonetecbr/bot-alert-group-whatsapp/issues",
+  "devDependencies": {
+    "@jest/globals": "^29.5.0",
+    "jest": "^29.5.0"
+  }
 }
