@@ -49,7 +49,6 @@ Funções sugeridas pelos membros ou nescessidades identificadas por mim:
 - [ ] Finalizar a implementação dos alertas no privado
 - [ ] Escrever mais testes para garantir a integridade de todo código
 - [ ] Atualizar o README com prints atuais
-- [ ] Intentificar links de mensagens da mensagem imediatamente anterior ao alerta
 - [ ] Adicionar alertas regionais (ex: #sp, #rj, #mg, #bh e etc)
 
 ## Usando

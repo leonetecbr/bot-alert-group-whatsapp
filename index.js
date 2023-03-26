@@ -38,6 +38,8 @@ async function start(client) {
         raw: true,
     })
 
+    let lastMessage = null
+
     // Verifica se os alertas estão no banco de dados
     if (alerts.length === 0) {
         ALERTS.map(async alert => {
@@ -48,7 +50,11 @@ async function start(client) {
     }
 
     // Mensagem recebida
-    await client.onMessage(message => queue.add(() => processMessage(client, message, alerts)))
+    await client.onMessage(message => {
+        message.lastMessage = lastMessage
+        queue.add(() => processMessage(client, message, alerts))
+        lastMessage = message
+    })
     // Foi adicionado em um grupo
     await client.onAddedToGroup(chat => processAddGroup(client, chat, alerts))
     // Mensagem deletada
