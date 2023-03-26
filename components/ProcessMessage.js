@@ -24,7 +24,7 @@ export async function processMessage(client, message, alerts) {
         // Envia uma mensagem de resposta marcando os usuários com os alertas ativados
         if (found.alerts.length !== 0) await alertUsers(found, client)
         // Se não encontrar alerta, procura por easter eggs
-        else if (found.alerts.length === 0 && message.mentionedJidList) await easterEggs(message, client)
+        else if (found.alerts.length === 0 && message.mentionedJidList) await easterEggs(message, client, alerts)
         // Marca a mensagem como lida
         else await client.sendSeen(message.chatId)
     }

@@ -1,6 +1,8 @@
-export async function EasterEggs(message, client){
+export async function EasterEggs(message, client, alerts){
     const me = (await client.getMe())['status']
-// Responde a mensagens que o mencionam
+    const admins = process.env.ADMINS.split(',')
+
+    // Responde a mensagens que o mencionam
     if (message.mentionedJidList.includes(me)) {
         // Inicia o "digitando ..."
         await client.simulateTyping(message.chatId, true)
