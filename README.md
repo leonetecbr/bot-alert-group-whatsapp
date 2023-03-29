@@ -26,11 +26,11 @@ botão abaixo para criar sua conta!
     </a>
 </p>
 
-Nossa recomensação mínima é o plano de $7/mês (Premium AMD/Intel, 1GB de RAM, 25GB de SSD, 1 CPU, 1TB de transferência).
+Nossa recomendação mínima é o plano de $7/mês (Premium AMD/Intel, 1 GB de RAM, 25 GB de SSD, 1 CPU, 1 TB de transferência).
 
 ### Passo a passo
 
-Para utilizá-lo clone esse repositório e instalar o Chrome no seu servidor (caso use Linux como SO) com os seguintes comandos:
+Para utilizá-lo clone esse repositório e instalar o Chrome no seu servidor (caso use uma distribuição Linux como SO) com os seguintes comandos:
 
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -38,13 +38,13 @@ sudo apt install ./google-chrome-stable_current_amd64.deb
 ```
 
 Logo após copie o aquivo [.env.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/.env.example),
-renomei-o para ```.env``` e prencha conforme seu ambiente, rode o comando ```npm install ; npm start``` e por fim
+renomei-o para ```.env``` e preencha conforme seu ambiente, rode o comando ```npm install ; npm start``` e por fim
 escanei o QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas
 através do privado do bot.
 
 # Tarefas a realizar
 
-Funções sugeridas pelos membros ou nescessidades identificadas por mim:
+Funções sugeridas pelos membros ou necessidades identificadas por mim:
 
 - [ ] Finalizar a implementação dos alertas no privado
 - [ ] Escrever mais testes para garantir a integridade de todo código

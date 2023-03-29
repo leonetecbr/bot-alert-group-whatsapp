@@ -12,10 +12,47 @@ User.init({
     privateAlerts: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+    },
+    state: {
+        type: DataTypes.ENUM,
+        values: [
+            'AC',
+            'AL',
+            'AP',
+            'AM',
+            'BA',
+            'CE',
+            'DF',
+            'ES',
+            'GO',
+            'MA',
+            'MT',
+            'MS',
+            'MG',
+            'PA',
+            'PB',
+            'PR',
+            'PE',
+            'PI',
+            'RJ',
+            'RN',
+            'RS',
+            'RO',
+            'RR',
+            'SC',
+            'SP',
+            'SE',
+            'TO'
+        ],
+        allowNull: true,
+    },
+    capital: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 }, {
     sequelize,
-    updatedAt: false,
+    createdAt: false,
 })
 
 export default User
