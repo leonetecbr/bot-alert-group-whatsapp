@@ -1,5 +1,8 @@
 import {DataTypes, Model} from 'sequelize'
 import sequelize from '../databases/db.js'
+import {readFile} from 'fs/promises'
+
+const states = JSON.parse(await readFile('./resources/UFs.json', 'utf8'))
 
 export class User extends Model {
 }
@@ -15,35 +18,7 @@ User.init({
     },
     state: {
         type: DataTypes.ENUM,
-        values: [
-            'AC',
-            'AL',
-            'AP',
-            'AM',
-            'BA',
-            'CE',
-            'DF',
-            'ES',
-            'GO',
-            'MA',
-            'MT',
-            'MS',
-            'MG',
-            'PA',
-            'PB',
-            'PR',
-            'PE',
-            'PI',
-            'RJ',
-            'RN',
-            'RS',
-            'RO',
-            'RR',
-            'SC',
-            'SP',
-            'SE',
-            'TO'
-        ],
+        values: states,
         allowNull: true,
     },
     capital: {
