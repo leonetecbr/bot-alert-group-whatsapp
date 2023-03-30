@@ -20,6 +20,7 @@ User.init({
         type: DataTypes.ENUM,
         values: states,
         allowNull: true,
+        defaultValue: null,
     },
     capital: {
         type: DataTypes.BOOLEAN,

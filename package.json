@@ -9,7 +9,7 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
-    "@open-wa/wa-automate": "^4.58",
+    "@open-wa/wa-automate": "^4.61.2",
     "dotenv": "^16.0.3",
     "node-libcurl": "^3.0.0",
     "p-queue": "^7.3.4",

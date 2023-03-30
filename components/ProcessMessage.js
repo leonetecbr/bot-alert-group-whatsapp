@@ -6,6 +6,7 @@ import easterEggs from './EasterEggs.js'
 
 // Processa mensagens recebidas em grupos e chats privados
 export async function processMessage(client, message, alerts) {
+    // Lista de administradores
     const admins = process.env.ADMINS.split(',')
 
     // Armazena a mensagem original para ser usada na busca por links

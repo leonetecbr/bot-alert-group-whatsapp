@@ -8,8 +8,6 @@ const states = JSON.parse(await readFile('./resources/UFs.json', 'utf8'))
 const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
 
 export async function ChatBot(message) {
-
-    message.text = message.text.toLowerCase()
     if (message.text === 'meus alertas') {
         await User.sync()
 
@@ -23,9 +21,12 @@ export async function ChatBot(message) {
             attributes: ['privateAlerts', 'state', 'capital',]
         })
 
+        // Se o usuário não existir, cria
+        if (user === null) user = await User.build({id: message.from}).save()
+
         await Alert.sync()
 
-        const alertMethod = (user === null || !user.privateAlerts) ? 'grupo' : 'privado'
+        const alertMethod = (!user.privateAlerts) ? 'grupo' : 'privado'
 
         // Lista os alertas disponíveis
         let text = 'Seus alertas são enviados no *' + alertMethod + '*!\n\nOs alertas disponíveis são:\n'
@@ -35,7 +36,7 @@ export async function ChatBot(message) {
         })
         let activeAlerts = []
 
-        if (user !== null) user.alerts.map(alert => activeAlerts.push(alert.AlertId))
+        if (user.alerts !== undefined) user.alerts.map(alert => activeAlerts.push(alert.AlertId))
 
         alerts.map(alert => {
             const name = '#' + alert.name
@@ -73,7 +74,7 @@ export async function ChatBot(message) {
         for (let i = 0; i < states.length; i++) {
             const name = '#' + states[i]
 
-            if (message.text.startsWith(name) || message.text.startsWith('#capital')) {
+            if (message.words[0] === name || message.words[0] === '#capital') {
                 await User.sync()
 
                 // Busca pelo usuário no banco de dados
@@ -82,7 +83,7 @@ export async function ChatBot(message) {
                 })
 
                 // Se o usuário não existir, cria
-                if (user === null) user = await User.create({id: message.from})
+                if (user === null) user = await User.build({id: message.from}).save()
 
                 // Se o comando for para desativar o alerta
                 if (message.text.endsWith('off')) action = false
@@ -142,7 +143,7 @@ export async function ChatBot(message) {
         for (let i = 0; i < alerts.length; i++) {
             const name = '#' + alerts[i].name
 
-            if (message.text.startsWith(name)) {
+            if (message.words[0] === name) {
                 await User.sync()
 
                 // Busca pelo usuário no banco de dados
