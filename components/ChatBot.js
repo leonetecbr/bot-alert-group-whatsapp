@@ -70,6 +70,10 @@ export async function ChatBot(message) {
     else if (message.text.startsWith('#') && message.text.length > 1) {
         // Ação padrão é ativar o alerta
         let action = true
+
+        // Se o comando for para desativar o alerta
+        if (message.words[1] === 'off') action = false
+
         // Verifica se é uma tag de alerta regional
         for (let i = 0; i < states.length; i++) {
             const name = '#' + states[i]
@@ -84,9 +88,6 @@ export async function ChatBot(message) {
 
                 // Se o usuário não existir, cria
                 if (user === null) user = await User.build({id: message.from}).save()
-
-                // Se o comando for para desativar o alerta
-                if (message.text.endsWith('off')) action = false
 
                 // Se estiver tentando modificar as configurações de capital sem definir um estado, informa o erro
                 if (message.words[0] === '#capital' && user.state === null) return 'Você precisa definir um estado antes de ativar o alerta para a capital!'
@@ -158,9 +159,6 @@ export async function ChatBot(message) {
 
                 // Se o usuário não existir, cria
                 if (user === null) user = await User.create({id: message.from})
-
-                // Se o comando for para desativar o alerta
-                if (message.text.endsWith('off')) action = false
 
                 await AlertUser.sync()
 

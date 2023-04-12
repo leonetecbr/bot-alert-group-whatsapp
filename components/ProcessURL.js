@@ -46,6 +46,12 @@ export async function processURL(url) {
         case 'www.aliexpress.com':
             return await generateAwin(url, 18879)
 
+        case 'www.nike.com.br':
+            return await generateAwin(url, 17652)
+
+        case 'www.cea.com.br':
+            return await generateAwin(url, 17648)
+
         case 'shopee.com.br':
         case 'live.shopee.com.br':
             return await generateShopee(url)

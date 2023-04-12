@@ -21,7 +21,7 @@ export async function FindAlert(message, alerts) {
         if (alert.length > 0) {
             // Adiciona o alerta a lista de alertas encontrados
             found.alerts.push(alert[0].id)
-            // Se for o último item, existir uma mensagem respondida e a quantidade palavras e alertas forem iguais,  o alerta é referente a mensagem respondida
+            // Se for o último item, existir uma mensagem respondida e a quantidade palavras e alertas forem iguais, o alerta é referente a mensagem respondida
             if (i + 1 === macthes.length && message.quotedMsgObj !== null && message.words.length === found.alerts.length) {
                 // Envia um alerta para a mensagem respondida
                 found.message = message.quotedMsgObj
@@ -30,7 +30,7 @@ export async function FindAlert(message, alerts) {
             }
             // Se não for uma resposta, o autor da mensagem for o mesmo da mensagem anterior e a quantidade palavras e alertas forem iguais, o alerta é referente a mensagem anterior
             else if (lastMessage !== null && message.words.length === found.alerts.length && message.author === lastMessage.author) {
-                // Envia um alerta para a penultima mensagem
+                // Envia um alerta para a penúltima mensagem
                 found.message = lastMessage
                 found.message.textNormal = lastMessage.text
             }

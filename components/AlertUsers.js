@@ -113,20 +113,19 @@ export async function AlertUsers(found, client) {
         return false
     }
 
-    if (found.message.chatId !== process.env.GROUP_ID_IGNORE) {
-        const links = found.message.textNormal.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
-        if (links) {
-            await Promise.all(
-                links.map(async link => {
-                    const url = await processURL(link)
+    // Transforma links conuns em links de afiliafdos
+    const links = found.message.textNormal.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
+    if (links) {
+        await Promise.all(
+            links.map(async link => {
+                const url = await processURL(link)
 
-                    if (url) text += url + '\n\n'
-                })
-            )
-        } else if (shopee) {
-            const link = await generateShopee('https://shopee.com.br/cart')
-            text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
-        }
+                if (url) text += url + '\n\n'
+            })
+        )
+    } else if (shopee) {
+        const link = await generateShopee('https://shopee.com.br/cart')
+        text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
     }
 
     // Se tiver usuários que querem receber os alertas no grupo
