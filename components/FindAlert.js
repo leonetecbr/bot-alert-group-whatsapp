@@ -22,7 +22,7 @@ export async function FindAlert(message, alerts) {
             // Adiciona o alerta a lista de alertas encontrados
             found.alerts.push(alert[0].id)
             // Se for o último item, existir uma mensagem respondida e a quantidade palavras e alertas forem iguais, o alerta é referente a mensagem respondida
-            if (i + 1 === macthes.length && message.quotedMsgObj !== null && message.words.length === found.alerts.length) {
+            if (i + 1 === macthes.length && message.quotedMsgObj && message.words.length === found.alerts.length) {
                 // Envia um alerta para a mensagem respondida
                 found.message = message.quotedMsgObj
                 found.message.textNormal = message.quotedMsgObj.text
