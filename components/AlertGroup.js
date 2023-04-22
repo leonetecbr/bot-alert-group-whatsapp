@@ -7,14 +7,22 @@ export async function alertGroup(found, client, users, text) {
     // Monta o texto da mensagem
     users.map(id => text += '@' + id.split('@')[0] + ' ')
 
-    // Envia a resposta para o grupo com as menções
-    let messageId = await client.sendReplyWithMentions(message.chatId, text, message.id, false, users)
+    let messageId = null
+
+    try {
+        // Envia a resposta para o grupo com as menções
+        messageId = await client.sendReplyWithMentions(message.chatId, text, message.id, false, users)
+    } catch (e) {
+        // Se não tiver sido enviada com sucesso, tenta enviar novamente sem resposta
+        try {
+            messageId = await client.sendTextWithMentions(message.chatId, text, false, users)
+        } catch (e) {
+            console.log(e)
+        }
+        console.log(e)
+    }
 
     console.log('Texto enviado: ', text)
-
-    // Se não tiver sido enviada com sucesso, tenta enviar novamente
-    if (!messageId || !messageId.startsWith('true_')) messageId = await client.sendTextWithMentions(message.chatId, text, false, users)
-
     console.log('Id da mensagem: ', messageId)
     console.log('Id da mensagem respondida: ', message.id)
 

@@ -16,19 +16,24 @@ const queue = new PQueue({
 })
 const ALERTS = process.env.ALERTS.split(',')
 
-create({
-    useChrome: true,
-    cacheEnabled: true,
-    cachedPatch: true,
-    disableSpins: true,
-    killClientOnLogout: true,
-    killProcessOnTimeout: true,
-    logConsoleErrors: true,
-    hostNotificationLang: 'pt-br',
-    aggressiveGarbageCollection: true,
-    ensureHeadfulIntegrity: true,
-    restartOnCrash: start,
-}).then(start)
+async function launch(){
+    try{
+        const client = await create({
+            useChrome: true,
+            disableSpins: true,
+            killClientOnLogout: true,
+            killProcessOnTimeout: true,
+            logConsoleErrors: true,
+            hostNotificationLang: 'pt-br',
+            aggressiveGarbageCollection: true,
+            ensureHeadfulIntegrity: true,
+            restartOnCrash: start,
+        })
+        await start(client)
+    } catch(e){
+        console.log(e)
+    }
+}
 
 async function start(client) {
     await sequelize.sync()
@@ -72,6 +77,8 @@ async function start(client) {
         if (state === 'UNPAIRED') console.log('Desconectado do Whatsapp!!!')
     })
 
-    // Inicia o fila de execução
+    // Inicia a fila de execução
     queue.start()
 }
+
+launch().then(() => console.log('Iniciado com sucesso!'))

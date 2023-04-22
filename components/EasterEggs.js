@@ -29,11 +29,25 @@ export async function EasterEggs(message, client, alerts){
             // Menciona todos os membros do grupo
             members.map(id => text += '@' + id.split('@')[0] + ' ')
 
-            const messageId = await client.sendReplyWithMentions(message.chatId, text, message.id, false, members)
-
-            // Se falhar, envia a mensagem sem ser como resposta
-            if (!messageId || !messageId.startsWith('true_')) await client.sendTextWithMentions(message.chatId, text, false, members)
-        } else await client.reply(message.chatId, 'Opa, me chamou? 👀', message.id, true)
+            try {
+                // Envia a resposta para o grupo com as menções
+                await client.sendReplyWithMentions(message.chatId, text, message.id, false, members)
+            } catch (e) {
+                // Se não tiver sido enviada com sucesso, tenta enviar novamente sem resposta
+                try {
+                    await client.sendTextWithMentions(message.chatId, text, false, members)
+                } catch (e) {
+                    console.log(e)
+                }
+                console.log(e)
+            }
+        } else {
+            try {
+                await client.reply(message.chatId, 'Opa, me chamou? 👀', message.id, true)
+            } catch (e) {
+                console.log(e)
+            }
+        }
 
         // Para o "digitando ..."
         await client.simulateTyping(message.chatId, false)

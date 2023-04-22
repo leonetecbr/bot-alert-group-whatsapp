@@ -40,7 +40,13 @@ export async function processMessage(client, message, alerts) {
         // Interage com o administrador quando ele envia um comando
         if (admins.includes(message.from) && message.text.startsWith('/') && message.words.length === 2) await commandsAdmin()
         // Interage com os usuários comuns
-        else await client.reply(message.from, await chatBot(message), message.id, true)
+        else {
+            try {
+                await client.reply(message.from, await chatBot(message), message.id, true)
+            } catch (e) {
+                console.log(e)
+            }
+        }
         // Marca a mensagem como lida (reply não está funcionando)
         await client.sendSeen(message.chatId)
         // Para o "digitando ..."
