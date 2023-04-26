@@ -11,7 +11,7 @@
   "dependencies": {
     "@open-wa/wa-automate": "^4.64.5",
     "dotenv": "^16.0.3",
-    "node-libcurl": "^3.0.0",
+    "node-libcurl": "^3",
     "p-queue": "^7.3.4",
     "sequelize": "^6.31",
     "sqlite3": "^5.1.6"

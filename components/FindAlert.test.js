@@ -26,7 +26,7 @@ describe('Os alertas estão sendo detectados', () => {
         })
     })
 
-    test('ALertas para mensagens anteriores funcionando', () => {
+    test('Alertas para mensagens anteriores funcionando', () => {
         message.lastMessage = {
             text: 'Teste de mensagem anterior',
             author: '5511999999999@c.us'

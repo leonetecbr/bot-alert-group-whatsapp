@@ -5,7 +5,7 @@ export async function FindAlert(message, alerts) {
         ignore: [message.author,],
     }
 
-    const matches = message.text.match(/#\w+/g)
+    const matches = message.text.match(/#[\wà-ú]+/g)
     let lastMessage = message.lastMessage ?? null
 
     // Verifica se tem possíveis alertas na mensagem

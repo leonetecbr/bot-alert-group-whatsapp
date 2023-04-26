@@ -179,6 +179,8 @@ export async function ChatBot(message) {
                 return '*Alerta para ' + name + ' ' + ((action) ? 'ativado!* ✅' : 'desativado!* ❌')
             }
         }
+
+        return message.words[0] + ' não é um alerta disponível! ❌'
     }
 
     let url = message.textNormal.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
