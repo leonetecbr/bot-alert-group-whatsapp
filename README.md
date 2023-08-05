@@ -42,15 +42,6 @@ renomei-o para ```.env``` e preencha conforme seu ambiente, rode o comando ```np
 escanei o QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas
 através do privado do bot.
 
-# Tarefas a realizar
-
-Funções sugeridas pelos membros ou necessidades identificadas por mim:
-
-- [ ] Finalizar a implementação dos alertas no privado
-- [ ] Escrever mais testes para garantir a integridade de todo código
-- [ ] Atualizar o README com prints atuais
-- [ ] Adicionar alertas regionais (ex: #sp, #rj, #mg, #bh e etc)
-
 ## Usando
 
 ### Adicionando ao(s) seu(s) grupo(s)

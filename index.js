@@ -1,84 +1,37 @@
-import dotenv from 'dotenv'
-import PQueue from 'p-queue'
-import {create} from '@open-wa/wa-automate'
-import processMessage from './components/ProcessMessage.js'
-import processAddGroup from './components/ProcessAddGroup.js'
-import processDeletion from './components/ProcessDeletion.js'
-import processCall from './components/ProcessCall.js'
-import sequelize from './databases/db.js'
-import Alert from './models/Alert.js'
+'use strict';
+
+const qrcode = require('qrcode-terminal')
+const {Client, LocalAuth,} = require('whatsapp-web.js')
+const dotenv = require('dotenv')
 
 dotenv.config()
 
-const queue = new PQueue({
-    concurrency: 4,
-    autoStart: false,
-})
 const ALERTS = process.env.ALERTS.split(',')
 
-async function launch(){
-    try{
-        const client = await create({
-            useChrome: true,
-            disableSpins: true,
-            killClientOnLogout: true,
-            killProcessOnTimeout: true,
-            logConsoleErrors: true,
-            hostNotificationLang: 'pt-br',
-            aggressiveGarbageCollection: true,
-            ensureHeadfulIntegrity: true,
-            restartOnCrash: start,
-        })
-        await start(client)
-    } catch(e){
-        console.log(e)
-    }
+async function start() {
+    const client = new Client({
+        authStrategy: new LocalAuth(),
+    })
+
+    client.on('qr', qr => qrcode.generate(qr, {small: true}))
+
+    client.on('authenticated', session => console.log('Autenticado com sucesso!'));
+
+    client.on('ready', () => console.log('Iniciado com sucesso!'))
+
+    client.on('message', message => {
+        if (message.body === '!ping') {
+            message.reply('pong')
+        }
+    })
+
+    client.on('message_revoke_everyone', message => {
+        console.log(message)
+    })
+
+    client.on('disconnected', reason => console.log("WHATSAPP DESCONECTADO!!!", reason))
+
+    await client.initialize()
 }
 
-async function start(client) {
-    await sequelize.sync()
-
-    const alerts = await Alert.findAll({
-        attributes: ['id', 'name'],
-        raw: true,
-    })
-
-    let lastMessage = null
-
-    // Verifica se os alertas estão no banco de dados
-    if (alerts.length === 0) {
-        ALERTS.map(async alert => {
-            await Alert.create({
-                name: alert
-            })
-        })
-    }
-
-    // Mensagem recebida
-    await client.onMessage(message => {
-        message.lastMessage = lastMessage
-        queue.add(() => processMessage(client, message, alerts))
-        lastMessage = message
-    })
-    // Foi adicionado em um grupo
-    await client.onAddedToGroup(chat => processAddGroup(client, chat, alerts))
-    // Mensagem deletada
-    await client.onMessageDeleted(message => queue.add(() => processDeletion(client, message)))
-    // Chamada recebida
-    await client.onIncomingCall(call => processCall(client, call))
-    // Processa as mensagens não lidas
-    await client.emitUnreadMessages()
-
-    // Estado mudou, tenta reconectar
-    client.onStateChanged(state => {
-        console.log('Mudou de estado:', state)
-
-        if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus()
-        if (state === 'UNPAIRED') console.log('Desconectado do Whatsapp!!!')
-    })
-
-    // Inicia a fila de execução
-    queue.start()
-}
-
-launch().then(() => console.log('Iniciado com sucesso!'))
+start()

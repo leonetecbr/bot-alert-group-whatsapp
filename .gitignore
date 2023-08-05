@@ -9,4 +9,4 @@ node_modules
 /logs
 resources/admin.json
 **.data.json
-**_IGNORE_**
+**.wwebjs_**
