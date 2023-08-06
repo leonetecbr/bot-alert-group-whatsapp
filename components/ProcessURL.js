@@ -1,11 +1,11 @@
-import generateAwin from './GenerateAwin.js'
-import generateShopee from './GenerateShopee.js'
-import getLocation from './GetLocation.js'
-import processPelando from './ProcessPelando.js'
+const generateAwin = require('./GenerateAwin')
+const generateShopee = require('./GenerateShopee')
+const getLocation = require('./GetLocation')
+const processPelando = require('./ProcessPelando')
 
-const decodeURL = url => url.replace('%3F', '?').replace('%3A', ':').replace('%2F', '/')
+module.exports = async function processURL(url){
+    const decodeURL = url => url.replace('%3F', '?').replace('%3A', ':').replace('%2F', '/')
 
-export async function processURL(url) {
     url = url.split('?')
     let params = url[1]
 
@@ -94,5 +94,3 @@ export async function processURL(url) {
             return false
     }
 }
-
-export default processURL

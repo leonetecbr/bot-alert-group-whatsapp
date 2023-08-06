@@ -1,6 +1,6 @@
-import {curly} from 'node-libcurl'
+const {curly} = require('node-libcurl')
 
-export async function getLocation(url) {
+module.exports = async url => {
     const {statusCode, headers} = await curly.get(url, {
         SSL_VERIFYHOST: false,
         SSL_VERIFYPEER: false,
@@ -11,5 +11,3 @@ export async function getLocation(url) {
     if (typeof headers[0].Location !== 'undefined') return headers[0].Location
     return headers[0].location
 }
-
-export default getLocation

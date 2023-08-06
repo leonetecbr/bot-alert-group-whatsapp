@@ -9,4 +9,6 @@ node_modules
 /logs
 resources/admin.json
 **.data.json
-**_IGNORE_**
+**.wwebjs_**
+test.js
+20230805184557-demo-user.js

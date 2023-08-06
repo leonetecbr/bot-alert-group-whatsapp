@@ -1,57 +1,55 @@
-export async function EasterEggs(message, client, alerts){
-    const me = (await client.getMe())['status']
+/**
+ * Busca por mensagens que disparam easter eggs
+ *
+ * @return {Promise<void>}
+ */
+module.exports = async (me, message, alerts) => {
     const admins = process.env.ADMINS.split(',')
+    const chat = message.chat;
 
     // Responde a mensagens que o mencionam
-    if (message.mentionedJidList.includes(me)) {
+    if (message.mentionedIds.includes(me._serialized)) {
         // Inicia o "digitando ..."
-        await client.simulateTyping(message.chatId, true)
+        chat.sendStateTyping().catch(e => console.log(e))
 
-        if (admins.includes(message.author) && message.text === '@' + me.split('@')[0] + ' conta a novidade aí') {
-            const members = await client.getGroupMembersId(message.chatId)
+        if (admins.includes(message.author) && message.body === '@' + me.user + ' conta a novidade aí') {
             let text = 'A novidade é que agora os alertas podem ser enviados no privado, basta ativar a opção' +
                 ' no menu de configurações na conversa comigo.\n\nE pra quem ainda não me conhece, sou o bot que' +
                 ' te ajuda a não perder as melhores promoções. Para ser avisado também, me mande uma mensagem' +
                 ' no privado.\n\nViu alguma promoção interessante? Envie uma das hashtags abaixo para que eu possa ' +
                 'avisar os demais participantes do grupo:\n'
+            let mentions = []
 
-            // Remove o bot do array de membros
-            members.splice(members.indexOf(me), 1)
-
-            // Remove quem escreveu a mensagem do array de membros
-            members.splice(members.indexOf(message.author), 1)
 
             // Lista os alertas disponíveis
-            alerts.map(alert => text += '\n```#' + alert.name + '```')
+            await Promise.all(
+                alerts.map(alert => text += '\n```#' + alert.name + '```')
+            )
 
             text += '\n\n'
 
-            // Menciona todos os membros do grupo
-            members.map(id => text += '@' + id.split('@')[0] + ' ')
+            // Menciona todos os participantes do grupo
+            for (const member of chat.participants) {
+                const contact = await client.getContactById(member.id._serialized);
 
-            try {
-                // Envia a resposta para o grupo com as menções
-                await client.sendReplyWithMentions(message.chatId, text, message.id, false, members)
-            } catch (e) {
-                // Se não tiver sido enviada com sucesso, tenta enviar novamente sem resposta
-                try {
-                    await client.sendTextWithMentions(message.chatId, text, false, members)
-                } catch (e) {
-                    console.log(e)
+                // Remove o bot e o autor do array de menções
+                if (member.id._serialized !== me._serialized && member.id._serialized !== message.author){
+                    mentions.push(contact)
+                    text += `@${member.id.user} `;
                 }
-                console.log(e)
             }
+
+            // Tenta enviar como resposta, em caso de falha envia com mensagem normal
+            message.reply(text, {mentions}).catch(e => {
+                console.log(e)
+                chat.sendMessage(text, {mentions}).catch(e => console.log(e))
+                chat.sendSeen().catch(e => console.log(e))
+            })
         } else {
-            try {
-                await client.reply(message.chatId, 'Opa, me chamou? 👀', message.id, true)
-            } catch (e) {
-                console.log(e)
-            }
+            message.reply('Opa, me chamou? 👀').catch(e => console.log(e))
         }
 
         // Para o "digitando ..."
-        await client.simulateTyping(message.chatId, false)
+        chat.clearState().catch(e => console.log(e))
     }
 }
-
-export default EasterEggs

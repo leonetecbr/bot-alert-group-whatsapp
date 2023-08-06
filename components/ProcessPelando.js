@@ -1,7 +1,7 @@
-import {curly} from 'node-libcurl'
-import processURL from './ProcessURL.js'
+const {curly} = require('node-libcurl')
+const processURL = require('./ProcessURL')
 
-export async function processPelando(url) {
+module.exports = async url => {
     const {data} = await curly.get(url, {
         SSL_VERIFYHOST: false,
         SSL_VERIFYPEER: false,
@@ -18,5 +18,3 @@ export async function processPelando(url) {
     // Se tiver cupom, retorna-o com a url original
     return (coupon.length > 0 && link) ? coupon[0][1] + '\n\n' + link : link
 }
-
-export default processPelando

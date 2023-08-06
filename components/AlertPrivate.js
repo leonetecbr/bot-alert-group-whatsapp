@@ -1,5 +1,3 @@
-export async function alertPrivate() {
+module.exports = async () => {
     // TODO Enviar mensagem privada
 }
-
-export default alertPrivate

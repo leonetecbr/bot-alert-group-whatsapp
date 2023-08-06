@@ -1,7 +1,6 @@
-import User from '../models/User.js'
-import Alert from '../models/Alert.js'
+const {User, Alert} = require('../models')
 
-export async function commandsAdmin(client, message) {
+module.exports = async (message) => {
     const param = message.words[1]
     const command = message.words[0].replace('/', '')
 
@@ -9,41 +8,52 @@ export async function commandsAdmin(client, message) {
     if (command === 'del') {
         // Deletar o usuário
         if (param.endsWith('@c.us')) {
-            await User.sync()
-
-            const user = await User.findByPk(param)
+            const user = await User.findByPk(param, {
+                attributes: ['id'],
+            })
 
             if (user) {
-                await user.destroy()
-                await client.react(message.id, '✅')
-            } else await client.react(message.id, '❌')
+                user.destroy()
+                    .then(() => {
+                        message.chat.sendSeen().catch(e => console.log(e))
+                        message.react('✅').catch(e => console.log(e))
+                    })
+                    .catch(e => console.log(e))
+            } else message.react('❌').catch(e => console.log(e))
         }
         // Deletar alerta
         else {
-            await Alert.sync()
-
             const alert = await Alert.findOne({
                 where: {
                     name: param
-                }
+                },
+                attributes: ['id']
             })
 
             if (alert) {
-                await alert.destroy()
-                await client.react(message.id, '✅')
-            } else await client.react(message.id, '❌')
+                alert.destroy()
+                    .then(() => {
+                        message.chat.sendSeen().catch(e => console.log(e))
+                        message.react('✅').then(e => console.log(e))
+                    })
+                    .catch(e => console.log(e))
+            } else message.react('❌').catch(e => console.log(e))
         }
     }
     // Criar alerta
     else if (command === 'add') {
-        await Alert.create({
+        Alert.create({
             name: param,
         })
-
-        await client.react(message.id, '✅')
+            .then(() => {
+                message.chat.sendSeen().catch(e => console.log(e))
+                message.react('✅').catch(e => console.log(e))
+            })
+            .catch(e => {
+                console.log(e)
+                message.react('❌').catch(e => console.log(e))
+            })
     }
     // Comando inválido
-    else await client.reply(message.from, 'Comando inválido', message.id, true)
+    else await message.reply('Comando inválido!')
 }
-
-export default commandsAdmin

@@ -1,84 +1,58 @@
-import dotenv from 'dotenv'
-import PQueue from 'p-queue'
-import {create} from '@open-wa/wa-automate'
-import processMessage from './components/ProcessMessage.js'
-import processAddGroup from './components/ProcessAddGroup.js'
-import processDeletion from './components/ProcessDeletion.js'
-import processCall from './components/ProcessCall.js'
-import sequelize from './databases/db.js'
-import Alert from './models/Alert.js'
+'use strict';
+
+const qrcode = require('qrcode-terminal')
+const {Client, LocalAuth,} = require('whatsapp-web.js')
+const dotenv = require('dotenv')
+const processMessage = require('./components/ProcessMessage')
+const processCall = require('./components/ProcessCall')
+const processDeletion = require('./components/ProcessDeletion')
+const processAddGroup = require('./components/ProcessAddGroup')
 
 dotenv.config()
 
-const queue = new PQueue({
-    concurrency: 4,
-    autoStart: false,
-})
-const ALERTS = process.env.ALERTS.split(',')
+async function start() {
+    console.log('Iniciando ...')
 
-async function launch(){
-    try{
-        const client = await create({
-            useChrome: true,
-            disableSpins: true,
-            killClientOnLogout: true,
-            killProcessOnTimeout: true,
-            logConsoleErrors: true,
-            hostNotificationLang: 'pt-br',
-            aggressiveGarbageCollection: true,
-            ensureHeadfulIntegrity: true,
-            restartOnCrash: start,
-        })
-        await start(client)
-    } catch(e){
-        console.log(e)
-    }
-}
-
-async function start(client) {
-    await sequelize.sync()
-
-    const alerts = await Alert.findAll({
-        attributes: ['id', 'name'],
-        raw: true,
+    const client = new Client({
+        authStrategy: new LocalAuth(),
     })
-
     let lastMessage = null
 
-    // Verifica se os alertas estão no banco de dados
-    if (alerts.length === 0) {
-        ALERTS.map(async alert => {
-            await Alert.create({
-                name: alert
-            })
-        })
-    }
+    // Pronto para mostrar o QR Code
+    client.on('qr', qr => qrcode.generate(qr, {small: true}))
+
+    // Autenticado
+    client.on('authenticated', session => console.log('Autenticado com sucesso!'));
+
+    // WhatsApp conectado
+    client.on('ready', () => console.log('Iniciado com sucesso!'))
 
     // Mensagem recebida
-    await client.onMessage(message => {
+    client.on('message', async message => {
         message.lastMessage = lastMessage
-        queue.add(() => processMessage(client, message, alerts))
-        lastMessage = message
+        lastMessage = await processMessage(client, message)
     })
-    // Foi adicionado em um grupo
-    await client.onAddedToGroup(chat => processAddGroup(client, chat, alerts))
-    // Mensagem deletada
-    await client.onMessageDeleted(message => queue.add(() => processDeletion(client, message)))
-    // Chamada recebida
-    await client.onIncomingCall(call => processCall(client, call))
-    // Processa as mensagens não lidas
-    await client.emitUnreadMessages()
 
-    // Estado mudou, tenta reconectar
-    client.onStateChanged(state => {
+    // Mensagem deletada para todos
+    client.on('message_revoke_everyone', async (message, revoked_msg) => await processDeletion(client, message, revoked_msg))
+
+    // Chamada recebida
+    client.on('incoming_call', async call => await processCall(client, call))
+
+    // Estado mudou
+    client.on('change_state', state => {
         console.log('Mudou de estado:', state)
 
-        if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus()
-        if (state === 'UNPAIRED') console.log('Desconectado do Whatsapp!!!')
+        if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.resetState()
     })
 
-    // Inicia a fila de execução
-    queue.start()
+    // Foi adicionado em um grupo
+    client.on('group_join', notification => processAddGroup(client, notification))
+
+    // Desconectado
+    client.on('disconnected', e => console.log('Desconectado do Whatsapp!!!', e))
+
+    await client.initialize()
 }
 
-launch().then(() => console.log('Iniciado com sucesso!'))
+start()

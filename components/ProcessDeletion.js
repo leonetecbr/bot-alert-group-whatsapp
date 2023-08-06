@@ -1,22 +1,21 @@
-import Alerted from '../models/Alerted.js'
+const {Alerted} = require('../models')
 
-export async function processDeletion(client, messageDeleted) {
-    if (messageDeleted.from === undefined) return false
+module.exports = async (client, messageDeleted, revokedMessage) => {
+    const message = revokedMessage ?? messageDeleted
 
-    await Alerted.sync()
+    if (message.from === undefined) return false
 
-    const messages = await Alerted.findAll({
+    const alerted = await Alerted.findAll({
         where: {
-            alertedMessageId: messageDeleted.id
+            alertedMessageId: message.id,
         },
+        raw: true,
         attributes: ['messageId'],
     })
 
-    messages.map(async message => {
-        await client.deleteMessage(messageDeleted.from, message.messageId)
-        console.log('|***** Mensagem deletada:  ', message.messageId, '*****|')
-        await message.destroy()
+    alerted.map(async alert => {
+        // TODO: Delete message alert.messageId
+        console.log('|***** Mensagem deletada:  ', alert.messageId, '*****|')
+        await alert.destroy()
     })
 }
-
-export default processDeletion

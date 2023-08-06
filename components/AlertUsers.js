@@ -1,103 +1,115 @@
-import User from '../models/User.js'
-import Alert from '../models/Alert.js'
-import AlertUser from '../models/AlertUser.js'
-import generateShopee from './GenerateShopee.js'
-import processURL from './ProcessURL.js'
-import alertGroup from './AlertGroup.js'
-import alertPrivate from './AlertPrivate.js'
+const {User, Alert} = require('../models')
+const {Op} = require('sequelize')
+const generateShopee = require('./GenerateShopee')
+const processURL = require('./ProcessURL')
+const alertPrivate = require('./AlertPrivate')
+const alertGroup = require('./AlertGroup')
 
-export async function AlertUsers(found, client) {
+module.exports = async (client, chat, found) => {
     // Inicia o "digitando ..."
-    await client.simulateTyping(found.message.chatId, true)
-    await User.sync()
+    chat.sendStateTyping().catch(e => console.log(e))
 
     console.log('_____________________________________________________________________________________________________')
-    console.log('Texto da mensagem: ', found.message.textNormal)
+    console.log('Texto da mensagem: ', found.message.text)
     console.log('Alertas encontrados: ', found.alerts)
 
-    let alertsId, alerts, groupUsers = [], privateUsers = [], text = 'Você tem um novo alerta para *', shopee = false
+    let groupUsers = [], privateUsers = [], text = 'Você tem um novo alerta para *', shopee = false
     const message = found.message
-    const members = await client.getGroupMembersId(message.chatId)
+    let members = []
+
+    for (const member of chat.participants) {
+        members.push(member.id._serialized)
+    }
 
     // Se tiver encontrado apenas um alerta
     if (found.alerts.length === 1) {
-        alertsId = found.alerts[0]
-        alerts = await Alert.findByPk(alertsId, {
-            include: {
-                model: AlertUser,
-                as: 'users',
-                attributes: ['UserId'],
-                include: {
-                    model: User,
-                    as: 'user',
-                    attributes: ['privateAlerts',],
-                },
+        const users = await User.findAll({
+            where: {
+                '$alerts.id$': found.alerts[0]
             },
-            attributes: ['name'],
-        })
+            include: 'alerts',
+            raw: true,
+            attributes: ['id', 'privateAlerts'],
+        });
 
-        alerts.users.map(user => {
-            // Verifica se o usuário quer receber os alertas no privado
-            if (user.user.privateAlerts) privateUsers.push(user.UserId)
-            // Se não, envia para o grupo
-            else groupUsers.push(user.UserId)
-        })
+        // Se tiver usuários com esse alerta ativado
+        if (users) {
+            const alert = await Alert.findOne({
+                where: {
+                    id: found.alerts[0]
+                },
+                attributes: ['name'],
+                raw: true
+            });
 
-        // Se o alerta for do Shopee
-        if (alerts.name === 'shopee') shopee = true
+            await Promise.all(
+                users.map(user => {
+                    // Verifica se o usuário quer receber os alertas no privado
+                    if (user.privateAlerts) privateUsers.push(user.id)
+                    // Se não, envia para o grupo
+                    else groupUsers.push(user.id)
+                })
+            )
 
-        // Insere o nome do alerta no texto
-        text += '#' + alerts.name + '*\n\n'
+            // Se o alerta for do Shopee
+            if (alert.name === 'shopee') shopee = true
+
+            // Insere o nome do alerta no texto
+            text += '#' + alert.name + '*\n\n'
+        }
     }
     // Se tiver encontrado mais de um alerta
     else {
-        alertsId = found.alerts
-
-        alerts = await Alert.findAll({
+        const users = await User.findAll({
             where: {
-                id: alertsId
+                '$alerts.id$': {
+                    [Op.or]: found.alerts
+                }
             },
-            include: {
-                model: AlertUser,
-                as: 'users',
-                attributes: ['UserId'],
-                include: {
-                    model: User,
-                    as: 'user',
-                    attributes: ['privateAlerts',],
+            include: 'alerts',
+            attributes: ['id', 'privateAlerts'],
+        });
+
+        await Promise.all(
+            users.map(user => {
+                // Verifica se o usuário quer receber os alertas no privado
+                if (user.privateAlerts) {
+                    // Evita que usuários sejam inseridos no array mais de uma vez
+                    if (!privateUsers.includes(user.id)) privateUsers.push(user.id)
+                }
+                // Se não, envia para o grupo
+                else if (!groupUsers.includes(user.id)) groupUsers.push(user.id)
+            })
+        )
+
+        // Se tiver usuários com pelo menos um desses alertas ativado
+        if (users) {
+            let alerts = await Alert.findAll({
+                where: {
+                    id: {
+                        [Op.or]: found.alerts
+                    }
                 },
-            },
-            attributes: ['id', 'name'],
-        })
+                attributes: ['id', 'name'],
+                raw: true
+            })
 
-        alerts.map(alert => alert.users.map(user => {
-            // Verifica se o usuário quer receber os alertas no privado
-            if (user.user.privateAlerts) {
-                // Evita que usuários sejam inseridos no array mais de uma vez
-                if (!privateUsers.includes(user.UserId)) privateUsers.push(user.UserId)
-            }
-            // Se não, envia para o grupo
-            else if (!groupUsers.includes(user.UserId)) groupUsers.push(user.UserId)
-        }))
+            // Se algum dos alertas for do Shopee
+            if (alerts.some(alert => alert.name === 'shopee')) shopee = true
 
-        // Se algum dos alertas for do Shopee
-        if (alerts.some(alert => alert.name === 'shopee')) shopee = true
+            // Gera o título com o nome dos alertas
+            await Promise.all(
+                alerts.map((alert, i, alerts) => {
+                    if (i !== 0 && i + 1 === alerts.length) text += '* e *'
 
-        // Insere o nome dos alertas no texto
-        const alertsName = {}
+                    text += '#' + alert.name
 
-        // Busca o nome dos alertas
-        await Promise.all(alerts.map(alert => alertsName[alert.id] = alert.name))
+                    if (i + 3 <= alerts.length) text += '*, *'
+                })
+            )
 
-        alertsId.map((id, i) => {
-            if (i !== 0 && i + 1 === alertsId.length) text += '* e *'
-
-            text += '#' + alertsName[id]
-
-            if (i + 3 <= alertsId.length) text += '*, *'
-        })
-
-        text += '*\n\n'
+            text += '*\n\n'
+        }
     }
 
     // Exclui usuários que não estão no grupo e o autor da(s) mensagem(ns)
@@ -107,32 +119,27 @@ export async function AlertUsers(found, client) {
     // Se não existirem usuários com o(s) alerta(s) ativado(s) interrompe a função
     if (groupUsers.length === 0 && privateUsers.length === 0) {
         // Para o "digitando ..."
-        await client.simulateTyping(found.message.chatId, false)
+        message.chat.clearState().catch(e => console.log(e))
         // Marca a mensagem como lida
-        await client.sendSeen(found.message.chatId)
+        message.chat.sendSeen().catch(e => console.log(e))
         return false
     }
 
-    // Transforma links conuns em links de afiliafdos
-    const links = found.message.textNormal.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
+    // Transforma links comuns em links de afiliados
+    const links = message.text.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
     if (links) {
-        await Promise.all(
-            links.map(async link => {
-                const url = await processURL(link)
-
-                if (url) text += url + '\n\n'
-            })
-        )
+        for (const link of links){
+            const url = await processURL(link)
+            if (url) text += url + '\n\n'
+        }
     } else if (shopee) {
         const link = await generateShopee('https://shopee.com.br/cart')
         text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
     }
 
     // Se tiver usuários que querem receber os alertas no grupo
-    if (groupUsers.length > 0) alertGroup(found, client, groupUsers, text).then(() => console.log('Enviado para o grupo!'))
+    if (groupUsers.length > 0) alertGroup(client, found, groupUsers, text).then(() => console.log('Enviado para o grupo!'))
 
     // Se tiver usuários que querem receber os alertas no privado
     if (privateUsers.length > 0) alertPrivate().then(() => console.log('Enviado para o privado!'))
 }
-
-export default AlertUsers

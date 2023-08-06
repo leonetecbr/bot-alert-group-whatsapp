@@ -1,9 +1,10 @@
-export async function processCall(client, call) {
-    // Inicia o "digitando ..."
-    await client.simulateTyping(call.peerJid, true)
-    await client.sendText(call.peerJid, 'Este é um sistema automatizado que não aceita ligações!')
-    // Para o "digitando ..."
-    await client.simulateTyping(call.peerJid, false)
-}
+module.exports = async (client, call) => {
+    const chat = await client.getChatById(call.peerJid)
 
-export default processCall
+    // Inicia o "digitando ..."
+    chat.sendStateTyping().catch(e => console.log(e))
+    // Envia aviso ao usuário
+    chat.sendMessage('Este é um sistema automatizado que não aceita ligações!').catch(e => console.log(e))
+    // Para o "digitando ..."
+    chat.clearState().catch(e => console.log(e))
+}
