@@ -3,15 +3,17 @@
 const qrcode = require('qrcode-terminal')
 const {Client, LocalAuth,} = require('whatsapp-web.js')
 const dotenv = require('dotenv')
+const processMessage = require('./components/ProcessMessage')
 
 dotenv.config()
 
-const ALERTS = process.env.ALERTS.split(',')
-
 async function start() {
+    console.log('Iniciando ...')
+
     const client = new Client({
         authStrategy: new LocalAuth(),
     })
+    let lastMessage = null
 
     client.on('qr', qr => qrcode.generate(qr, {small: true}))
 
@@ -19,10 +21,9 @@ async function start() {
 
     client.on('ready', () => console.log('Iniciado com sucesso!'))
 
-    client.on('message', message => {
-        if (message.body === '!ping') {
-            message.reply('pong')
-        }
+    client.on('message', async message => {
+        message.lastMessage = lastMessage
+        lastMessage = await processMessage(client, message)
     })
 
     client.on('message_revoke_everyone', message => {

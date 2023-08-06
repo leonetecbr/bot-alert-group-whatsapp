@@ -1,5 +1,10 @@
-const {Model} = require('sequelize');
+const {Model, DataTypes} = require('sequelize');
 
+/**
+ * @param {Sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @return Model
+ * */
 module.exports = (sequelize, DataTypes) => {
   class Alert extends Model {
     static associate(models) {
@@ -12,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.Alerted, {
         through: models.AlertedAlert,
         foreignKey: 'AlertId',
-        as: 'Alerteds'
+        as: 'alerteds'
       })
     }
   }

@@ -1,5 +1,10 @@
-const {Model} = require('sequelize')
+const {Model, DataTypes} = require('sequelize')
 
+/**
+ * @param {Sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @return Model
+ * */
 module.exports = (sequelize, DataTypes) => {
   class UserAlert extends Model {}
 

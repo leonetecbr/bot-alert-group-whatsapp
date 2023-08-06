@@ -1,7 +1,10 @@
-'use strict';
+const {Model, DataTypes} = require('sequelize');
 
-const {Model} = require('sequelize');
-
+/**
+ * @param {Sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @return Model
+ * */
 module.exports = (sequelize, DataTypes) => {
   class Alerted extends Model {
     static associate(models) {

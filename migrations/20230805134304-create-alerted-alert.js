@@ -13,7 +13,7 @@ module.exports = {
       AlertId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Alert',
+          model: 'Alerts',
           key: 'id',
           onDelete: 'CASCADE',
         },
@@ -21,7 +21,7 @@ module.exports = {
       AlertedId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Alerted',
+          model: 'Alerteds',
           key: 'id',
           onDelete: 'CASCADE',
         },

@@ -1,7 +1,10 @@
-'use strict';
+const {Model, DataTypes} = require('sequelize');
 
-const {Model} = require('sequelize');
-
+/**
+ * @param {Sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @return Model
+ * */
 module.exports = (sequelize, DataTypes) => {
   class AlertedAlert extends Model {}
 
@@ -15,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     AlertId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Alert',
+        modelName: 'Alert',
         key: 'id',
         onDelete: 'CASCADE',
       },
@@ -23,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     AlertedId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Alerted',
+        modelName: 'Alerted',
         key: 'id',
         onDelete: 'CASCADE',
       },

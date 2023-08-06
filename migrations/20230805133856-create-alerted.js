@@ -11,7 +11,7 @@ module.exports = {
         autoIncrement: false,
       },
       alertedMessageId: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       createdAt: {
