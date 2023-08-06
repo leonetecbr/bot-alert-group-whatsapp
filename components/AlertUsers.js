@@ -1,6 +1,9 @@
 const {User, Alert} = require('../models')
 const {Op} = require('sequelize')
 const generateShopee = require('./GenerateShopee')
+const processURL = require('./ProcessURL')
+const alertPrivate = require('./AlertPrivate')
+const alertGroup = require('./AlertGroup')
 
 module.exports = async (client, chat, found) => {
     // Inicia o "digitando ..."
@@ -14,8 +17,8 @@ module.exports = async (client, chat, found) => {
     const message = found.message
     let members = []
 
-    for (const [key, member] of Object.entries(chat.groupMetadata.participants)) {
-        members.push(member.id)
+    for (const member of chat.participants) {
+        members.push(member.id._serialized)
     }
 
     // Se tiver encontrado apenas um alerta
@@ -108,7 +111,7 @@ module.exports = async (client, chat, found) => {
             text += '*\n\n'
         }
     }
-    //
+
     // Exclui usuários que não estão no grupo e o autor da(s) mensagem(ns)
     groupUsers = groupUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
     privateUsers = privateUsers.filter(user => (members.includes(user) && !found.ignore.includes(user)))
@@ -123,23 +126,20 @@ module.exports = async (client, chat, found) => {
     }
 
     // Transforma links comuns em links de afiliados
-    const links = found.message.text.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
-    // if (links) {
-    //     await Promise.all(
-    //         links.map(async link => {
-    //             const url = await processURL(link)
-    //
-    //             if (url) text += url + '\n\n'
-    //         })
-    //     )
-    /*} else*/ if (shopee) {
+    const links = message.text.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
+    if (links) {
+        for (const link of links){
+            const url = await processURL(link)
+            if (url) text += url + '\n\n'
+        }
+    } else if (shopee) {
         const link = await generateShopee('https://shopee.com.br/cart')
         text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
     }
 
-    // // Se tiver usuários que querem receber os alertas no grupo
-    // if (groupUsers.length > 0) alertGroup(found, client, groupUsers, text).then(() => console.log('Enviado para o grupo!'))
-    //
-    // // Se tiver usuários que querem receber os alertas no privado
-    // if (privateUsers.length > 0) alertPrivate().then(() => console.log('Enviado para o privado!'))
+    // Se tiver usuários que querem receber os alertas no grupo
+    if (groupUsers.length > 0) alertGroup(client, found, groupUsers, text).then(() => console.log('Enviado para o grupo!'))
+
+    // Se tiver usuários que querem receber os alertas no privado
+    if (privateUsers.length > 0) alertPrivate().then(() => console.log('Enviado para o privado!'))
 }

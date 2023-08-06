@@ -1,3 +1,8 @@
+/**
+ * Busca por alertas nas mensagens recebidas dos grupos
+ *
+ * @return {Promise<{alerts: *[], ignore: string[], message: import('whatsapp-web.js').Message}>}
+ */
 module.exports = async (message, alerts) => {
     let found = {
         message: message,

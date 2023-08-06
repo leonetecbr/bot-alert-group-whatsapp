@@ -1,6 +1,9 @@
 const {Alert} = require('../models')
 const findAlert = require('./FindAlert')
 const alertUsers = require('./AlertUsers')
+const easterEggs = require('./EasterEggs')
+const commandsAdmin = require('./CommandsAdmin')
+const chatBot = require('./ChatBot')
 
 /**
  * Processa mensagens recebidas em grupos e chats privados
@@ -37,8 +40,8 @@ module.exports = async (client, message) => {
 
         // Envia uma mensagem de resposta marcando os usuários com os alertas ativados
         if (found.alerts.length !== 0) await alertUsers(client, message.chat, found)
-        // // Se não encontrar alerta, procura por easter eggs
-        // else if (message.mentionedIds.length !== 0) await easterEggs(message, client, alerts)
+        // Se não encontrar alerta, procura por easter eggs
+        else if (message.mentionedIds.length !== 0) await easterEggs(client.info.wid, message, alerts)
         // Marca a mensagem como lida
         else message.chat.sendSeen().catch(e => console.log(e))
     // Evita que o bot responda empresas que eventualmente envie uma mensagem privada para o número
@@ -46,9 +49,9 @@ module.exports = async (client, message) => {
         // Inicia o "digitando ..."
         message.chat.sendStateTyping().catch(e => console.log(e))
 
-        // if (admins.includes(message.from) && message.body.startsWith('/') && message.words.length === 2){
-        //     await commandsAdmin(client, message)
-        // } else await message.reply(await chatBot(message))
+        if (admins.includes(message.from) && message.body.startsWith('/') && message.words.length === 2){
+            await commandsAdmin(message)
+        } else message.reply(await chatBot(message)).catch(e => console.log(e))
 
         // Para o "digitando ..."
         message.chat.clearState().catch(e => console.log(e))

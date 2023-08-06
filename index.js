@@ -4,6 +4,9 @@ const qrcode = require('qrcode-terminal')
 const {Client, LocalAuth,} = require('whatsapp-web.js')
 const dotenv = require('dotenv')
 const processMessage = require('./components/ProcessMessage')
+const processCall = require('./components/ProcessCall')
+const processDeletion = require('./components/ProcessDeletion')
+const processAddGroup = require('./components/ProcessAddGroup')
 
 dotenv.config()
 
@@ -15,22 +18,39 @@ async function start() {
     })
     let lastMessage = null
 
+    // Pronto para mostrar o QR Code
     client.on('qr', qr => qrcode.generate(qr, {small: true}))
 
+    // Autenticado
     client.on('authenticated', session => console.log('Autenticado com sucesso!'));
 
+    // WhatsApp conectado
     client.on('ready', () => console.log('Iniciado com sucesso!'))
 
+    // Mensagem recebida
     client.on('message', async message => {
         message.lastMessage = lastMessage
         lastMessage = await processMessage(client, message)
     })
 
-    client.on('message_revoke_everyone', message => {
-        console.log(message)
+    // Mensagem deletada para todos
+    client.on('message_revoke_everyone', async (message, revoked_msg) => await processDeletion(client, message, revoked_msg))
+
+    // Chamada recebida
+    client.on('incoming_call', async call => await processCall(client, call))
+
+    // Estado mudou
+    client.on('change_state', state => {
+        console.log('Mudou de estado:', state)
+
+        if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.resetState()
     })
 
-    client.on('disconnected', reason => console.log("WHATSAPP DESCONECTADO!!!", reason))
+    // Foi adicionado em um grupo
+    client.on('group_join', notification => processAddGroup(client, notification))
+
+    // Desconectado
+    client.on('disconnected', e => console.log('Desconectado do Whatsapp!!!', e))
 
     await client.initialize()
 }
