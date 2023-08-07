@@ -55,5 +55,5 @@ module.exports = async (message) => {
             })
     }
     // Comando inválido
-    else await message.reply('Comando inválido!')
+    else message.reply('Comando inválido!').catch(e => console.log(e))
 }

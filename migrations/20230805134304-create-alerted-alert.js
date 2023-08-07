@@ -19,10 +19,10 @@ module.exports = {
         },
       },
       AlertedId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         references: {
           model: 'Alerteds',
-          key: 'id',
+          key: 'messageId',
           onDelete: 'CASCADE',
         },
       },

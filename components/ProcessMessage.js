@@ -29,10 +29,17 @@ module.exports = async (client, message) => {
     message.words = message.body.replace(/\n/g, ' ').split(' ')
 
     // Obtém detalhes do chat
-    message.chat = await message.getChat()
+    await message.getChat()
+        .then(chat => message.chat = chat)
+        .catch(e => console.log)
 
     // Obtém detalhes de quem enviou
-    message.sender = await message.getContact()
+    await message.getContact()
+        .then(contact => message.sender = contact)
+        .catch(e => console.log)
+
+    // Se não tiver sido possível obter os dados, encerra a função
+    if (!message.sender || !message.chat) return message.lastMessage
 
     // Em grupos, busca por alertas nas mensagens recebidas,
     if (message.chat.isGroup) {

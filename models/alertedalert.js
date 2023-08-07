@@ -18,16 +18,16 @@ module.exports = (sequelize, DataTypes) => {
     AlertId: {
       type: DataTypes.INTEGER,
       references: {
-        modelName: 'Alert',
+        model: 'Alerts',
         key: 'id',
         onDelete: 'CASCADE',
       },
     },
     AlertedId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       references: {
-        modelName: 'Alerted',
-        key: 'id',
+        model: 'Alerteds',
+        key: 'messageId',
         onDelete: 'CASCADE',
       },
     },
