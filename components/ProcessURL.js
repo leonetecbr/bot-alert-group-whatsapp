@@ -54,7 +54,7 @@ module.exports = async function processURL(url){
 
         case 'shopee.com.br':
         case 'live.shopee.com.br':
-            return await generateShopee(url)
+            return false//await generateShopee(url)
 
         case 'www.amazon.com.br':
             return url + '?tag=' + process.env.AMAZON_TAG

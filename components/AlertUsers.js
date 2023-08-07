@@ -133,8 +133,8 @@ module.exports = async (client, chat, found) => {
             if (url) text += url + '\n\n'
         }
     } else if (shopee) {
-        const link = await generateShopee('https://shopee.com.br/cart')
-        text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
+        // const link = await generateShopee('https://shopee.com.br/cart')
+        // text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
     }
 
     // Se tiver usuários que querem receber os alertas no grupo
