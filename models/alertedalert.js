@@ -1,4 +1,4 @@
-const {Model, DataTypes} = require('sequelize');
+const {Model, DataTypes} = require('sequelize')
 
 /**
  * @param {Sequelize} sequelize
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     updatedAt: false,
     modelName: 'AlertedAlert',
-  });
+  })
 
-  return AlertedAlert;
-};
+  return AlertedAlert
+}

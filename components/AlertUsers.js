@@ -30,7 +30,7 @@ module.exports = async (client, chat, found) => {
             include: 'alerts',
             raw: true,
             attributes: ['id', 'privateAlerts'],
-        });
+        })
 
         // Se tiver usuários com esse alerta ativado
         if (users) {
@@ -40,16 +40,14 @@ module.exports = async (client, chat, found) => {
                 },
                 attributes: ['name'],
                 raw: true
-            });
+            })
 
-            await Promise.all(
-                users.map(user => {
-                    // Verifica se o usuário quer receber os alertas no privado
-                    if (user.privateAlerts) privateUsers.push(user.id)
-                    // Se não, envia para o grupo
-                    else groupUsers.push(user.id)
-                })
-            )
+            for (const user of users) {
+                // Verifica se o usuário quer receber os alertas no privado
+                if (user.privateAlerts) privateUsers.push(user.id)
+                // Se não, envia para o grupo
+                else groupUsers.push(user.id)
+            }
 
             // Se o alerta for do Shopee
             if (alert.name === 'shopee') shopee = true
@@ -68,19 +66,17 @@ module.exports = async (client, chat, found) => {
             },
             include: 'alerts',
             attributes: ['id', 'privateAlerts'],
-        });
+        })
 
-        await Promise.all(
-            users.map(user => {
-                // Verifica se o usuário quer receber os alertas no privado
-                if (user.privateAlerts) {
-                    // Evita que usuários sejam inseridos no array mais de uma vez
-                    if (!privateUsers.includes(user.id)) privateUsers.push(user.id)
-                }
-                // Se não, envia para o grupo
-                else if (!groupUsers.includes(user.id)) groupUsers.push(user.id)
-            })
-        )
+        for (const user of users) {
+            // Verifica se o usuário quer receber os alertas no privado
+            if (user.privateAlerts) {
+                // Evita que usuários sejam inseridos no array mais de uma vez
+                if (!privateUsers.includes(user.id)) privateUsers.push(user.id)
+            }
+            // Se não, envia para o grupo
+            else if (!groupUsers.includes(user.id)) groupUsers.push(user.id)
+        }
 
         // Se tiver usuários com pelo menos um desses alertas ativado
         if (users) {
@@ -98,15 +94,15 @@ module.exports = async (client, chat, found) => {
             if (alerts.some(alert => alert.name === 'shopee')) shopee = true
 
             // Gera o título com o nome dos alertas
-            await Promise.all(
-                alerts.map((alert, i, alerts) => {
-                    if (i !== 0 && i + 1 === alerts.length) text += '* e *'
+            for (const alert of alerts) {
+                const i = alerts.indexOf(alert)
 
-                    text += '#' + alert.name
+                if (i !== 0 && i + 1 === alerts.length) text += '* e *'
 
-                    if (i + 3 <= alerts.length) text += '*, *'
-                })
-            )
+                text += '#' + alert.name
+
+                if (i + 3 <= alerts.length) text += '*, *'
+            }
 
             text += '*\n\n'
         }

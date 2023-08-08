@@ -11,7 +11,7 @@ const chatBot = require('./ChatBot')
  * @return {Promise<import('whatsapp-web.js').Message>}
  */
 module.exports = async (client, message) => {
-    const alerts = await Alert.findAll();
+    const alerts = await Alert.findAll()
 
     // Lista de administradores
     const admins = process.env.ADMINS.split(',')

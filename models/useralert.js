@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'UserAlert',
     updatedAt: false,
-  });
+  })
 
-  return UserAlert;
-};
+  return UserAlert
+}

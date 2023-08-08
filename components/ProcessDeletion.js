@@ -5,17 +5,17 @@ module.exports = async (client, messageDeleted, revokedMessage) => {
 
     if (message.from === undefined) return false
 
-    const alerted = await Alerted.findAll({
+    const alerteds = await Alerted.findAll({
         where: {
-            alertedMessageId: message.id,
+            alertedMessageId: message.id._serialized,
         },
         raw: true,
         attributes: ['messageId'],
     })
 
-    alerted.map(async alert => {
-        // TODO: Delete message alert.messageId
-        console.log('|***** Mensagem deletada:  ', alert.messageId, '*****|')
-        await alert.destroy()
-    })
+    for (const alerted of alerteds) {
+        // TODO: Delete message alerted.messageId
+        console.log('|***** Mensagem deletada:  ', alerted.messageId, '*****|')
+        await alerted.destroy()
+    }
 }

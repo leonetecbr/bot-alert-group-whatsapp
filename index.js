@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const dotenv = require('dotenv')
 
@@ -13,51 +13,50 @@ const processAddGroup = require('./components/ProcessAddGroup')
 
 async function start() {
     console.log('Iniciando ...')
-    
-    try {
-        const client = new Client({
-            authStrategy: new LocalAuth(),
-        })
-        let lastMessage = null
 
-        // Pronto para mostrar o QR Code
-        client.on('qr', qr => qrcode.generate(qr, {small: true}))
+    const client = new Client({
+        authStrategy: new LocalAuth(),
+    })
+    let lastMessage = null
 
-        // Autenticado
-        client.on('authenticated', session => console.log('Autenticado com sucesso!'));
+    // Pronto para mostrar o QR Code
+    client.on('qr', qr => {
+        console.log('Escanei o QR Code:')
+        qrcode.generate(qr, {small: true})
+    })
 
-        // WhatsApp conectado
-        client.on('ready', () => console.log('Iniciado com sucesso!'))
+    // Autenticado
+    client.on('authenticated', session => console.log('Autenticado com sucesso!'))
 
-        // Mensagem recebida
-        client.on('message', async message => {
-            message.lastMessage = lastMessage
-            lastMessage = await processMessage(client, message)
-        })
+    // WhatsApp conectado
+    client.on('ready', () => console.log('Iniciado com sucesso!'))
 
-        // Mensagem deletada para todos
-        client.on('message_revoke_everyone', async (message, revoked_msg) => await processDeletion(client, message, revoked_msg))
+    // Mensagem recebida
+    client.on('message', async message => {
+        message.lastMessage = lastMessage
+        lastMessage = await processMessage(client, message)
+    })
 
-        // Chamada recebida
-        client.on('incoming_call', async call => await processCall(client, call))
+    // Mensagem deletada para todos
+    client.on('message_revoke_everyone', async (message, revoked_msg) => await processDeletion(client, message, revoked_msg))
 
-        // Estado mudou
-        client.on('change_state', state => {
-            console.log('Mudou de estado:', state)
+    // Chamada recebida
+    client.on('incoming_call', async call => await processCall(client, call))
 
-            if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.resetState()
-        })
+    // Estado mudou
+    client.on('change_state', state => {
+        console.log('Mudou de estado:', state)
 
-        // Foi adicionado em um grupo
-        client.on('group_join', notification => processAddGroup(client, notification))
+        if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.resetState()
+    })
 
-        // Desconectado
-        client.on('disconnected', e => console.log('Desconectado do Whatsapp!!!', e))
+    // Foi adicionado em um grupo
+    client.on('group_join', notification => processAddGroup(client, notification))
 
-        await client.initialize()
-    } catch (e) {
-        console.log(e)
-    }
+    // Desconectado
+    client.on('disconnected', e => console.log('Desconectado do Whatsapp!!!', e))
+
+    await client.initialize()
 }
 
 start()

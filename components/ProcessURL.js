@@ -81,10 +81,10 @@ module.exports = async function processURL(url){
 
             let paramsObj = {}
 
-            params.map(param => {
-                let data = param.split('=')
+            for (const param of params){
+                const data = param.split('=')
                 paramsObj[data[0]] = data[1]
-            })
+            }
 
             const link = (url.startsWith('https://www.awin1.com/cread.php')) ? paramsObj.ued : paramsObj.u
 

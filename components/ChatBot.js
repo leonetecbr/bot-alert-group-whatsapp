@@ -67,8 +67,8 @@ module.exports = async message => {
         if (message.words[1] === 'off') action = false
 
         // Verifica se é uma tag de alerta regional
-        for (let i = 0; i < states.length; i++) {
-            const name = '#' + states[i]
+        for (const state of states) {
+            const name = '#' + state
 
             if (message.words[0] === name || message.words[0] === '#capital') {
 
@@ -95,9 +95,9 @@ module.exports = async message => {
                     // Se o alerta for para o estado
                     else {
                         // Se o alerta para o estado já estiver ativado, não faz nada
-                        if (user.state === states[i]) return 'O alerta para o estado ```' + user.state + '``` já está ativado!'
+                        if (user.state === state) return 'O alerta para o estado ```' + user.state + '``` já está ativado!'
                         // Se o alerta não estava ativo, ativa
-                        user.state = states[i]
+                        user.state = state
                     }
                 } else {
                     // Se o alerta for para a capital

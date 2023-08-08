@@ -5,7 +5,7 @@
  */
 module.exports = async (me, message, alerts) => {
     const admins = process.env.ADMINS.split(',')
-    const chat = message.chat;
+    const chat = message.chat
 
     // Responde a mensagens que o mencionam
     if (message.mentionedIds.includes(me._serialized)) {
@@ -22,20 +22,20 @@ module.exports = async (me, message, alerts) => {
 
 
             // Lista os alertas disponíveis
-            await Promise.all(
-                alerts.map(alert => text += '\n```#' + alert.name + '```')
-            )
+            for (const alert of alerts) {
+                text += '\n```#' + alert.name + '```'
+            }
 
             text += '\n\n'
 
             // Menciona todos os participantes do grupo
             for (const member of chat.participants) {
-                const contact = await client.getContactById(member.id._serialized);
+                const contact = await client.getContactById(member.id._serialized)
 
                 // Remove o bot e o autor do array de menções
                 if (member.id._serialized !== me._serialized && member.id._serialized !== message.author){
                     mentions.push(contact)
-                    text += `@${member.id.user} `;
+                    text += `@${member.id.user} `
                 }
             }
 

@@ -14,9 +14,9 @@ module.exports = async (client, notification) => {
             '\nOs alertas disponíveis são:\n'
 
         // Lista os alertas disponíveis
-        await Promise.all(
-            alerts.map(alert => text += '\n```#' + alert.name + '```')
-        )
+        for (const alert of alerts) {
+            text += '\n```#' + alert.name + '```'
+        }
 
         text += '\n\n'
 

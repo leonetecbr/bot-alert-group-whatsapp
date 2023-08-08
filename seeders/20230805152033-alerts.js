@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-const {Op} = require('sequelize');
+const {Op} = require('sequelize')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -46,7 +46,7 @@ module.exports = {
         name: 'ccame',
         updatedAt: new Date(),
       }
-    ], {});
+    ], {})
   },
 
   async down (queryInterface, Sequelize) {
@@ -54,6 +54,6 @@ module.exports = {
       name: {
         [Op.or]: ['bug', 'ifood', 'picpay', 'shopee', 'mercadolivre', 'gratis', 'cupom', 'promoboa', 'mercadopago', 'ccame'],
       },
-    }, {});
+    }, {})
   }
-};
+}
