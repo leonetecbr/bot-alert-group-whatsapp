@@ -63,8 +63,6 @@ describe('Os alertas estão sendo detectados', () => {
         }
 
         return findAlert(message, alerts).then(({ignore}) => {
-            console.log(ignore)
-
             expect(ignore.includes('5511900000000@c.us') && ignore.includes('5511999999999@c.us'))
                 .toBe(true)
         })
