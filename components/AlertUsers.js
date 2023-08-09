@@ -94,9 +94,7 @@ module.exports = async (client, chat, found) => {
             if (alerts.some(alert => alert.name === 'shopee')) shopee = true
 
             // Gera o título com o nome dos alertas
-            for (const alert of alerts) {
-                const i = alerts.indexOf(alert)
-
+            for (const [i, alert] of alerts.entries()) {
                 if (i !== 0 && i + 1 === alerts.length) text += '* e *'
 
                 text += '#' + alert.name

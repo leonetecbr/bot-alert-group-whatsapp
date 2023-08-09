@@ -43,7 +43,7 @@ Logo após copie o aquivo [.env.example](https://github.com/leonetecbr/bot-alert
 renomei-o para ```.env``` e preencha conforme seu ambiente, rode os comandos: 
 ```
 npm install
-npm run migrate:up
+npm run migrate:all
 npm run seed:all
 npm start
 ```

@@ -19,10 +19,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "node node_modules/jest/bin/jest.js",
-    "migrate:up": "npx sequelize-cli db:migrate",
-    "migrate:undo": "npx sequelize-cli db:migrate:undo",
-    "seed:all": "npx sequelize-cli db:seed:all",
-    "seed:undo": "npx sequelize-cli db:seed:undo:all"
+    "migrate:all": "npx sequelize-cli db:migrate --env=production && npx sequelize-cli db:migrate --env=test && npx sequelize-cli db:migrate --env=development",
+    "seed:all": "npx sequelize-cli db:seed:all --env=production && npx sequelize-cli db:seed:all --env=test && npx sequelize-cli db:seed:all --env=development"
   },
   "repository": {
     "type": "git",

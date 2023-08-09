@@ -10,5 +10,3 @@ node_modules
 resources/admin.json
 **.data.json
 **.wwebjs_**
-test.js
-20230805184557-demo-user.js
