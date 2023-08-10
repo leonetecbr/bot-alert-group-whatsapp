@@ -1,5 +1,5 @@
 const generateAwin = require('./GenerateAwin')
-const generateShopee = require('./GenerateShopee')
+//const generateShopee = require('./GenerateShopee')
 const getLocation = require('./GetLocation')
 const processPelando = require('./ProcessPelando')
 
@@ -60,7 +60,11 @@ module.exports = async function processURL(url){
             return url + '?tag=' + process.env.AMAZON_TAG
 
         case 'www.pelando.com.br':
-            return await processPelando(url)
+            const {coupon, to} = await processPelando(url)
+
+            url = await processURL(to)
+
+            return url ? coupon ? coupon + '\n\n' + url : url : false
 
         // Links encurtados
         case 'shope.ee':

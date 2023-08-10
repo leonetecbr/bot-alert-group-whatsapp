@@ -1,5 +1,4 @@
 const {curly} = require('node-libcurl')
-const processURL = require('./ProcessURL')
 
 module.exports = async url => {
     const {data} = await curly.get(url, {
@@ -13,8 +12,9 @@ module.exports = async url => {
 
     if (matches.length === 0) return false
 
-    const link = await processURL(matches[0][1])
-
     // Se tiver cupom, retorna-o com a url original
-    return (coupon.length > 0 && link) ? coupon[0][1] + '\n\n' + link : link
+    return {
+        coupon: ((coupon.length > 0) ? coupon[0][1] : null),
+        to: matches[0][1]
+    }
 }
