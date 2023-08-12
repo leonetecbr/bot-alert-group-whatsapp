@@ -25,10 +25,8 @@ module.exports = async (client, found, users, text) => {
 
     // Monta o texto da mensagem
     for (const id of users){
-        const user = await client.getContactById(id)
-
-        text += '@' + user.id.user + ' '
-        mentions.push(user)
+        text += '@' + id.split('@')[0] + ' '
+        mentions.push(id)
     }
 
     // Tenta envia mensagem no grupo como resposta, caso não consiga envia como mensagem normal

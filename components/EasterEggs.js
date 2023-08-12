@@ -30,11 +30,9 @@ module.exports = async (me, message, alerts) => {
 
             // Menciona todos os participantes do grupo
             for (const member of chat.participants) {
-                const contact = await client.getContactById(member.id._serialized)
-
                 // Remove o bot e o autor do array de menções
                 if (member.id._serialized !== me._serialized && member.id._serialized !== message.author){
-                    mentions.push(contact)
+                    mentions.push(member.id._serialized)
                     text += `@${member.id.user} `
                 }
             }

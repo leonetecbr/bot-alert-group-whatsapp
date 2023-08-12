@@ -25,10 +25,8 @@ module.exports = async (client, notification) => {
         // Menciona todos os membros do grupo
         for (const member of chat.participants) {
             if (member.id._serialized !== me) {
-                const user = await client.getContactById(member.id._serialized)
-
-                text += '@' + user.id.user + ' '
-                mentions.push(user)
+                text += '@' + member.id.user + ' '
+                mentions.push(member.id._serialized)
             }
         }
 
