@@ -34,6 +34,9 @@ module.exports = async (message, alerts) => {
                 message.quotedMsgObj = await message.getQuotedMessage()
                 // Envia um alerta para a mensagem respondida
                 found.message = message.quotedMsgObj
+                found.message.text = found.message.body
+                found.message.body = found.message.body.toLowerCase()
+                found.message.chat = message.chat
                 found.ignore.push(message.quotedMsgObj.author)
             }
             // Se não for uma resposta, o autor da mensagem for o mesmo da mensagem anterior e a quantidade palavras e alertas forem iguais, o alerta é referente a mensagem anterior
