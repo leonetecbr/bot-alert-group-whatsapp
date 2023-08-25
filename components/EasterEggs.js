@@ -38,11 +38,13 @@ module.exports = async (me, message, alerts) => {
             }
 
             // Tenta enviar como resposta, em caso de falha envia com mensagem normal
-            message.reply(text, {mentions}).catch(e => {
+            chat.sendMessage(text, {mentions, quotedMessageId: message.id._serialized}).catch(e => {
                 console.log(e)
                 chat.sendMessage(text, {mentions}).catch(e => console.log(e))
-                chat.sendSeen().catch(e => console.log(e))
             })
+
+            // Marca a mensagem como lida
+            chat.sendSeen().catch(e => console.log(e))
         } else {
             message.reply('Opa, me chamou? 👀').catch(e => console.log(e))
         }

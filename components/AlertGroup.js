@@ -67,7 +67,7 @@ module.exports = async (client, found, users) => {
     }
 
     // Tenta envia mensagem no grupo como resposta, caso não consiga envia como mensagem normal
-    message.reply(text, {mentions})
+    message.chat.sendMessage(text, {mentions, quotedMessageId: message.id._serialized})
         .then(sendedMessage => registerSend(sendedMessage, message, text, found.alerts))
         .catch(e => {
             console.log(e)
@@ -75,6 +75,9 @@ module.exports = async (client, found, users) => {
                 .then(sendedMessage => registerSend(sendedMessage, message, text, found.alerts))
                 .catch(e => console.log(e))
         })
+
+    // Marca a mensagem como lida
+    message.chat.sendSeen().catch(e => console.log(e))
 
     // Para o "digitando ..."
     message.chat.clearState().catch(e => console.log(e))
