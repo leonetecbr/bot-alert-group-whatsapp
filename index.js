@@ -18,6 +18,7 @@ async function start() {
         authStrategy: new LocalAuth(),
     })
     let lastMessage = null
+    let lastState = ''
 
     // Pronto para mostrar o QR Code
     client.on('qr', qr => {
@@ -48,6 +49,20 @@ async function start() {
         console.log('Mudou de estado:', state)
 
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.resetState()
+
+        if (state !== 'CONNECTED') {
+            setTimeout(() => {
+                client.getState()
+                    .then(state => {
+                        if (state === lastState) {
+                            return client.destroy()
+                                .then(start)
+                                .catch(e => console.log(e))
+                        }
+                    })
+                    .catch(e => console.log(e))
+            }, 300000)
+        }
     })
 
     // Foi adicionado em um grupo
