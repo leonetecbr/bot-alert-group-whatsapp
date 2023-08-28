@@ -18,7 +18,6 @@ async function start() {
         authStrategy: new LocalAuth(),
     })
     let lastMessage = null
-    let lastState = ''
 
     // Pronto para mostrar o QR Code
     client.on('qr', qr => {
@@ -30,7 +29,15 @@ async function start() {
     client.on('authenticated', session => console.log('Autenticado com sucesso!'))
 
     // WhatsApp conectado
-    client.on('ready', () => console.log('Iniciado com sucesso!'))
+    client.on('ready', () => {
+        console.log('Iniciado com sucesso!')
+        // Reinicia o robô todos os dias para evitar bugs
+        setTimeout(() => {
+             client.destroy()
+                .then(start)
+                .catch(e => console.log(e))
+        }, 24 * 60 * 60 * 1000)
+    })
 
     // Mensagem recebida
     client.on('message', async message => {
@@ -49,20 +56,6 @@ async function start() {
         console.log('Mudou de estado:', state)
 
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.resetState()
-
-        if (state !== 'CONNECTED') {
-            setTimeout(() => {
-                client.getState()
-                    .then(state => {
-                        if (state === lastState) {
-                            return client.destroy()
-                                .then(start)
-                                .catch(e => console.log(e))
-                        }
-                    })
-                    .catch(e => console.log(e))
-            }, 300000)
-        }
     })
 
     // Foi adicionado em um grupo
