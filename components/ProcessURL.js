@@ -6,6 +6,8 @@ const processPelando = require('./ProcessPelando')
 module.exports = async function processURL(url){
     const decodeURL = url => url.replace('%3F', '?').replace('%3A', ':').replace('%2F', '/')
 
+    if (!url) return false
+
     url = url.split('?')
     let params = url[1]
 
