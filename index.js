@@ -19,6 +19,7 @@ async function start() {
             authStrategy: new LocalAuth(),
         })
         let lastMessage = null
+        let lastState = null
 
         // Pronto para mostrar o QR Code
         client.on('qr', qr => {
@@ -37,7 +38,7 @@ async function start() {
                 client.destroy()
                     .then(() => {
                         start().then((e) => e ? console.log(e) : '')
-                        throw 'Encerrando função anterior e iniciando nova';
+                        throw 'Refresh: Encerrando função anterior e iniciando novamente';
                     })
                     .catch(e => console.log(e))
             }, 24 * 60 * 60 * 1000)
@@ -60,13 +61,28 @@ async function start() {
             console.log('Mudou de estado:', state)
 
             if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.resetState()
+
+            if (state === 'OPENING' || state === 'PAIRING') {
+                setTimeout(() => {
+                    if (state === lastState) {
+                        client.destroy()
+                            .then(() => {
+                                start().then((e) => e ? console.log(e) : '')
+                                throw 'Timeout: Encerrando função anterior e iniciando novamente';
+                            })
+                            .catch(e => console.log(e))
+                    }
+                }, 5 * 60 * 1000)
+            }
         })
 
         // Foi adicionado em um grupo
         client.on('group_join', notification => processAddGroup(client, notification))
 
         // Desconectado
-        client.on('disconnected', e => console.log('Desconectado do Whatsapp!!!', e))
+        client.on('disconnected', e => {
+            throw 'Desconectado do Whatsapp!!!'
+        })
 
         await client.initialize()
     } catch (e) {

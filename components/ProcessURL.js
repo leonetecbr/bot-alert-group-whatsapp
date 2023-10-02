@@ -1,5 +1,5 @@
 const generateAwin = require('./GenerateAwin')
-//const generateShopee = require('./GenerateShopee')
+const generateShopee = require('./GenerateShopee')
 const getLocation = require('./GetLocation')
 const processPelando = require('./ProcessPelando')
 
@@ -35,15 +35,6 @@ module.exports = async function processURL(url){
     domain = domain[0][1]
 
     switch (domain){
-        case 'www.casasbahia.com.br':
-            return await generateAwin(url, 17629)
-
-        case 'www.pontofrio.com.br':
-            return await generateAwin(url, 17621)
-
-        case 'www.extra.com.br':
-            return await generateAwin(url, 17874)
-
         case 'pt.aliexpress.com':
         case 'www.aliexpress.com':
             return await generateAwin(url, 18879)
@@ -56,7 +47,7 @@ module.exports = async function processURL(url){
 
         case 'shopee.com.br':
         case 'live.shopee.com.br':
-            return false//await generateShopee(url)
+            return await generateShopee(url)
 
         case 'www.amazon.com.br':
             return url + '?tag=' + process.env.AMAZON_TAG

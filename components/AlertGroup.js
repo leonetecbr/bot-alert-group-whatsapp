@@ -1,6 +1,6 @@
 const {Alert, Alerted} = require('../models')
 const {Op} = require('sequelize')
-// TODO: const generateShopee = require('./GenerateShopee')
+const generateShopee = require('./GenerateShopee')
 const processURL = require('./ProcessURL')
 
 module.exports = async (client, found, users) => {
@@ -56,8 +56,8 @@ module.exports = async (client, found, users) => {
             if (url) text += url + '\n\n'
         }
     } else if (shopee) {
-        // const link = await generateShopee('https://shopee.com.br/cart')
-        // text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
+        const link = await generateShopee('https://shopee.com.br/cart')
+        text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
     }
 
     // Monta o texto da mensagem
