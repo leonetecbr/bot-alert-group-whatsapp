@@ -1,20 +1,27 @@
 const {curly} = require('node-libcurl')
 
 module.exports = async url => {
-    const {data} = await curly.get(url, {
-        SSL_VERIFYHOST: false,
-        SSL_VERIFYPEER: false,
-    })
-    // Pega a url original
-    const matches = [...data.matchAll(/"sourceUrl":"([-\w@:%.\\+~#?&/=,]+)"/g)]
-    // Busca por cupons
-    const coupon = [...data.matchAll(/"couponCode":"(\w+)"/g)]
+    try {
+        const {data} = await curly.get(url, {
+            SSL_VERIFYHOST: false,
+            SSL_VERIFYPEER: false,
+        })
 
-    if (matches.length === 0) return false
+        // Pega a url original
+        const matches = [...data.matchAll(/"sourceUrl":"([-\w@:%.\\+~#?&/=,]+)"/g)]
+        // Busca por cupons
+        const coupon = [...data.matchAll(/"couponCode":"(\w+)"/g)]
 
-    // Se tiver cupom, retorna-o com a url original
-    return {
-        coupon: ((coupon.length > 0) ? coupon[0][1] : null),
-        to: matches[0][1]
+
+        if (matches.length === 0) return false
+
+        // Se tiver cupom, retorna-o com a url original
+        return {
+            coupon: ((coupon.length > 0) ? coupon[0][1] : null),
+            to: matches[0][1]
+        }
+    } catch (e) {
+        console.log(e)
+        return false
     }
 }
