@@ -57,7 +57,8 @@ module.exports = async (client, found, users) => {
         }
     } else if (shopee) {
         const link = await generateShopee('https://shopee.com.br/cart')
-        text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
+        
+        if (link) text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'
     }
 
     // Monta o texto da mensagem
