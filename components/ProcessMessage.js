@@ -4,6 +4,7 @@ const alertUsers = require('./AlertUsers')
 const easterEggs = require('./EasterEggs')
 const commandsAdmin = require('./CommandsAdmin')
 const chatBot = require('./ChatBot')
+const {MessageMedia} = require('whatsapp-web.js')
 
 /**
  * Processa mensagens recebidas em grupos e chats privados
@@ -58,7 +59,18 @@ module.exports = async (client, message) => {
 
         if (admins.includes(message.from) && message.body.startsWith('/') && message.words.length === 2) {
             commandsAdmin(message).catch(e => console.log(e))
-        } else chatBot(message).then(text => message.reply(text).catch(e => console.log(e)))
+        } else {
+            chatBot(message).then(text => {
+                if (typeof text === 'string') message.reply(text).catch(e => console.log(e))
+                else if (text instanceof MessageMedia) {
+                    message.reply(text, message.chat.id._serialized, {
+                        sendMediaAsSticker: true,
+                        stickerAuthor: 'Por: @leone.tec.br',
+                        stickerName: 'Via bot de alerta',
+                    }).catch(e => console.log(e))
+                }
+            })
+        }
 
         // Para o "digitando ..."
         message.chat.clearState().catch(e => console.log(e))

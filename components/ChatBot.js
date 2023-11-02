@@ -187,6 +187,10 @@ module.exports = async message => {
         }
 
         return message.words[0] + ' não é um alerta disponível! ❌'
+    } else if (message.hasMedia) {
+        const media = await message.downloadMedia();
+
+        if (media) return media
     }
 
     let url = message.text.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
