@@ -18,7 +18,7 @@ async function start() {
         const client = new Client({
             authStrategy: new LocalAuth(),
         })
-        let lastMessage = null
+        let lastMessage = []
         let lastState = null
 
         // Pronto para mostrar o QR Code
@@ -28,7 +28,7 @@ async function start() {
         })
 
         // Autenticado
-        client.on('authenticated', session => console.log('Autenticado com sucesso!'))
+        client.on('authenticated', () => console.log('Autenticado com sucesso!'))
 
         // WhatsApp conectado
         client.on('ready', () => {
@@ -46,8 +46,8 @@ async function start() {
 
         // Mensagem recebida
         client.on('message', async message => {
-            message.lastMessage = lastMessage
-            lastMessage = await processMessage(client, message)
+            message.lastMessage = lastMessage[message.id.remote] ?? null
+            lastMessage[message.id.remote ?? 0] = await processMessage(client, message)
         })
 
         // Mensagem deletada para todos
@@ -80,7 +80,7 @@ async function start() {
         client.on('group_join', notification => processAddGroup(client, notification))
 
         // Desconectado
-        client.on('disconnected', e => {
+        client.on('disconnected', () => {
             throw 'Desconectado do Whatsapp!!!'
         })
 

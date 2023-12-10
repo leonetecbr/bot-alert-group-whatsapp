@@ -4,7 +4,7 @@ const {Op} = require('sequelize')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up (queryInterface) {
     await queryInterface.bulkInsert('Alerts', [
       {
         name: 'bug',
@@ -49,7 +49,7 @@ module.exports = {
     ], {})
   },
 
-  async down (queryInterface, Sequelize) {
+  async down (queryInterface) {
     await queryInterface.bulkDelete('Alerts', {
       name: {
         [Op.or]: ['bug', 'ifood', 'picpay', 'shopee', 'mercadolivre', 'gratis', 'cupom', 'promoboa', 'mercadopago', 'ccame'],

@@ -1,4 +1,4 @@
-const {User, Alert, UserAlert} = require('../models')
+const {User, Alert} = require('../models')
 const processURL = require('./ProcessURL')
 const states = [
     'ac', 'al', 'ap', 'am', 'ba', 'ce', 'df', 'es', 'go', 'ma', 'mt', 'ms', 'mg', 'pa',
