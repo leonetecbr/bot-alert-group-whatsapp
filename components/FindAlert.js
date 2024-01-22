@@ -10,6 +10,8 @@ module.exports = async (message, alerts) => {
         ignore: [message.author,],
     }
 
+    if (process.env.USERS_IGNORE.split(',').includes(message.author)) return found
+
     const matches = message.body.match(/#[\wà-ú]+/g)
     let lastMessage = message.lastMessage ?? null
 

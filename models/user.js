@@ -18,26 +18,20 @@ module.exports = (sequelize, DataTypes) => {
 
   User.init({
     id: {
-      type: DataTypes.STRING,
+      allowNull: false,
+      autoIncrement: true,
       primaryKey: true,
+      type: DataTypes.INTEGER
     },
-    privateAlerts: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
+    privateAlerts: DataTypes.BOOLEAN,
     state: {
       type: DataTypes.ENUM,
       values: [
         'ac', 'al', 'ap', 'am', 'ba', 'ce', 'df', 'es', 'go', 'ma', 'mt', 'ms', 'mg', 'pa',
         'pb', 'pr', 'pe', 'pi', 'rj', 'rn', 'rs', 'ro', 'rr', 'sc', 'sp', 'se', 'to'
       ],
-      allowNull: true,
-      defaultValue: null,
     },
-    capital: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    }
+    capital: DataTypes.BOOLEAN,
   }, {
     sequelize,
     createdAt: false,

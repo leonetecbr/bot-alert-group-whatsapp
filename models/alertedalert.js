@@ -15,22 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    AlertId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Alerts',
-        key: 'id',
-        onDelete: 'CASCADE',
-      },
-    },
-    AlertedId: {
-      type: DataTypes.STRING,
-      references: {
-        model: 'Alerteds',
-        key: 'messageId',
-        onDelete: 'CASCADE',
-      },
-    },
+    AlertId: DataTypes.INTEGER,
+    AlertedId: DataTypes.STRING,
   }, {
     sequelize,
     updatedAt: false,

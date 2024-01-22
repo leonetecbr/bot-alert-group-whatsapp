@@ -23,10 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: false,
     },
-    alertedMessageId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    alertedMessageId: DataTypes.STRING,
   }, {
     sequelize,
     updatedAt: false,

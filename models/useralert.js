@@ -10,28 +10,13 @@ module.exports = (sequelize, DataTypes) => {
 
   UserAlert.init({
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
+      allowNull: false,
       autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
     },
-    UserId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Users',
-        key: 'id',
-        onDelete: 'CASCADE',
-      },
-    },
-    AlertId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Alerts',
-        key: 'id',
-        onDelete: 'CASCADE',
-      },
-    },
+    UserId: DataTypes.INTEGER,
+    AlertId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'UserAlert',
