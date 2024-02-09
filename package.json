@@ -8,6 +8,7 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
+    "chrome-aws-lambda": "^10.1.0",
     "dotenv": "^16.3",
     "node-libcurl": "^3",
     "process": "^0.11",

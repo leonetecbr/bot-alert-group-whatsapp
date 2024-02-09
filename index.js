@@ -6,6 +6,7 @@ dotenv.config()
 
 const qrcode = require('qrcode-terminal')
 const {Client, LocalAuth,} = require('whatsapp-web.js')
+const chrome = require('chrome-aws-lambda')
 const processMessage = require('./components/ProcessMessage')
 const processCall = require('./components/ProcessCall')
 const processDeletion = require('./components/ProcessDeletion')
@@ -17,6 +18,9 @@ async function start() {
 
         const client = new Client({
             authStrategy: new LocalAuth(),
+            puppeteer: {
+                executablePath: await chrome.executablePath,
+            },
         })
         let lastMessage = []
         let lastState = null
