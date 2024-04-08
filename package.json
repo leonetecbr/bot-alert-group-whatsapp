@@ -9,12 +9,12 @@
   },
   "dependencies": {
     "chrome-aws-lambda": "^10.1.0",
-    "dotenv": "^16.3",
-    "node-libcurl": "^3",
-    "process": "^0.11",
+    "dotenv": "^16.4.5",
+    "node-libcurl": "^4",
+    "process": "^0.11.10",
     "qrcode-terminal": "^0.12",
-    "sequelize": "^6.35",
-    "sqlite3": "^5.1",
+    "sequelize": "^6.37.2",
+    "sqlite3": "^5.1.7",
     "whatsapp-web.js": "^1.23"
   },
   "scripts": {

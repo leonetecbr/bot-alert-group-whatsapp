@@ -21,6 +21,10 @@ async function start() {
             puppeteer: {
                 executablePath: await chrome.executablePath,
             },
+            webVersionCache: {
+                type: 'remote',
+                remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
+            }
         })
         let lastMessage = []
         let lastState = null
