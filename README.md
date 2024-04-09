@@ -30,6 +30,13 @@ Nossa recomendação mínima é o plano de $7/mês (Premium AMD/Intel, 1 GB de R
 
 ### Passo a passo
 
+Instale o Chrome, caso não tenha na sua máquina:
+
+```
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install ./google-chrome-stable_current_amd64.deb
+```
+
 Caso deseje trocar os alertas disponíveis altere o [seed de alertas](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/seeders/20230805152033-alerts.js). 
 
 Logo após copie o aquivo [.env.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/.env.example),
