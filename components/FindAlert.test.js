@@ -20,12 +20,6 @@ describe('Os alertas estão sendo detectados', () => {
             },
             raw: true
         })
-        promoboa = await Alert.findOne({
-            where: {
-                name: 'promoboa'
-            },
-            raw: true
-        })
 
         return findAlert(message, alerts).then(({alerts}) => {
             expect(alerts.includes(bug.id)).toBe(true)
@@ -48,6 +42,13 @@ describe('Os alertas estão sendo detectados', () => {
         message.words.push('#promoboa')
         message.lastMessage = null
 
+        promoboa = await Alert.findOne({
+            where: {
+                name: 'promoboa'
+            },
+            raw: true
+        })
+
         return findAlert(message, alerts).then(({alerts}) => {
             expect(alerts.includes(bug.id) && alerts.includes(promoboa.id)).toBe(true)
         })
@@ -55,16 +56,17 @@ describe('Os alertas estão sendo detectados', () => {
 
     test('Alertas respostas estão sendo lançados corretamente', () => {
         message.hasQuotedMsg = true
-        message.getQuotedMessage = () => {
-            return {
-                author: '5511900000000@c.us',
-                body: 'Teste',
-            }
-        }
+        message.getQuotedMessage = () => ({
+            author: '5511900000000@c.us',
+            body: 'Teste',
+        })
 
-        return findAlert(message, alerts).then(({ignore}) => {
-            expect(ignore.includes('5511900000000@c.us') && ignore.includes('5511999999999@c.us'))
-                .toBe(true)
+        return findAlert(message, alerts).then(({ignore, message}) => {
+            expect(
+                ignore.includes('5511900000000@c.us') &&
+                ignore.includes('5511999999999@c.us') &&
+                message.body === 'teste'
+            ).toBe(true)
         })
     })
 })
