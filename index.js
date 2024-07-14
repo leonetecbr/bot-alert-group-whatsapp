@@ -17,10 +17,14 @@ async function start() {
 
         const client = new Client({
             authStrategy: new LocalAuth(),
-            webVersionCache: {
-                type: 'remote',
-                remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2413.51-beta.html',
-            }
+            restartOnAuthFail: true,
+            puppeteer: {
+                headless: true,
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox'
+                ],
+            },
         })
         let lastMessage = []
         let lastState = null
