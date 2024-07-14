@@ -21,7 +21,7 @@ Usando a Digital Ocean para realizar seu deixar seu bot no ar, você ganhará U$
 botão abaixo para criar sua conta!
 
 <p align="center">
-    <a href="https://www.digitalocean.com/?refcode=73ea4bd8a1ba&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge">
+    <a href="https://www.digitalocean.com/?refcode=5d3426700562&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge">
         <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/DigitalOcean.png" alt="DigitalOcean" />
     </a>
 </p>
