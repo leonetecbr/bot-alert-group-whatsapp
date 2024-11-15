@@ -8,13 +8,14 @@
     "url": "https://leone.tec.br"
   },
   "dependencies": {
+    "node": "^20",
     "dotenv": "^16.4.5",
     "node-libcurl": "^4",
     "process": "^0.11.10",
     "qrcode-terminal": "^0.12",
     "sequelize": "^6.37.2",
     "sqlite3": "^5.1.7",
-    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#webpack-exodus"
+    "whatsapp-web.js": "^1.26"
   },
   "scripts": {
     "start": "node index.js",

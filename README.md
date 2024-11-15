@@ -15,24 +15,19 @@ promoção incrível.
 
 ## Instalação
 
-### Deploy gratuito
-
-Usando a Digital Ocean para realizar seu deixar seu bot no ar, você ganhará U$ 200 em créditos em sua conta, clique no 
-botão abaixo para criar sua conta!
-
-<p align="center">
-    <a href="https://www.digitalocean.com/?refcode=5d3426700562&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge">
-        <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/DigitalOcean.png" alt="DigitalOcean" />
-    </a>
-</p>
-
-Nossa recomendação mínima é o plano de $7/mês (Premium AMD/Intel, 1 GB de RAM, 25 GB de SSD, 1 CPU, 1 TB de transferência).
-
 ### Passo a passo
+
+Clone o projeto e instale as dependências:
+
+```bash
+git clone https://github.com/leonetecbr/bot-alert-group-whatsapp/
+cd bot-alert-group-whatsapp
+npm install
+```
 
 Instale o Chrome, caso não tenha na sua máquina:
 
-```
+```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt install ./google-chrome-stable_current_amd64.deb
 
@@ -45,15 +40,85 @@ sudo yum localinstall ./google-chrome-stable_current_x86_64.rpm
 Caso deseje trocar os alertas disponíveis altere o [seed de alertas](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/seeders/20230805152033-alerts.js). 
 
 Logo após copie o aquivo [.env.example](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/.env.example),
-renomei-o para ```.env``` e preencha conforme seu ambiente, rode os comandos: 
-```
+renomei-o para ```.env``` e preencha conforme seu ambiente, rode os comandos:
+
+```bash
 npm install
 npm run migrate:all
 npm run seed:all
 npm start
 ```
+
 Por fim escanei o QR Code para fazer login com o WhatsApp. Após isso basta adicionar o bot no(s) grupo(s) e ativar os alertas
 através do privado do bot.
+
+## Rodando em segundo plano
+
+Após rodar o `npm start` é necessário que o terminal permaneça aberto para que o código continue rodando, para evitar
+que isso ocorra vamos usar o supervisor.
+
+Faça a instalação do Supervisor:
+
+```bash
+sudo apt install supervisor
+```
+
+Faça os ajustes necessários no arquivo `/etc/supervisor/supervisord.conf`:
+
+```
+; supervisor config file
+
+[unix_http_server]
+file=/var/run/supervisor.sock   ; (the path to the socket file)
+chmod=0770                       ; sockef file mode (default 0700)
+chown=ubuntu
+
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log ; (main log file;default $CWD/supervisord.log)
+pidfile=/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+childlogdir=/var/log/supervisor            ; ('AUTO' child log dir, default $TEMP)
+
+; the below section must remain in the config file for RPC
+; (supervisorctl/web interface) to work, additional interfaces may be
+; added by defining them in separate rpcinterface: sections
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run/supervisor.sock ; use a unix:// URL  for a unix socket
+
+; The [include] section can just contain the "files" setting.  This
+; setting can list multiple files (separated by whitespace or
+; newlines).  It can also contain wildcards.  The filenames are
+; interpreted as relative to this file.  Included files *cannot*
+; include files themselves.
+
+[include]
+files = /etc/supervisor/conf.d/*.conf
+```
+
+Configure o Supervisor criando o arquivo bot.conf no diretório /etc/supervisor/conf.d:
+
+```bash
+[program:whatsapp]
+process_name=bot_de_alerta
+command=/home/ubuntu/.nvm/versions/node/v20.17.0/bin/node /home/ubuntu/bot/index.js
+autostart=true
+autorestart=true
+user=ubuntu
+redirect_stderr=true
+stdout_logfile=/home/ubuntu/bot/supervisor.log
+```
+
+Inicie o Supervisor:
+
+```bash
+sudo supervisorctl reread
+ 
+sudo supervisorctl update
+ 
+sudo supervisorctl start "whatsapp:*"
+```
 
 ## Usando
 

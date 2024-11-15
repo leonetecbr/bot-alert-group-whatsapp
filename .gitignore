@@ -10,3 +10,4 @@ node_modules
 resources/admin.json
 **.data.json
 **.wwebjs_**
+supervisor.log

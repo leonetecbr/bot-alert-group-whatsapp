@@ -2,10 +2,12 @@
 
 const dotenv = require('dotenv')
 
-dotenv.config()
+dotenv.config({
+    path: `${__dirname}/.env`
+})
 
 const qrcode = require('qrcode-terminal')
-const {Client, LocalAuth,} = require('whatsapp-web.js')
+const {Client, LocalAuth} = require('whatsapp-web.js')
 const processMessage = require('./components/ProcessMessage')
 const processCall = require('./components/ProcessCall')
 const processDeletion = require('./components/ProcessDeletion')
@@ -16,7 +18,11 @@ async function start() {
         console.log('Iniciando ...')
 
         const client = new Client({
-            authStrategy: new LocalAuth(),
+            webVersionCache: {
+                type: 'local',
+                path: `${__dirname}/.wwebjs_cache/`,
+            },
+            authStrategy: new LocalAuth({dataPath: `${__dirname}/.wwebjs_auth/`}),
             restartOnAuthFail: true,
             puppeteer: {
                 headless: true,
