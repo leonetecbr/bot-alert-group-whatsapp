@@ -55,6 +55,6 @@ module.exports = async (client, chat, found) => {
     // Se tiver usuários que querem receber os alertas no grupo
     if (groupUsers.length > 0) alertGroup(client, found, groupUsers).then(() => console.log('Enviado para o grupo!'))
 
-    // Se tiver usuários que querem receber os alertas no privado
+    // Se tiver usuários que querem receber os alerta no privado
     if (privateUsers.length > 0) alertPrivate().then(() => console.log('Enviado para o privado!'))
 }

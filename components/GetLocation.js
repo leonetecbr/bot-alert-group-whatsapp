@@ -7,7 +7,7 @@ module.exports = async url => {
     })
 
     if (statusCode !== 302 && statusCode !== 301) return false
+
     // Retorna o link de destino
-    if (typeof headers[0].Location !== 'undefined') return headers[0].Location
-    return headers[0].location
+    return headers[0].Location ?? headers[0].location
 }

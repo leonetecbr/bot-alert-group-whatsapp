@@ -1,5 +1,5 @@
 const ProcessPelando = require('./ProcessPelando')
-const {describe, test} = require("@jest/globals");
+const {describe, expect, test} = require("@jest/globals");
 
 describe('Processa o link do pelando', () => {
     test('Obtendo a url original', async () => {

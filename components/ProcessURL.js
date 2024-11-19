@@ -20,9 +20,6 @@ module.exports = async function processURL(url){
         if (url.startsWith('https://m.pt.')) url = url.replace('//m.', '//')
         else if (url.startsWith('https://m.')) url = url.replace('//m.', '//www.')
 
-        // Se for um link do beta
-        if (url.startsWith('https://beta.')) url = url.replace('//beta.', '//www.')
-
         let domain = !url.endsWith('/') ? url + '/' : url
 
         // Busca qual o domínio do link

@@ -30,11 +30,12 @@ Instale o Chrome, caso não tenha na sua máquina:
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt install ./google-chrome-stable_current_amd64.deb
+```
 
-#ou
+Instale o ffmpeg;
 
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
-sudo yum localinstall ./google-chrome-stable_current_x86_64.rpm
+```bash
+sudo apt install ffmpeg
 ```
 
 Caso deseje trocar os alertas disponíveis altere o [seed de alertas](https://github.com/leonetecbr/bot-alert-group-whatsapp/blob/main/seeders/20230805152033-alerts.js). 
@@ -152,7 +153,7 @@ consultar a lista de alertas disponíveis pode se usar o comando `Meus Alertas`.
 ### Disparando alertas
 
 Para disparar o alerta é bem simples, basta usar o alerta em uma mensagem no grupo, recomendamos que o alerta inicie com
-uma hash (#), para evitar o disparo acidental, (pode se incluir vários alertas em uma mesma mensagem). Exemplo:
+uma hash (#), para evitar o disparo acidental, (pode se incluir vários alerta em uma mesma mensagem). Exemplo:
 
 <p align="center">
    <img src="https://raw.githubusercontent.com/leonetecbr/bot-alert-group-whatsapp/main/result/Lan%C3%A7ando%20alerta%20no%20grupo.jpg" alt="Disparando os alertas"/>

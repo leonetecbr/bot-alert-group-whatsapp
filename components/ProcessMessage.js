@@ -8,8 +8,6 @@ const {MessageMedia} = require('whatsapp-web.js')
 
 /**
  * Processa mensagens recebidas em grupos e chats privados
- *
- * @return {Promise<import('whatsapp-web.js').Message>}
  */
 module.exports = async (client, message) => {
     const alerts = await Alert.findAll()
@@ -40,10 +38,13 @@ module.exports = async (client, message) => {
         .catch(e => console.log(e))
 
     // Se não tiver sido possível obter os dados, encerra a função
-    if (!message.sender || !message.chat) return message.lastMessage
+    if (!message.sender || !message.chat) return;
 
-    // Em grupos, busca por alertas nas mensagens recebidas,
+    // Em grupos, busca por alerta nas mensagens recebidas,
     if (message.chat.isGroup) {
+        // Ignora se não poder lançar alertas
+        if (message.chat.isReadOnly) return;
+
         findAlert(message, alerts).then(found => {
             // Envia uma mensagem de resposta marcando os usuários com os alertas ativados
             if (found.alerts.length !== 0) alertUsers(client, message.chat, found)

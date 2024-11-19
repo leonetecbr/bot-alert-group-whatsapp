@@ -32,7 +32,6 @@ async function start() {
                 ],
             },
         })
-        let lastMessage = []
         let lastState = null
 
         // Pronto para mostrar o QR Code
@@ -60,12 +59,13 @@ async function start() {
 
         // Mensagem recebida
         client.on('message', async message => {
-            message.lastMessage = lastMessage[message.id.remote] ?? null
-            lastMessage[message.id.remote ?? 0] = await processMessage(client, message)
+            await processMessage(client, message)
         })
 
         // Mensagem deletada para todos
-        client.on('message_revoke_everyone', async (message, revoked_msg) => await processDeletion(client, message, revoked_msg))
+        client.on('message_revoke_everyone', async (message, revoked_msg) => {
+            await processDeletion(client, message, revoked_msg)
+        })
 
         // Chamada recebida
         client.on('incoming_call', async call => await processCall(client, call))

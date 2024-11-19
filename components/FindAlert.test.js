@@ -1,4 +1,4 @@
-const {expect, describe, test} = require('@jest/globals')
+const {describe, expect, test} = require('@jest/globals')
 const findAlert = require('./FindAlert')
 const {Alert} = require('../models')
 

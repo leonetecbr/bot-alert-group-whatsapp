@@ -4,9 +4,9 @@ const generateShopee = require('./GenerateShopee')
 const processURL = require('./ProcessURL')
 
 module.exports = async (client, found, users) => {
-    function registerSend(sendedMessage, message, text, alerts){
+    function registerSend(sentMessage, message, text, alerts){
         console.log('Texto enviado no grupo: ', text)
-        console.log('Id da mensagem enviada no grupo: ', sendedMessage.id._serialized)
+        console.log('Id da mensagem enviada no grupo: ', sentMessage.id._serialized)
         console.log('Id da mensagem respondida: ', message.id._serialized)
 
         // Envia uma reação para a mensagem original
@@ -14,7 +14,7 @@ module.exports = async (client, found, users) => {
 
         // Salva o ‘id’ da mensagem no banco de dados
         Alerted.create({
-            messageId: sendedMessage.id._serialized,
+            messageId: sentMessage.id._serialized,
             alertedMessageId: message.id._serialized,
         })
             .then(alerted => alerted.setAlerts(alerts).catch(e => console.log(e)))
@@ -69,12 +69,19 @@ module.exports = async (client, found, users) => {
 
     // Tenta envia mensagem no grupo como resposta, caso não consiga envia como mensagem normal
     message.chat.sendMessage(text, {mentions, quotedMessageId: message.id._serialized})
-        .then(sendedMessage => registerSend(sendedMessage, message, text, found.alerts))
+        .then(sentMessage => registerSend(sentMessage, message, text, found.alerts))
         .catch(e => {
             console.log(e)
             message.chat.sendMessage(text, {mentions})
-                .then(sendedMessage => registerSend(sendedMessage, message, text, found.alerts))
+                .then(sentMessage => registerSend(sentMessage, message, text, found.alerts))
                 .catch(e => console.log(e))
+        })
+
+    message.chat.participants.filter(participant => participant.id === client.info.wid)
+        .map(async user => {
+            if (user.isAdmin) {
+                await message.pin(1)
+            }
         })
 
     // Marca a mensagem como lida
