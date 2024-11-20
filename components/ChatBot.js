@@ -35,11 +35,11 @@ module.exports = async message => {
         for (const alert of alerts){
             const name = '#' + alert.name
 
-            text += '\n```' + name + '```: ' + ((activeAlerts.includes(alert.id)) ? '*Ativado* ✅' : '*Desativado* ❌')
+            text += '\n```' + name + '```: ' + (activeAlerts.includes(alert.id) ? '*Ativado* ✅' : '*Desativado* ❌')
         }
 
-        text += '\n\nEstado: ' + ((user.state === null) ? '*Não definido* ❌' : '*' + user.state.toUpperCase() + '* ✅')
-        text += '\nCapital: ' + ((user.capital) ? '*Ativado* ✅' : '*Desativado* ❌')
+        text += '\n\nEstado: ' + (user.state ? '*' + user.state.toUpperCase() + '* ✅' : '*Não definido* ❌')
+        text += '\nCapital: ' + (user.capital ? '*Ativado* ✅' : '*Desativado* ❌')
 
         return text
     } else if (message.body === 'ajuda') {
@@ -81,7 +81,7 @@ module.exports = async message => {
                 }))[0]
 
                 // Se estiver tentando modificar as configurações de capital sem definir um estado, informa o erro
-                if (message.words[0] === '#capital' && user.state === null) return 'Você precisa definir um estado antes de ativar o alerta para a capital!'
+                if (message.words[0] === '#capital' && !user.state) return 'Você precisa definir um estado antes de ativar o alerta para a capital!'
 
                 // Ativa ou desativa o alerta
                 if (action) {
@@ -122,7 +122,7 @@ module.exports = async message => {
                 await user.save()
 
                 // Confirma a ativação ou desativação do alerta
-                return '*Alerta para ' + name + ' ' + ((action) ? 'ativado!* ✅' : 'desativado!* ❌')
+                return '*Alerta para ' + name + ' ' + (action ? 'ativado!* ✅' : 'desativado!* ❌')
             }
         }
 
@@ -151,7 +151,7 @@ module.exports = async message => {
             else await user.setAlerts([])
 
             // Confirma a ativação ou desativação do alerta
-            return '*Todos os seus alertas foram ' + ((action) ? 'ativados!* ✅' : 'desativados!* ❌')
+            return '*Todos os seus alertas foram ' + (action ? 'ativados!* ✅' : 'desativados!* ❌')
         }
 
         for (const alert of alerts) {
@@ -182,7 +182,7 @@ module.exports = async message => {
                 }
 
                 // Confirma a ativação ou desativação do alerta
-                return '*Alerta para ' + name + ' ' + ((action) ? 'ativado!* ✅' : 'desativado!* ❌')
+                return '*Alerta para ' + name + ' ' + (action ? 'ativado!* ✅' : 'desativado!* ❌')
             }
         }
 

@@ -41,9 +41,12 @@ module.exports = async (message, alerts) => {
                 found.ignore.push(message.quotedMsgObj.author)
             }
             // Se não for uma resposta, o autor da mensagem for o mesmo da mensagem anterior e a quantidade palavras e alerta forem iguais, o alerta é referente a mensagem anterior
-            else if (message.chat.lastMessage !== null && message.words.length === found.alerts.length && message.author === message.chat.lastMessage.author) {
+            else if (message.chat.lastMessage && message.words.length === found.alerts.length && message.author === message.chat.lastMessage.author) {
                 // Envia um alerta para a penúltima mensagem
                 found.message = message.chat.lastMessage
+                found.message.text = found.message.body
+                found.message.body = found.message.body.toLowerCase()
+                found.message.chat = message.chat
             }
         }
     }

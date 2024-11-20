@@ -15,7 +15,7 @@
     "qrcode-terminal": "^0.12",
     "sequelize": "^6.37.5",
     "sqlite3": "^5.1.7",
-    "whatsapp-web.js": "^1.26"
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#pull/3380/head"
   },
   "scripts": {
     "start": "node index.js",

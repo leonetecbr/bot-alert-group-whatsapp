@@ -1,12 +1,12 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "/home/ubuntu/bot//dev.sqlite",
+    "storage": "/home/ubuntu/bot/dev.sqlite",
     "logging": false
   },
   "test": {
     "dialect": "sqlite",
-    "storage": "/home/ubuntu/bot//test.sqlite",
+    "storage": "/home/ubuntu/bot/test.sqlite",
     "logging": false
   },
   "production": {

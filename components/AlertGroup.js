@@ -77,13 +77,6 @@ module.exports = async (client, found, users) => {
                 .catch(e => console.log(e))
         })
 
-    message.chat.participants.filter(participant => participant.id === client.info.wid)
-        .map(async user => {
-            if (user.isAdmin) {
-                await message.pin(1)
-            }
-        })
-
     // Marca a mensagem como lida
     message.chat.sendSeen().catch(e => console.log(e))
 

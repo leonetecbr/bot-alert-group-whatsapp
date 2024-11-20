@@ -22,7 +22,7 @@ module.exports = async (client, messageDeleted, revokedMessage) => {
 
                 chat.fetchMessages({limit})
                     .then(messages => {
-                        messages.map((message) => {
+                        messages.map(message => {
                             if (message.id._serialized === alerted.messageId) {
                                 message.delete(true)
                                     .then(() => console.log('|***** Mensagem deletada:  ', alerted.messageId, '*****|'))

@@ -27,7 +27,7 @@ const ProcessPelando = async url => {
 
         // Se tiver cupom, retorna-o com a url original
         return {
-            coupon: ((coupon.length > 0) ? String(coupon[0][1]) : null),
+            coupon: (coupon.length > 0 ? String(coupon[0][1]) : null),
             to: matches[0][1],
         }
     } catch (e) {

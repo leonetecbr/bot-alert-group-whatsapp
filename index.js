@@ -50,7 +50,7 @@ async function start() {
             setTimeout(() => {
                 client.destroy()
                     .then(() => {
-                        start().then((e) => e ? console.log(e) : '')
+                        start().then(e => e ? console.log(e) : '')
                         throw 'Refresh: Encerrando função anterior e iniciando novamente';
                     })
                     .catch(e => console.log(e))
@@ -81,7 +81,7 @@ async function start() {
                     if (state === lastState) {
                         client.destroy()
                             .then(() => {
-                                start().then((e) => e ? console.log(e) : '')
+                                start().then(e => e ? console.log(e) : '')
                                 throw 'Timeout: Encerrando função anterior e iniciando novamente';
                             })
                             .catch(e => console.log(e))
@@ -104,4 +104,4 @@ async function start() {
     }
 }
 
-start().then((e) => e ? console.log(e) : '')
+start().then(e => e ? console.log(e) : '')
