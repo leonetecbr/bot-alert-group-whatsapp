@@ -12,12 +12,16 @@ module.exports = (sequelize, DataTypes) => {
         through: models.UserAlert,
         foreignKey: 'AlertId',
         as: 'users',
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
       })
 
       this.belongsToMany(models.Alerted, {
         through: models.AlertedAlert,
         foreignKey: 'AlertId',
-        as: 'alerteds'
+        as: 'alerteds',
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
       })
     }
   }

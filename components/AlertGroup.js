@@ -23,6 +23,8 @@ module.exports = async (client, found, users) => {
 
     console.log('Membros com o(s) alerta(s) ativo(s) para receber no grupo: ', users)
 
+    let linkPreview = false
+
     const message = found.message
     const alerts = await Alert.findAll({
         where: {
@@ -33,6 +35,7 @@ module.exports = async (client, found, users) => {
         attributes: ['id', 'name'],
         raw: true
     })
+
     // Se algum dos alertas for da Shopee
     const shopee = alerts.some(alert => alert.name === 'shopee')
     let mentions = [], text = 'Você tem um novo alerta para *'
@@ -53,7 +56,11 @@ module.exports = async (client, found, users) => {
     if (links) {
         for (const link of links){
             const url = await processURL(link)
-            if (url) text += url + '\n\n'
+
+            if (url) {
+                linkPreview = true
+                text += url + '\n\n'
+            }
         }
     } else if (shopee) {
         const link = await generateShopee('https://shopee.com.br/cart')
@@ -68,11 +75,11 @@ module.exports = async (client, found, users) => {
     }
 
     // Tenta envia mensagem no grupo como resposta, caso não consiga envia como mensagem normal
-    message.chat.sendMessage(text, {mentions, quotedMessageId: message.id._serialized})
+    message.reply(text, message.chat.id._serialized, {mentions, linkPreview})
         .then(sentMessage => registerSend(sentMessage, message, text, found.alerts))
         .catch(e => {
             console.log(e)
-            message.chat.sendMessage(text, {mentions})
+            message.chat.sendMessage(text, {mentions, linkPreview})
                 .then(sentMessage => registerSend(sentMessage, message, text, found.alerts))
                 .catch(e => console.log(e))
         })

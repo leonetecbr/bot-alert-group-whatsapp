@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         through: models.UserAlert,
         foreignKey: 'UserId',
         as: 'alerts',
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
       })
     }
   }

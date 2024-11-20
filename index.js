@@ -6,6 +6,7 @@ dotenv.config({
     path: `${__dirname}/.env`
 })
 
+const {User} = require('./models')
 const qrcode = require('qrcode-terminal')
 const {Client, LocalAuth} = require('whatsapp-web.js')
 const processMessage = require('./components/ProcessMessage')
@@ -43,6 +44,9 @@ async function start() {
         // Autenticado
         client.on('authenticated', () => console.log('Autenticado com sucesso!'))
 
+        // Falha na autenticação
+        client.on('auth_failure', () => console.log('Falha na autenticação!'))
+
         // WhatsApp conectado
         client.on('ready', () => {
             console.log('Iniciado com sucesso!')
@@ -58,9 +62,16 @@ async function start() {
         })
 
         // Mensagem recebida
-        client.on('message', async message => {
-            await processMessage(client, message)
-        })
+        client.on('message', async message => await processMessage(client, message))
+
+        // Usuário mudou de número
+        client.on('contact_changed', async (message, oldId, newId, isContact) => {
+            const user = await User.find(oldId)
+
+            user.id = newId
+
+            user.save()
+        });
 
         // Mensagem deletada para todos
         client.on('message_revoke_everyone', async (message, revoked_msg) => {
