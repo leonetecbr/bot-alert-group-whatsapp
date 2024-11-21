@@ -36,8 +36,6 @@ module.exports = async (client, found, users) => {
         raw: true
     })
 
-    // Se algum dos alertas for da Shopee
-    const shopee = alerts.some(alert => alert.name === 'shopee')
     let mentions = [], text = 'Você tem um novo alerta para *'
 
     // Gera o título com o nome dos alertas
@@ -52,9 +50,8 @@ module.exports = async (client, found, users) => {
     text += '*\n\n'
 
     // Transforma links comuns em links de afiliados
-    const links = message.text.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
-    if (links) {
-        for (const link of links){
+    if (message.links.length > 0) {
+        for (const link of message.links){
             const url = await processURL(link)
 
             if (url) {
@@ -62,7 +59,9 @@ module.exports = async (client, found, users) => {
                 text += url + '\n\n'
             }
         }
-    } else if (shopee) {
+    }
+    // Se algum dos alertas for da Shopee
+    else if (alerts.some(alert => alert.name === 'shopee')) {
         const link = await generateShopee('https://shopee.com.br/cart')
         
         if (link) text += '🛒 Link rápido pro carrinho: ' + link + '\n\n'

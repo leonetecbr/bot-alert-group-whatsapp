@@ -8,16 +8,16 @@ module.exports = async (client, chat, found) => {
     chat.sendStateTyping().catch(e => console.log(e))
 
     console.log('_____________________________________________________________________________________________________')
-    console.log('Texto da mensagem: ', found.message.text)
+    console.log('Texto da mensagem: ', found.message.body)
     console.log('Alertas encontrados: ', found.alerts)
 
     const message = found.message
-    let groupUsers = [], privateUsers = [], members = [], users
+    let groupUsers = [], privateUsers = []
 
-    for (const member of chat.participants) members.push(member.id._serialized)
+    const members = chat.participants.map(participant => participant.id._serialized)
 
     // Busca os usuários com algum dos alertas ativados
-    users = await User.findAll({
+    let users = await User.findAll({
         where: {
             '$alerts.id$': {
                 [Op.or]: found.alerts

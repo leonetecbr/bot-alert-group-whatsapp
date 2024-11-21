@@ -18,9 +18,6 @@ module.exports = async (client, message) => {
     // Trata a mensagem recebida para evitar erros
     message.body = message.body ?? ''
 
-    // Armazena a mensagem original para ser usada na busca por links
-    message.text = message.body
-
     // Passa toda a mensagem para minúsculo
     message.body = message.body.toLowerCase()
 

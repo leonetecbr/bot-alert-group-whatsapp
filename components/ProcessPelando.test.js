@@ -7,7 +7,7 @@ describe('Processa o link do pelando', () => {
         const link = 'https://shopee.com.br/product/616222685/14494160625';
 
         return ProcessPelando(url).then(data => {
-            expect(data.to === link).toBe(true)
+            expect(data.to).toBe(link)
         })
     })
 
@@ -16,7 +16,7 @@ describe('Processa o link do pelando', () => {
         const coupon = 'AMZAPPDAY100';
 
         return ProcessPelando(url).then(data => {
-            expect(data.coupon === coupon).toBe(true)
+            expect(data.coupon).toBe(coupon)
         })
     })
 })

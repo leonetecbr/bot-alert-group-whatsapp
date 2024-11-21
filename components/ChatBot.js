@@ -193,13 +193,13 @@ module.exports = async message => {
         if (media) return media
     }
 
-    let url = message.text.match(/https?:\/\/[-\w@:%.\\+~#?&/=,]+/g)
-
     // Se a mensagem contiver um link ou mais, pega o primeiro link da mensagem e transforma em link de afiliados
-    if (url !== null) url = await processURL(url[0])
+    if (message.links.length > 0) {
+        const url = await processURL(message.links[0].link)
 
-    // Se o link de afiliados for gerado com sucesso, envia a mensagem
-    if (url) return url
+        // Se o link de afiliados for gerado com sucesso, envia a mensagem
+        if (url) return url
+    }
 
     const greetings = ['olá', 'oii', 'oe', 'oie', 'bom dia', 'boa tarde', 'boa noite', 'eai', 'eae']
     let start = 'Oi' + ' ' + message.sender.pushname

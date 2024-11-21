@@ -35,18 +35,22 @@ module.exports = async (message, alerts) => {
                 message.quotedMsgObj = await message.getQuotedMessage()
                 // Envia um alerta para a mensagem respondida
                 found.message = message.quotedMsgObj
-                found.message.text = found.message.body
-                found.message.body = found.message.body.toLowerCase()
+                found.message.body = found.message.body?.toLowerCase() ?? ''
                 found.message.chat = message.chat
                 found.ignore.push(message.quotedMsgObj.author)
             }
-            // Se não for uma resposta, o autor da mensagem for o mesmo da mensagem anterior e a quantidade palavras e alerta forem iguais, o alerta é referente a mensagem anterior
-            else if (message.chat.lastMessage && message.words.length === found.alerts.length && message.author === message.chat.lastMessage.author) {
-                // Envia um alerta para a penúltima mensagem
-                found.message = message.chat.lastMessage
-                found.message.text = found.message.body
-                found.message.body = found.message.body.toLowerCase()
-                found.message.chat = message.chat
+            // Se não for uma resposta e a quantidade palavras e alerta forem iguais, o alerta é referente a mensagem anterior
+            else if (message.words.length === found.alerts.length) {
+                // Obtém a mensagem anterior
+                const lastMessage = (await message.chat.fetchMessages({limit: 2}))[0]
+
+                //Verifica se o autor da mensagem é o mesmo da mensagem anterior
+                if (message.author === lastMessage.author) {
+                    // Envia um alerta para a penúltima mensagem
+                    found.message = lastMessage
+                    found.message.body = found.message.body?.toLowerCase() ?? ''
+                    found.message.chat = message.chat
+                }
             }
         }
     }
