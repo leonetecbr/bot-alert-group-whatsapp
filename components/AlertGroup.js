@@ -51,7 +51,7 @@ module.exports = async (client, found, users) => {
 
     // Transforma links comuns em links de afiliados
     if (message.links.length > 0) {
-        for (const link of message.links){
+        for (const {link} of message.links){
             const url = await processURL(link)
 
             if (url) {
